@@ -1,0 +1,387 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-red-50: #fef2f2;
+  --color-brand-red-100: #fee2e2;
+  --color-brand-red-200: #fecaca;
+  --color-brand-red-300: #fca5a5;
+  --color-brand-red-400: #f87171;
+  --color-brand-red-500: #ef4444;
+  --color-brand-red-600: #dc2626;
+  --color-brand-red-700: #b91c1c;
+  --color-brand-red-800: #991b1b;
+  --color-brand-red-900: #7f1d1d;
+  --color-brand-red-950: #450a0a;
+}
+
+@variant dark (&:where(.dark, .dark *));
+
+/* ─── Base Reset ──────────────────────────────────────────────── */
+html {
+  font-size: clamp(14px, 0.89vw, 17px) !important;
+  scroll-behavior: smooth;
+  overflow-x: clip;
+}
+
+body {
+  font-family: var(--font-body) !important;
+  color: var(--color-ink);
+  background-color: var(--color-paper);
+  background-image:
+    radial-gradient(90% 60% at 85% -10%, rgba(185, 28, 28, 0.06) 0%, transparent 60%),
+    radial-gradient(70% 50% at -10% 40%, rgba(185, 28, 28, 0.04) 0%, transparent 55%);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: clip;
+  overflow-y: auto;
+}
+
+.dark body {
+  background-image:
+    radial-gradient(90% 60% at 85% -10%, rgba(248, 113, 113, 0.09) 0%, transparent 60%),
+    radial-gradient(70% 50% at -10% 40%, rgba(248, 113, 113, 0.06) 0%, transparent 55%);
+}
+
+/* ─── Film grain (subtle, GPU-light) ────────────────────────────── */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  pointer-events: none;
+  opacity: 0.045;
+  mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+}
+
+.dark body::before {
+  opacity: 0.06;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before {
+    animation: none;
+  }
+}
+
+/* ─── Lenis smooth scroll ─────────────────────────────────────── */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.scroll-native {
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+/* ─── Mobile bottom nav spacer ─────────────────────────────────── */
+@media (max-width: 767px) {
+  body {
+    padding-bottom: 5.5rem;
+  }
+}
+
+/* ─── Typography ─────────────────────────────────────────────── */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-display) !important;
+  font-style: normal;
+  letter-spacing: -0.025em;
+  font-weight: 600;
+}
+
+.font-display,
+.font-display-alt {
+  font-family: var(--font-display) !important;
+}
+
+.title {
+  font-family: var(--font-body-ui) !important;
+}
+
+/* ─── Universal scrollbar ──────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-ink-3);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-ink-2);
+}
+
+/* ─── Theme transitions ───────────────────────────────────────── */
+html,
+body,
+nav,
+header,
+footer,
+main,
+section,
+article,
+aside,
+div:not([class*="skeleton"]),
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+a,
+button,
+label,
+input,
+textarea,
+select,
+table,
+tr,
+td,
+th,
+blockquote,
+figure,
+figcaption {
+  transition:
+    background-color var(--dur-base) var(--ease-out),
+    color var(--dur-base) var(--ease-out),
+    border-color var(--dur-base) var(--ease-out);
+}
+
+img,
+svg,
+hr,
+li,
+ul,
+ol,
+span,
+[class*="skeleton-"] {
+  transition: none !important;
+}
+
+/* ─── Utility ─────────────────────────────────────────────────── */
+.overflow-wrap-anywhere {
+  overflow-wrap: anywhere;
+}
+
+/* ─── Selection ───────────────────────────────────────────────── */
+::selection {
+  background: var(--color-accent);
+  color: white;
+}
+
+/* ─── List reset ──────────────────────────────────────────────── */
+li {
+  list-style: none;
+  position: relative;
+}
+
+td,
+th {
+  @apply py-2 px-3;
+}
+
+/* ─── Separator ───────────────────────────────────────────────── */
+.separator {
+  width: 2.5rem;
+  height: 2px;
+  background: var(--color-accent);
+  border-radius: var(--radius-full);
+}
+
+.separator-long {
+  width: 5rem;
+  height: 2px;
+  background: var(--color-ink-3);
+  border-radius: var(--radius-full);
+  margin-bottom: var(--space-2);
+}
+
+/* ─── Focus visible ───────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* ─── Poster-specific utilities ───────────────────────────────── */
+.poster-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 16px;
+  background: var(--color-accent-ghost);
+  color: var(--color-accent);
+  font-family: var(--font-body-ui);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  border-radius: var(--radius-pill);
+  border: 1px solid transparent;
+}
+
+/* =============================================
+   Ember amplification — bold color washes (no token changes)
+   ============================================= */
+
+/* Accent headline: large text with ember gradient fill */
+.ember-headline {
+  background: linear-gradient(
+    100deg,
+    var(--color-accent) 0%,
+    var(--color-accent-hover) 55%,
+    #f87171 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Accent keyword inside a headline/bio (strong highlight, not subtle) */
+.ember-word {
+  color: var(--color-accent);
+}
+
+.dark .ember-word {
+  color: var(--color-accent-dark);
+}
+
+/* Tinted stat tiles */
+.ember-tile {
+  background:
+    linear-gradient(160deg, rgba(185, 28, 28, 0.12) 0%, rgba(185, 28, 28, 0.04) 70%),
+    var(--color-surface);
+  border: 1px solid rgba(185, 28, 28, 0.22);
+}
+
+.dark .ember-tile {
+  background:
+    linear-gradient(160deg, rgba(248, 113, 113, 0.14) 0%, rgba(248, 113, 113, 0.05) 70%),
+    var(--color-surface-dark);
+  border: 1px solid rgba(248, 113, 113, 0.28);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ember-float {
+    animation: none;
+  }
+}
+
+/* Soft floating glow orb (decorative) */
+.ember-orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(60px);
+  pointer-events: none;
+}
+
+.ember-orb-a {
+  background: rgba(185, 28, 28, 0.22);
+}
+
+.ember-orb-b {
+  background: rgba(185, 28, 28, 0.16);
+}
+
+.dark .ember-orb-a {
+  background: rgba(248, 113, 113, 0.26);
+}
+
+.dark .ember-orb-b {
+  background: rgba(248, 113, 113, 0.18);
+}
+
+/* =============================================
+   Skeleton / Shimmer loader
+   ============================================= */
+@layer skeleton {
+  .skeleton-shimmer {
+    position: relative;
+    overflow: hidden;
+    background: var(--color-paper-2);
+    border-radius: var(--radius-md);
+    will-change: transform;
+  }
+
+  .dark .skeleton-shimmer {
+    background: var(--color-paper-2-dark);
+  }
+
+  .skeleton-shimmer::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.3) 50%,
+      transparent 100%
+    );
+    animation: skeleton-shimmer 1.8s ease-in-out infinite;
+  }
+
+  .dark .skeleton-shimmer::after {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.05) 50%,
+      transparent 100%
+    );
+  }
+
+  @keyframes skeleton-shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  .skeleton-pulse {
+    animation: skeleton-pulse 2s ease-in-out infinite;
+    background: var(--color-paper-2);
+    border-radius: var(--radius-md);
+  }
+
+  .dark .skeleton-pulse {
+    background: var(--color-paper-2-dark);
+  }
+
+  @keyframes skeleton-pulse {
+    0%,
+    100% {
+      opacity: 0.5;
+    }
+    50% {
+      opacity: 0.25;
+    }
+  }
+
+  .skeleton-circle {
+    border-radius: 50%;
+  }
+}

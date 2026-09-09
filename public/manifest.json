@@ -1,0 +1,16 @@
+{
+  "name": "Taim Baklouti — Portfolio",
+  "short_name": "Taim Portfolio",
+  "description": "Taim Baklouti — High School Senior, AI Education Builder, and National Basketball Player. Creator of EduTounes.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#dc2626",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

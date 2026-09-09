@@ -1,0 +1,191 @@
+{
+  "Projects": [
+    {
+      "show": true,
+      "title": "EduTounes",
+      "desc": [
+        "An open-source, local-first study app that turns any lecture, PDF, or video into study notes, flashcards, quizzes, and a study chat — free, and private by default. Point it at a document, a website, a YouTube link, or an audio file and it generates clean notes (with math), spaced-repetition flashcards, quizzes, and a chat that knows your material.",
+        "Born from my own struggle with learning difficulties, EduTounes was designed to democratize access to quality educational support in Tunisia. The project won 2nd place at the National AI SHIFT 2025 Hackathon, and the prize money was reinvested into learning backend development to take the platform from prototype to a fully functional desktop application.",
+        "Two ways to run the AI: fully local (Ollama, no key, no cloud, no cost — auto-downloads a ~2GB model) or bring your own key (OpenAI/Anthropic) for top-tier quality. Notes and generated content live only on your machine. Tech: React 19, Vite, Tailwind, Electron shell, Ollama, KaTeX, FSRS spaced repetition. No backend, no telemetry, no account."
+      ],
+      "year": "2025",
+      "preview": "https://github.com/Blueturboguy07/EduTounes/releases/latest",
+      "code": "https://github.com/Blueturboguy07/EduTounes",
+      "thumbnail": "/image/projects/ai/edutounes/edutounes-thumbnail.png",
+      "images": [
+        "/image/projects/ai/edutounes/edutounes1.png",
+        "/image/projects/ai/edutounes/edutounes2.png",
+        "/image/projects/ai/edutounes/edutounes3.png"
+      ],
+      "tech": [
+        "React 19",
+        "Vite",
+        "Tailwind CSS",
+        "Electron",
+        "Ollama (local AI)",
+        "OpenAI / Anthropic (cloud)",
+        "KaTeX",
+        "FSRS Spaced Repetition",
+        "TypeScript"
+      ],
+      "slug": "edutounes",
+      "category": [1, 2]
+    },
+    {
+      "show": true,
+      "title": "Calendar",
+      "desc": [
+        "An interactive calendar application with month and year views, drag-and-drop event management, dark/light themes, and smooth transition animations — a full-featured desktop-style app built entirely with vanilla JavaScript.",
+        "The technical challenge was designing a multi-view system (month/year) with fluid grid animations while integrating the native HTML5 Drag & Drop API to move events between dates, with centralized state and dynamic badges limited to +N.",
+        "Highlights include native drag & drop with visual feedback (drag-over effect, wobble animation on impact, real-time UI updates), a dual view with slide/fade transitions and auto-scroll to the current month, plus professional accessibility: role=\"grid\", full keyboard navigation (Tab, Enter, Escape), and dark/light theme support via prefers-color-scheme."
+      ],
+      "year": "2026",
+      "preview": "",
+      "code": "",
+      "thumbnail": "/image/projects/web/calendar/calendar-thumbnail.png",
+      "images": [
+        "/image/projects/web/calendar/calendar1.png",
+        "/image/projects/web/calendar/calendar2.png"
+      ],
+      "tech": [
+        "JavaScript Vanilla (IIFE)",
+        "HTML5",
+        "CSS3",
+        "Drag & Drop API",
+        "localStorage"
+      ],
+      "slug": "calendar",
+      "category": [1]
+    },
+    {
+      "show": true,
+      "title": "Expense Tracker",
+      "desc": [
+        "A complete personal finance management application with dashboard, interactive charts, Tunisian tax calculations (progressive IRPP, CNSS, CSS), category budgets, recurring transactions, CSV export, and save/restore — fully localized in French and English.",
+        "The technical challenge was building an app equivalent to a professional financial web app: full internationalization (~130 keys per language), tax calculations across 8 progressive tax brackets, interactive charting with Chart.js, and robust persistence with validation — all in a single coherent JavaScript file.",
+        "Highlights include an advanced i18n system with dynamic parameters and real-time updates without reloading (charts, tables, budgets, settings), complete Tunisian tax calculations (IRPP from 0% to 40%, CNSS 9.68%, CSS 1%), and smart analytics: doughnut charts with central labels, 12-month trend curves, budget-overrun alerts, and savings projections over 3/6/12 months based on real averages."
+      ],
+      "year": "2026",
+      "preview": "",
+      "code": "",
+      "thumbnail": "/image/projects/web/expense-tracker/expense-tracker-thumbnail.png",
+      "images": [
+        "/image/projects/web/expense-tracker/expense-tracker1.png",
+        "/image/projects/web/expense-tracker/expense-tracker2.png"
+      ],
+      "tech": [
+        "Chart.js",
+        "JavaScript Vanilla",
+        "localStorage",
+        "Intl.NumberFormat",
+        "Lucide Icons",
+        "HTML5",
+        "CSS3"
+      ],
+      "slug": "expense-tracker",
+      "category": [1]
+    },
+    {
+      "show": true,
+      "title": "ImageVault",
+      "desc": [
+        "An infinite image gallery connected to the Unsplash API, with keyword search, multilingual random suggestions, parallax scrolling, and an immersive lightbox — all in a responsive, clean design without any framework.",
+        "The technical challenge was implementing a fluid masonry layout with optimized infinite scrolling (IntersectionObserver), while maintaining staggered entry animations, a smooth 60 FPS parallax effect, and a credible skeleton loader in pure CSS and JavaScript.",
+        "Highlights include optimized scrolling performance (IntersectionObserver with 400px rootMargin for anticipatory loading, parallax limited to visible cards via Set + requestAnimationFrame, shimmer skeleton loader), instant FR/EN internationalization with fade transitions, and an immersive lightbox with image download via fetch + Blob + URL.createObjectURL."
+      ],
+      "year": "2026",
+      "preview": "",
+      "code": "",
+      "thumbnail": "/image/projects/web/imagevault/imagevault-thumbnail.png",
+      "images": [
+        "/image/projects/web/imagevault/imagevault1.png",
+        "/image/projects/web/imagevault/imagevault2.png"
+      ],
+      "tech": [
+        "Unsplash API",
+        "CSS Masonry (column-count)",
+        "IntersectionObserver",
+        "JavaScript Vanilla",
+        "HTML5",
+        "CSS3"
+      ],
+      "slug": "imagevault",
+      "category": [1]
+    },
+    {
+      "show": true,
+      "title": "Love Letter",
+      "desc": [
+        "An interactive animated Valentine's card where the user must aim and shoot Cupid's arrow at a floating envelope to reveal a pixelated love letter, all set in a retro-chic universe with floating confetti. Created as part of a 7-day, 7-projects challenge.",
+        "The technical challenge was simulating realistic arc physics in pure JavaScript — parabolic trajectory with gravity, progressive velocity based on bow draw strength, and adaptive hitbox detection that widens after each missed shot to keep the experience enjoyable.",
+        "Highlights include procedural bow physics (progressive draw, bow recoil, heart-shaped particle trail, auto-adjusting hitbox), a multi-layer particle system (three depth planes with parallax, heart burst on impact, confetti rain with gravity physics), and full keyboard, mouse, and touch support with prefers-reduced-motion fallback."
+      ],
+      "year": "2026",
+      "preview": "",
+      "code": "",
+      "thumbnail": "/image/projects/other/love-letter/love-letter-thumbnail.png",
+      "images": [
+        "/image/projects/other/love-letter/love-letter1.png"
+      ],
+      "tech": [
+        "HTML5",
+        "CSS3",
+        "JavaScript Vanilla",
+        "Canvas API"
+      ],
+      "slug": "love-letter",
+      "category": [9]
+    },
+    {
+      "show": true,
+      "title": "Luv Song",
+      "desc": [
+        "An interactive 3D music visualization experience where a crystal heart reacts in real time to audio frequencies, with particles, circular waves, and a camera choreography that immerses the user in an atmospheric journey. Day 7 finale of the 7-day challenge.",
+        "The technical challenge was synchronizing real-time audio spectrum analysis (FFT) with GLSL particle systems, a procedural heartbeat, and bloom post-processing, all orchestrated in a single render loop without performance degradation.",
+        "Highlights include custom GLSL shaders for heart-shaped particles with per-instance color and size variation (InstancedBufferGeometry), real-time audio analysis with beat detection and bass-mapped heartbeat pulse (plus a cyclic 6-second bloom), and a narrative camera choreography with mouse parallax, drag rotation, and scroll zoom."
+      ],
+      "year": "2026",
+      "preview": "",
+      "code": "",
+      "thumbnail": "/image/projects/other/luv-song/luv-song-thumbnail.png",
+      "images": [
+        "/image/projects/other/luv-song/luv-song1.png"
+      ],
+      "tech": [
+        "Three.js (WebGL)",
+        "Web Audio API",
+        "GLSL Shaders",
+        "GSAP",
+        "GLTFLoader",
+        "Procedural 3D"
+      ],
+      "slug": "luv-song",
+      "category": [9]
+    },
+    {
+      "show": true,
+      "title": "Weather App",
+      "desc": [
+        "A complete weather application with city search, automatic geolocation, live suggestions, °C/°F toggle, automatic day/night theme based on the time, and smooth animated counters for every weather metric. My first fully independent API integration project.",
+        "The technical challenge was orchestrating four parallel API calls (current weather, 5-day forecast, geocoding, browser geolocation) with animated UI states (welcome → loading → weather/error) and aggregating 3-hour forecast data into daily summaries.",
+        "Highlights include a state-based UI system with dedicated entry/exit animations (slide-up, scale, shake, fade) and staggered children, animated counters using requestAnimationFrame with cubic easing and cascade effects, and smart geolocation with progressive fallback (geolocation → saved city → home screen), debounced autocomplete (250ms), and persistent favorites."
+      ],
+      "year": "2026",
+      "preview": "",
+      "code": "",
+      "thumbnail": "/image/projects/web/weather-app/weather-app-thumbnail.png",
+      "images": [
+        "/image/projects/web/weather-app/weather-app1.png"
+      ],
+      "tech": [
+        "OpenWeatherMap API",
+        "Geolocation API",
+        "JavaScript Vanilla",
+        "HTML5",
+        "CSS3"
+      ],
+      "slug": "weather-app",
+      "category": [1]
+    }
+  ]
+}

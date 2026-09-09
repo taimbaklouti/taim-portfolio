@@ -1,0 +1,4076 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EduTounes — Détails du Projet</title>
+  <style>
+    /* ─── Reset ─── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    /* ─── Theme Variables ─── */
+    :root[data-theme="dark"] {
+      --bg: #0a0a0a;
+      --bg-sidebar: #0f0f0f;
+      --bg-content: #111111;
+      --bg-card: #161616;
+      --bg-card-hover: #1c1c1c;
+      --border: #1e1e1e;
+      --border-active: #2a2a2a;
+      --text: #e4e4e7;
+      --text-dim: #71717a;
+      --text-muted: #52525b;
+      --accent: #06b6d4;
+      --accent-hover: #0d9488;
+      --accent-soft: rgba(6, 182, 212, 0.08);
+      --accent-border: rgba(6, 182, 212, 0.2);
+      --code-bg: #18181b;
+      --code-border: #27272a;
+      --blockquote-bg: #0c1a20;
+      --table-header: #18181b;
+      --scrollbar-thumb: #27272a;
+      --scrollbar-track: transparent;
+    }
+    :root[data-theme="light"] {
+      --bg: #ffffff;
+      --bg-sidebar: #f8f8f8;
+      --bg-content: #fafafa;
+      --bg-card: #ffffff;
+      --bg-card-hover: #f4f4f5;
+      --border: #e4e4e7;
+      --border-active: #d4d4d8;
+      --text: #18181b;
+      --text-dim: #52525b;
+      --text-muted: #a1a1aa;
+      --accent: #0891b2;
+      --accent-hover: #0e7490;
+      --accent-soft: rgba(8, 145, 178, 0.06);
+      --accent-border: rgba(8, 145, 178, 0.2);
+      --code-bg: #f4f4f5;
+      --code-border: #e4e4e7;
+      --blockquote-bg: #ecfeff;
+      --table-header: #f4f4f5;
+      --scrollbar-thumb: #d4d4d8;
+      --scrollbar-track: transparent;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* ─── Scrollbar ─── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--scrollbar-track); }
+    ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 3px; }
+
+    /* ─── Sidebar ─── */
+    .sidebar {
+      width: 300px;
+      min-width: 300px;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      background: var(--bg-sidebar);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      z-index: 10;
+    }
+
+    .sidebar-header {
+      padding: 20px 20px 16px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .sidebar-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+    }
+    .sidebar-title a {
+      color: var(--text);
+      text-decoration: none;
+    }
+    .sidebar-title a:hover { color: var(--accent); }
+
+    .sidebar-controls {
+      display: flex;
+      gap: 8px;
+    }
+
+    /* ─── Toggle Buttons ─── */
+    .toggle-group {
+      display: flex;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .toggle-btn {
+      padding: 6px 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border: none;
+      background: transparent;
+      color: var(--text-dim);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .toggle-btn.active {
+      background: var(--accent);
+      color: #fff;
+    }
+    .toggle-btn:hover:not(.active) {
+      color: var(--text);
+      background: var(--bg-card-hover);
+    }
+
+    /* ─── Sidebar Nav ─── */
+    .sidebar-nav {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px 0;
+    }
+
+    .nav-group { margin-bottom: 8px; }
+    .nav-group-title {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      padding: 8px 20px 4px;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 20px;
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      border-left: 2px solid transparent;
+    }
+    .nav-item:hover {
+      color: var(--text);
+      background: var(--accent-soft);
+    }
+    .nav-item.active {
+      color: var(--accent);
+      background: var(--accent-soft);
+      border-left-color: var(--accent);
+      font-weight: 600;
+    }
+    .nav-item-icon {
+      font-size: 0.9rem;
+      width: 20px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .nav-item-tag {
+      font-size: 0.6rem;
+      font-weight: 700;
+      padding: 1px 5px;
+      border-radius: 4px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      margin-left: auto;
+    }
+
+    /* ─── Main Content ─── */
+    .main {
+      flex: 1;
+      min-width: 0;
+      padding: 40px 60px 80px;
+      max-width: 900px;
+    }
+
+    .content-header {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .content-header h1 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 8px;
+    }
+    .content-meta {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .content-meta span {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* ─── Markdown Content ─── */
+    .md-content h1 { font-size: 1.5rem; font-weight: 800; margin: 32px 0 12px; letter-spacing: -0.02em; }
+    .md-content h2 { font-size: 1.25rem; font-weight: 700; margin: 28px 0 10px; letter-spacing: -0.02em; }
+    .md-content h3 { font-size: 1.05rem; font-weight: 700; margin: 24px 0 8px; }
+
+    .md-content p { margin: 0 0 12px; }
+    .md-content strong { font-weight: 700; }
+    .md-content em { font-style: italic; }
+
+    .md-content a {
+      color: var(--accent);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+    .md-content a:hover { color: var(--accent-hover); }
+
+    .md-content ul, .md-content ol {
+      margin: 0 0 12px 20px;
+    }
+    .md-content li { margin-bottom: 4px; }
+
+    .md-content blockquote {
+      background: var(--blockquote-bg);
+      border-left: 3px solid var(--accent);
+      padding: 12px 16px;
+      margin: 16px 0;
+      border-radius: 0 8px 8px 0;
+      font-size: 0.88rem;
+      color: var(--text-dim);
+      font-style: italic;
+    }
+
+    .md-content pre {
+      background: var(--code-bg);
+      border: 1px solid var(--code-border);
+      border-radius: 8px;
+      padding: 16px;
+      margin: 14px 0;
+      overflow-x: auto;
+      font-size: 0.8rem;
+      line-height: 1.6;
+    }
+    .md-content code {
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: 0.85em;
+    }
+    .md-content pre code {
+      background: none;
+      padding: 0;
+      border-radius: 0;
+    }
+    .md-content :not(pre) > code {
+      background: var(--code-bg);
+      border: 1px solid var(--code-border);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.85em;
+    }
+
+    .md-content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0;
+      font-size: 0.82rem;
+    }
+    .md-content th {
+      background: var(--table-header);
+      font-weight: 700;
+      text-align: left;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+    }
+    .md-content td {
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+    }
+    .md-content tr:hover td { background: var(--accent-soft); }
+
+    .md-content hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 28px 0;
+    }
+
+    .md-content img {
+      max-width: 100%;
+      border-radius: 8px;
+    }
+
+    /* ─── Back to top ─── */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 40px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-decoration: none;
+      color: var(--accent);
+      border: 1px solid var(--accent-border);
+      transition: all 0.15s ease;
+    }
+    .back-link:hover { background: var(--accent-soft); }
+
+    /* ─── Mobile ─── */
+    .mobile-menu-btn {
+      display: none;
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      z-index: 20;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text);
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+
+    @media (max-width: 900px) {
+      .sidebar {
+        position: fixed;
+        left: -300px;
+        transition: left 0.25s ease;
+        box-shadow: none;
+      }
+      .sidebar.open {
+        left: 0;
+        box-shadow: 20px 0 60px rgba(0,0,0,0.5);
+      }
+      .mobile-menu-btn { display: block; }
+      .main { padding: 60px 24px 60px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── Mobile menu ─── -->
+  <button class="mobile-menu-btn" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰ Menu</button>
+
+  <!-- ═══════════ SIDEBAR ═══════════ -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-title"><a href="index.html">← Portfolio</a></div>
+
+      <!-- Language Toggle -->
+      <div class="sidebar-controls">
+        <div class="toggle-group" id="langToggle">
+          <button class="toggle-btn active" data-lang="fr" onclick="setLang('fr')">🇫🇷 FR</button>
+          <button class="toggle-btn" data-lang="en" onclick="setLang('en')">🇬🇧 EN</button>
+        </div>
+        <!-- Theme Toggle -->
+        <div class="toggle-group" id="themeToggle">
+          <button class="toggle-btn active" data-theme="dark" onclick="setTheme('dark')">🌙</button>
+          <button class="toggle-btn" data-theme="light" onclick="setTheme('light')">☀️</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sidebar-nav" id="sidebarNav"></nav>
+  </aside>
+
+  <!-- ═══════════ MAIN CONTENT ═══════════ -->
+  <main class="main">
+    <div id="contentArea"></div>
+  </main>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════
+// DATA — All 12 .md files
+// ═══════════════════════════════════════════════════════════════════════
+const articles = [
+  // ─── V1 ───
+  {
+    id: "v1-arch-fr",
+    version: "V1",
+    category: "Architecture",
+    lang: "fr",
+    icon: "🧱",
+    title: "Architecture Technique",
+    content: `# 📍 LinkedIn Post 1 — Architecture Technique
+
+> *À accompagner d'une capture d'écran de l'arborescence du projet ou du diagramme d'architecture*
+
+---
+
+**💻 EduTounes — Plongée dans l'architecture d'une app de prise de notes augmentée par l'IA**
+
+Je développe actuellement **EduTounes**, une application open-source de prise de notes avec génération automatique de flashcards, quiz, podcasts, et chat contextuel — le tout 100% local ou via vos propres clés API.
+
+Voici les décisions architecturales qui structurent le projet :
+
+---
+
+**🧱 Stack**
+
+React 18 + TypeScript — Tailwind CSS v4 — Vite — Tauri (desktop natif Rust) / Electron (fallback). Le typage strict TypeScript couvre l'intégralité du modèle de domaine (Note, Block, Flashcard, Quiz, Podcast, Job, Folder).
+
+\`\`\`
+src/
+├── App.tsx              # Routage global + Suspense + FloatingPomodoro
+├── components/          # 17 composants UI (Editor, Flashcards, Quiz, Pomodoro…)
+├── pages/               # Dashboard, NoteView, Settings, Onboarding
+├── lib/
+│   ├── app.tsx          # Contexte global (Repo, Engine, Prefs)
+│   ├── theme.ts         # Moteur de thème (4 palettes, GSAP overlay)
+│   ├── types.ts         # Modèle de domaine (Note, Block, Flashcard, Quiz…)
+│   ├── history.ts       # Pile undo/redo (snapshot-based, profondeur 50)
+│   ├── markdown.ts      # Parseur markdown ↔ blocks (round-trip)
+│   ├── engine/          # 7 fournisseurs IA, router, resilient
+│   ├── db/              # IndexedDB + Memory fallback
+│   ├── generation/      # Pipelines IA (notes, flashcards, quiz, podcast)
+│   └── study/           # FSRS-5, suivi de maîtrise
+└── styles/
+    └── theme.css        # ~2000 lignes de design system
+\`\`\`
+
+---
+
+**🗄️ Persistance 3 couches**
+
+- **IndexedDB** via une couche \`Repo\` abstraite (CRUD pour notes, blocs, flashcards, quiz, podcasts)
+- **localStorage** : préférences utilisateur, thème (4 palettes), profils Pomodoro, clés API chiffrées
+- **Memory fallback** : si IndexedDB est indisponible, un \`Map\` en mémoire prend le relais — jamais de perte de données
+
+\`\`\`typescript
+// app.tsx — initialisation
+const repo = await idbStore().catch(() => memoryStore());
+// Le fallback est silencieux et transparent pour l'utilisateur
+\`\`\`
+
+---
+
+**🔄 Synchronisation multi-onglets**
+
+Chaque modification de préférence ou de palette est instantanément propagée via \`BroadcastChannel\` :
+
+\`\`\`typescript
+const bc = new BroadcastChannel("edutounes-prefs");
+bc.onmessage = () => reloadEngine();
+\`\`\`
+
+Les composants réagissent aux événements DOM customs :
+- \`edutounes:palette-change\` → mise à jour des couleurs
+- \`edutounes:folder-select\` → filtre des notes dans le Dashboard
+- \`edutounes:pomodoro-toast\` → notification de fin de focus
+- \`edutounes:sidebar-search\` → synchronisation de la recherche
+
+---
+
+**🎨 Moteur de thème maison**
+
+Le système repose sur 2 attributs HTML + 1 attribut contextuel :
+- \`data-theme\` → light | dark
+- \`data-color-accent\` → cyan | multicolor | monochrome | custom
+- \`data-current-view\` → colore la palette Multicolor par module
+
+4 palettes complètes :
+| Palette | Principe | Couleurs |
+|---------|----------|----------|
+| **Cyan** | Défaut pro — #06b6d4 partout | Teal monocorde |
+| **Multicolor** | Ambre, Teal, Cyan, Émeraude selon la vue | Modulaire |
+| **Monochrome** | Zinc greys — minimal radical | #18181b → #fafafa |
+| **Custom** | Color picker + calcul auto des variants | HSL dynamique |
+
+La transition entre palettes utilise GSAP avec un overlay flash :
+
+\`\`\`typescript
+function animatePaletteFlash(onVisualChange: () => void) {
+  const overlay = document.createElement("div");
+  overlay.style.cssText = "position:fixed;inset:0;z-index:9999;pointer-events:none;";
+  document.body.appendChild(overlay);
+  // Timeline : flash blanc → changement visuel → fade out
+  gsap.timeline()
+    .to(overlay, { backgroundColor: "rgba(255,255,255,0.06)", duration: 0.1 })
+    .call(onVisualChange)
+    .to(overlay, { backgroundColor: "rgba(255,255,255,0)", duration: 0.2 });
+}
+\`\`\`
+
+---
+
+**📝 Éditeur à blocs avec round-trip markdown**
+
+Le contenu est modélisé en \`Block[]\` (13 types : heading, bullet, code, math KaTeX, table GFM, callout GitHub-style, todo, divider…). Un parseur bidirectionnel assure la conversion markdown ↔ blocks sans perte :
+
+\`\`\`typescript
+// Round-trip garanti
+const blocks = markdownToBlocks(markdownSource);    // parse
+const markdown = blocksToMarkdown(blocks);            // sérialise
+\`\`\`
+
+Sauvegarde automatique avec debounce 400ms :
+\`\`\`typescript
+function persist(patch: Partial<Note>) {
+  const next = { ...note, ...patch, updatedAt: now() };
+  historyRef.current.push(next);           // snapshot dans la pile undo
+  setSaving(true);
+  setTimeout(() => {
+    repo?.putNote(next);                    // écriture IndexedDB
+    setSaving(false);
+  }, 400);
+}
+\`\`\`
+
+La pile undo/redo \`History<T>\` stocke 50 snapshots via \`structuredClone\`.
+
+---
+
+**🧠 Moteur IA resilient**
+
+Architecture qui supporte **7 fournisseurs** avec détection automatique :
+
+\`\`\`typescript
+// engine/router.ts
+const engines = {
+  openai, anthropic, groq, openrouter, perplexity, xai, deepseek, nvidia
+};
+\`\`\`
+
+Chaque appel API est wrapped dans un système resilient avec retry exponentiel. Le mode local utilise Ollama + Whisper + Kokoro pour le TTS — zéro dépendance cloud.
+
+Détection du provider par préfixe de clé API :
+\`\`\`typescript
+function detectProvider(key: string): Provider | null {
+  if (key.startsWith("sk-ant")) return "anthropic";
+  if (key.startsWith("gsk_")) return "groq";
+  if (key.startsWith("sk-")) return "openai"; // ou deepseek — ambiguïté gérée
+  // …
+}
+\`\`\`
+
+---
+
+**📐 Leçons apprises en chemin**
+
+✅ **Ce qui marche bien :**
+- Le système de variables CSS dynamiques est flexible et performant
+- La virtualisation du Dashboard (\`@tanstack/react-virtual\`) gère 1000+ notes sans ralentissement
+- Le parseur markdown couvre tous les cas (math KaTeX, tables, callouts, listes imbriquées)
+- L'architecture du moteur IA resilient encaisse les erreurs API sans planter l'UI
+
+⚠️ **Ce que je referais différemment :**
+- **7 implémentations manuelles de dropdowns** (via \`createPortal\` + \`getBoundingClientRect\`) — une abstraction \`DropdownPortal\` commune est la priorité numéro 1
+- Le composant **Pomodoro** (380 lignes, 8 \`useState\`, 8 \`useEffect\`) doit être éclaté en sous-composants
+- \`structuredClone\` sur des notes de 200 blocs 50 fois de suite = lag potentiel. Passer à un diff-based approach
+- La fonction utilitaire \`relTime()\` est dupliquée textuellement entre Dashboard et NoteView
+
+---
+
+**🎯 Prochaines étapes techniques :**
+1. Abstraire les 7 dropdowns en un composant \`DropdownPortal\` réutilisable
+2. Éclater le Pomodoro en sous-composants (Timer, SessionConfig, Stats)
+3. Remplacer \`structuredClone\` par un système de patches optimisé
+4. Ajouter des raccourcis clavier dans Flashcards (1-4 pour les ratings) et Quiz (A-D)
+
+#React #TypeScript #Architecture #OpenSource #FullStack #WebDev #TAURI #CSSVariables #DesignTokens #FSRS
+
+---
+
+*Si ce genre de réflexion architecturale vous intéresse, suivez-moi pour la suite — je publie régulièrement sur le développement de ce projet.*`
+  },
+
+  {
+    id: "v1-arch-en",
+    version: "V1",
+    category: "Architecture",
+    lang: "en",
+    icon: "🧱",
+    title: "Technical Architecture",
+    content: `# 📍 LinkedIn Post 1 — Technical Architecture (English)
+
+> *Pair with a screenshot of the project tree or architecture diagram*
+
+---
+
+**💻 EduTounes — Deep dive into the architecture of an AI-powered note-taking app**
+
+I'm currently building **EduTounes**, an open-source note-taking app with automatic generation of flashcards, quizzes, podcasts, and contextual chat — all running 100% locally or using your own API keys.
+
+Here are the architectural decisions shaping the project:
+
+---
+
+**🧱 Stack**
+
+React 18 + TypeScript — Tailwind CSS v4 — Vite — Tauri (native Rust desktop) / Electron (fallback). Strict TypeScript typing covers the entire domain model (Note, Block, Flashcard, Quiz, Podcast, Job, Folder).
+
+\`\`\`
+src/
+├── App.tsx              # Global routing + Suspense + FloatingPomodoro
+├── components/          # 17 UI components (Editor, Flashcards, Quiz, Pomodoro…)
+├── pages/               # Dashboard, NoteView, Settings, Onboarding
+├── lib/
+│   ├── app.tsx          # Global context (Repo, Engine, Prefs)
+│   ├── theme.ts         # Theme engine (4 palettes, GSAP overlay)
+│   ├── types.ts         # Domain model (Note, Block, Flashcard, Quiz…)
+│   ├── history.ts       # Undo/redo stack (snapshot-based, depth 50)
+│   ├── markdown.ts      # Markdown ↔ blocks parser (round-trip)
+│   ├── engine/          # 7 AI providers, router, resilient layer
+│   ├── db/              # IndexedDB + Memory fallback
+│   ├── generation/      # AI pipelines (notes, flashcards, quiz, podcast)
+│   └── study/           # FSRS-5, mastery tracking
+└── styles/
+    └── theme.css        # ~2000 lines of design system
+\`\`\`
+
+---
+
+**🗄️ 3-Layer Persistence**
+
+- **IndexedDB** via a \`Repo\` abstraction layer (CRUD for notes, blocks, flashcards, quizzes, podcasts)
+- **localStorage**: user preferences, themes (4 palettes), Pomodoro profiles, encrypted API keys
+- **Memory fallback**: if IndexedDB is unavailable, an in-memory \`Map\` takes over — zero data loss
+
+\`\`\`typescript
+// app.tsx — initialization
+const repo = await idbStore().catch(() => memoryStore());
+// The fallback is silent and transparent to the user
+\`\`\`
+
+---
+
+**🔄 Cross-tab synchronization**
+
+Every preference or palette change is instantly propagated via \`BroadcastChannel\`:
+
+\`\`\`typescript
+const bc = new BroadcastChannel("edutounes-prefs");
+bc.onmessage = () => reloadEngine();
+\`\`\`
+
+Components react to custom DOM events:
+- \`edutounes:palette-change\` → color update
+- \`edutounes:folder-select\` → note filtering in Dashboard
+- \`edutounes:pomodoro-toast\` → focus completion notification
+- \`edutounes:sidebar-search\` → search synchronization
+
+---
+
+**🎨 Custom Theme Engine**
+
+The system relies on 2 HTML attributes + 1 contextual attribute:
+- \`data-theme\` → light | dark
+- \`data-color-accent\` → cyan | multicolor | monochrome | custom
+- \`data-current-view\` → colors the Multicolor palette per module
+
+4 complete palettes:
+| Palette | Principle | Colors |
+|---------|-----------|--------|
+| **Cyan** | Professional default — #06b6d4 everywhere | Monochrome teal |
+| **Multicolor** | Amber, Teal, Cyan, Emerald per view | Modular |
+| **Monochrome** | Zinc greys — radical minimalism | #18181b → #fafafa |
+| **Custom** | Color picker + auto-calculated variants | Dynamic HSL |
+
+Palette transitions use GSAP with a flash overlay:
+
+\`\`\`typescript
+function animatePaletteFlash(onVisualChange: () => void) {
+  const overlay = document.createElement("div");
+  overlay.style.cssText = "position:fixed;inset:0;z-index:9999;pointer-events:none;";
+  document.body.appendChild(overlay);
+  // Timeline: white flash → visual change → fade out
+  gsap.timeline()
+    .to(overlay, { backgroundColor: "rgba(255,255,255,0.06)", duration: 0.1 })
+    .call(onVisualChange)
+    .to(overlay, { backgroundColor: "rgba(255,255,255,0)", duration: 0.2 });
+}
+\`\`\`
+
+---
+
+**📝 Block Editor with markdown round-trip**
+
+Content is modeled as \`Block[]\` (13 types: heading, bullet, code, KaTeX math, GFM table, GitHub-style callout, todo, divider…). A bidirectional parser ensures lossless markdown ↔ blocks conversion:
+
+\`\`\`typescript
+// Guaranteed round-trip
+const blocks = markdownToBlocks(markdownSource);    // parse
+const markdown = blocksToMarkdown(blocks);            // serialize
+\`\`\`
+
+Auto-save with 400ms debounce:
+\`\`\`typescript
+function persist(patch: Partial<Note>) {
+  const next = { ...note, ...patch, updatedAt: now() };
+  historyRef.current.push(next);           // snapshot into undo stack
+  setSaving(true);
+  setTimeout(() => {
+    repo?.putNote(next);                    // IndexedDB write
+    setSaving(false);
+  }, 400);
+}
+\`\`\`
+
+The \`History<T>\` undo/redo stack stores 50 snapshots via \`structuredClone\`.
+
+---
+
+**🧠 Resilient AI Engine**
+
+Architecture supporting **7 providers** with auto-detection:
+
+\`\`\`typescript
+// engine/router.ts
+const engines = {
+  openai, anthropic, groq, openrouter, perplexity, xai, deepseek, nvidia
+};
+\`\`\`
+
+Each API call is wrapped in a resilient system with exponential backoff retry. Local mode uses Ollama + Whisper + Kokoro for TTS — zero cloud dependency.
+
+Provider detection by API key prefix:
+\`\`\`typescript
+function detectProvider(key: string): Provider | null {
+  if (key.startsWith("sk-ant")) return "anthropic";
+  if (key.startsWith("gsk_")) return "groq";
+  if (key.startsWith("sk-")) return "openai"; // or deepseek — handled ambiguity
+  // …
+}
+\`\`\`
+
+---
+
+**📐 Lessons learned along the way**
+
+✅ **What works well:**
+- The dynamic CSS variable system is flexible and performant
+- Dashboard virtualization (\`@tanstack/react-virtual\`) handles 1000+ notes smoothly
+- The markdown parser covers all edge cases (KaTeX math, tables, callouts, nested lists)
+- The resilient AI engine architecture absorbs API errors without crashing the UI
+
+⚠️ **What I'd do differently:**
+- **7 manual dropdown implementations** (via \`createPortal\` + \`getBoundingClientRect\`) — a shared \`DropdownPortal\` abstraction is priority #1
+- The **Pomodoro component** (380 lines, 8 \`useState\`, 8 \`useEffect\`) needs splitting into sub-components
+- \`structuredClone\` on 200-block notes 50 times in a row = potential lag. Switch to a diff-based approach
+- The \`relTime()\` utility is duplicated verbatim between Dashboard and NoteView
+
+---
+
+**🎯 Next technical steps:**
+1. Abstract the 7 dropdowns into a reusable \`DropdownPortal\` component
+2. Split the Pomodoro into sub-components (Timer, SessionConfig, Stats)
+3. Replace \`structuredClone\` with an optimized patch system
+4. Add keyboard shortcuts to Flashcards (1-4 for ratings) and Quiz (A-D)
+
+#React #TypeScript #Architecture #OpenSource #FullStack #WebDev #TAURI #CSSVariables #DesignTokens #FSRS
+
+---
+
+*If this kind of architectural thinking interests you, follow me for updates — I regularly publish about this project's development.*`
+  },
+
+  {
+    id: "v1-uiux-fr",
+    version: "V1",
+    category: "UI/UX",
+    lang: "fr",
+    icon: "🎨",
+    title: "UI/UX Design",
+    content: `# 📍 LinkedIn Post 2 — UI/UX Design
+
+> *À accompagner d'une capture d'écran du Dashboard ou de la NoteView avec le rail latéral*
+
+---
+
+**🎨 EduTounes — Concevoir une UI qui ne se prend pas pour ce qu'elle n'est pas**
+
+Dans EduTounes, j'ai fait un pari : **aucune bibliothèque UI**. Pas de Radix, pas de shadcn, pas de MUI. 100% des composants sont écrits à la main sur Tailwind CSS v4. Pourquoi ? Parce que chaque dropdown, chaque modale, chaque micro-interaction raconte l'histoire du produit, pas celle d'un design system générique.
+
+Voici les coulisses de cette interface.
+
+---
+
+## 🎯 Le système de palettes — 4 ambiances visuelles
+
+Chaque palette redéfinit **~30 variables CSS** (accents, surfaces, ombres, badges, glassmorphism). L'utilisateur peut basculer à tout moment et la transition est adoucie par un overlay GSAP.
+
+### Cyan (défaut)
+\`\`\`
+--edutounes-accent-primary: #06b6d4;
+--edutounes-accent-hover: #0d9488;
+— Du cyan/teal partout, propre et professionnel
+\`\`\`
+
+### Multicolor (le plus complexe)
+Chaque module a sa propre couleur, pilotée par l'attribut \`data-current-view\` sur \`<html>\` :
+
+\`\`\`css
+/* Le multicolor colore chaque vue différemment */
+:root[data-color-accent="multicolor"][data-current-view="dashboard"] {
+  --edutounes-accent-primary: #f59e0b;  /* Ambre */
+}
+:root[data-color-accent="multicolor"][data-current-view="chat"] {
+  --edutounes-accent-primary: #0d9488;  /* Teal */
+}
+:root[data-color-accent="multicolor"][data-current-view="quiz"] {
+  --edutounes-accent-primary: #10b981;  /* Émeraude */
+}
+\`\`\`
+
+Le logo devient un dégradé Ice Blue → Emerald → Violet. Les badges de source (PDF, YouTube, Audio) prennent les couleurs des modules.
+
+### Monochrome
+Zinc greys du light au dark. Toute l'UI devient monochrome — y compris les icônes de création. Radical, pour qui veut zéro distraction visuelle.
+
+### Custom
+L'utilisateur choisit une couleur via \`<input type="color">\`. Le moteur calcule automatiquement les variants (\`darken()\`, \`lighten()\`), produit les swatches, le gradient, et les applique à toutes les surfaces.
+
+---
+
+## 🚂 Le rail latéral de l'éditeur
+
+48px de large, 5 vues :
+
+\`\`\`
+┌──────┐
+│  🏠  │  ← Retour Dashboard
+│  ─── │
+│  📄  │  ← Editor
+│  💬  │  ← Chat IA
+│  🎤  │  ← Podcast
+│  🗂️  │  ← Flashcards
+│  ✅  │  ← Quiz
+│  ─── │
+│  ●   │  ← Connection status (vert/rouge/ambre/gris)
+│  🎨  │  ← Palette compacte
+│  👤  │  ← Menu utilisateur
+└──────┘
+\`\`\`
+
+Chaque icône change de couleur selon la palette active via \`text-accent-{dashboard|assistant|podcast|flashcard|quiz}\`.
+
+Les tooltips apparaissent au survol avec une transition CSS sur \`translate-X\` :
+
+\`\`\`css
+.tooltip {
+  opacity: 0;
+  transform: translateX(-0.5rem);
+  transition: all 150ms;
+}
+.group:hover .tooltip {
+  opacity: 1;
+  transform: translateX(0);
+}
+\`\`\`
+
+La vue active a une **pastille colorée** positionnée en \`absolute -left-2 top-1/2\` avec la couleur du module.
+
+Zéro librairie de tooltip — juste du CSS de base.
+
+---
+
+## 📋 Le Dashboard virtuel
+
+Liste des notes virtualisée avec \`@tanstack/react-virtual\` :
+
+\`\`\`typescript
+const virtualizer = useVirtualizer({
+  count: virtualRows.length,      // headers + notes
+  estimateSize: (index) => {
+    const row = virtualRows[index];
+    return row.type === "header" ? 40 : 124;
+  },
+  overscan: 8,
+});
+\`\`\`
+
+**Fonctionnalités :**
+- Groupes "Today" / "Earlier" avec séparateurs
+- Cartes avec icônes colorées par type de source, badges, dates relatives
+- Sélection multiple avec support **Shift+click** (sélection de plage)
+- Barre d'actions bulk en \`position: fixed\` avec \`createPortal\` (Move, Duplicate, Copy, Export, Delete)
+- **Clic droit** (onContextMenu) → menu contextuel avec les mêmes actions
+- Commande palette ⌘K avec recherche floue + suggestions d'actions rapides
+- Animation d'entrée des cartes via CSS \`animate-card-stagger\`
+
+Le champ de recherche est un vrai \`role="combobox"\` avec \`aria-expanded\` et navigation clavier (↑↓ pour naviguer, Enter pour sélectionner).
+
+---
+
+## 🃏 Les flashcards en 3D
+
+Une seule animation JavaScript : la transition 3D de la carte. Tout le reste est du CSS :
+
+\`\`\`css
+/* Conteneur de perspective */
+.card-container {
+  perspective: 1000px;
+}
+
+/* Face avant/arrière */
+.card-inner {
+  transform-style: preserve-3d;
+  transition: transform 400ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.card-inner.flipped {
+  transform: rotateY(180deg);
+}
+
+/* Les deux faces */
+.card-front, .card-back {
+  backface-visibility: hidden;
+  position: absolute;
+  inset: 0;
+}
+.card-back {
+  transform: rotateY(180deg);
+}
+\`\`\`
+
+Les 4 boutons de rating (Again / Hard / Good / Easy) n'apparaissent qu'après le retournement. Le design change selon la palette :
+
+\`\`\`css
+/* Palette multicolor : le bouton Easy prend la couleur du module Assistant */
+.pill--easy {
+  background: var(--color-accent-assistant);
+  @apply bg-accent-assistant/10 text-accent-assistant;
+}
+\`\`\`
+
+---
+
+## ⏱️ Le Pomodoro flottant
+
+FAB en bas à droite avec timer circulaire SVG. Le cercle de progression utilise \`stroke-dasharray\` et \`stroke-dashoffset\` :
+
+\`\`\`tsx
+<svg className="size-14 -rotate-90" viewBox="0 0 36 36">
+  <circle cx="18" cy="18" r="15.5"
+    strokeDasharray={\`\${2 * Math.PI * 15.5}\`}
+    strokeDashoffset={\`\${2 * Math.PI * 15.5 * progress}\`}
+    className="transition-all duration-500 ease-linear"
+  />
+</svg>
+\`\`\`
+
+Les phases :
+- **Focus** → fond \`bg-accent-softer/40\`, cercle \`text-accent\`
+- **Break** → fond \`bg-success-soft/40\`, cercle \`text-success-ink\`
+- **Pause** → \`opacity-70 saturate-50\` avec indicateur clignotant "Paused"
+
+Le timer survit au rechargement de la page (persistence localStorage avec timestamp).
+
+---
+
+## 🔔 Le toast de changement de palette
+
+Positionné \`fixed right-6 top-4 z-[9999]\`, avec backdrop blur, animation d'entrée CSS, gradient dynamique :
+
+\`\`\`tsx
+<div className="pointer-events-none fixed right-6 top-4 z-[9999]
+  flex items-center gap-2.5 rounded-xl border border-edge/60
+  bg-card px-4 py-2.5 shadow-lg backdrop-blur-sm animate-toast-in">
+  <span className="size-3.5 rounded-full"
+    style={{ background: gradient }} />
+  <span className="text-sm font-semibold text-ink">{label}</span>
+</div>
+\`\`\`
+
+2.3 secondes de display, puis disparition automatique.
+
+---
+
+## 📱 Responsive & mobile
+
+- Sidebar collapse automatique < 768px avec overlay \`backdrop-blur-sm\`
+- Assistant Panel en bottom-sheet mobile (\`max-h-[80vh]\` avec handle de drag)
+- FAB mobile pour ouvrir l'assistant en bas à droite
+- Barre de navigation adaptative
+
+---
+
+## ♿ Accessibilité implémentée
+
+- \`aria-label\` sur tous les boutons icon-only
+- \`aria-expanded\` + \`aria-haspopup\` sur les dropdowns et menus
+- \`role="menu"\`, \`role="menuitem"\`, \`role="dialog"\`, \`role="tooltip"\`
+- \`aria-live="polite"\` pour les changements de vue dans l'éditeur
+- Focus traps complets dans \`ConfirmModal\` et \`CreateNoteModal\`
+- Gestion clavier : \`Escape\` ferme tous les overlays, \`Tab\` cyclique dans les modales
+- \`prefers-reduced-motion\` via les animations CSS conditionnelles
+
+---
+
+## 💡 Ce que j'aurais fait différemment
+
+**Les 7 dropdowns manuels :**
+- PaletteDropdownPortal (AppShell)
+- UserDropdownPortal (AppShell)
+- CompactPaletteDropdown (NoteView)
+- RailUserDropdown (NoteView)
+- RowMenu (Dashboard)
+- ContextMenu (Dashboard)
+- FolderContextMenu
+
+Chacun réimplémente \`getBoundingClientRect\` + \`useEffect\` scroll/resize + gestion Escape + click-outside. Une abstraction \`DropdownPortal\` commune éliminerait 200+ lignes de code redondant.
+
+**Le \`relTime()\` dupliqué** entre Dashboard et NoteView : 30 lignes identiques dans deux composants différents.
+
+**Le Pomodoro monolithique** (380 lignes) : le timer, les stats, la persistance, les profiles, les raccourcis clavier — tout dans le même fichier.
+
+---
+
+## ✅ Ce dont je suis fier
+
+1. **Le thème Multicolor** qui colore chaque module différemment — c'est un détail qui fait que l'appli a une vraie personnalité
+2. **Les transitions CSS cohérentes** partout — \`animate-tooltip-in\`, \`animate-section-fade-in\`, \`animate-page-in\`, \`animate-card-stagger\`
+3. **L'accessibilité** — chaque composant est pensé pour être utilisable au clavier
+4. **Le \`data-current-view\`** qui propage automatiquement la couleur de la vue courante au CSS, sans JS supplémentaire
+5. **Les animations 3D des flashcards** — zéro librairie, juste du CSS pur
+6. **La barre d'actions bulk** qui utilise \`var(--sidebar-width)\` pour s'adapter dynamiquement au collapse de la sidebar
+7. **Le système de badges palette-aware** — les couleurs des badges (SourceKind) suivent automatiquement la palette active via \`var(--badge-{kind}-ink)\`
+
+---
+
+**🎯 Prochaine étape UI/UX :**
+- Refactorer les 7 dropdowns en \`DropdownPortal\` réutilisable
+- Ajouter les raccourcis clavier Flashcards (1-4) et Quiz (A-D)
+- Supprimer le rebond infini "Click to reveal ↓" sur les flashcards
+- Rendre le FloatingPomodoro conscient du BulkActionBar (conflit z-index)
+
+#UI #UX #DesignSystem #CSS #TailwindCSS #React #Frontend #WebDesign #Accessibilité #AnimationCSS
+
+---
+
+*Vous travaillez sur un projet sans librairie UI ? Des retours d'expérience sur le design system maison ? Commentez ci-dessous — je suis preneur de tout retour.*`
+  },
+
+  {
+    id: "v1-uiux-en",
+    version: "V1",
+    category: "UI/UX",
+    lang: "en",
+    icon: "🎨",
+    title: "UI/UX Design",
+    content: `# 📍 LinkedIn Post 2 — UI/UX Design (English)
+
+> *Pair with a screenshot of the Dashboard or NoteView showing the side rail*
+
+---
+
+**🎨 EduTounes — Designing a UI that doesn't pretend to be something it's not**
+
+In EduTounes, I made a bet: **zero UI libraries**. No Radix, no shadcn, no MUI. 100% of components are hand-written on Tailwind CSS v4. Why? Because every dropdown, every modal, every micro-interaction tells the product's story, not a generic design system's.
+
+Here's what's under the hood.
+
+---
+
+## 🎯 The Palette System — 4 Visual Moods
+
+Each palette redefines **~30 CSS variables** (accents, surfaces, shadows, badges, glassmorphism). Users can switch at any time — the transition is smoothed by a GSAP overlay.
+
+### Cyan (default)
+\`\`\`
+--edutounes-accent-primary: #06b6d4;
+--edutounes-accent-hover: #0d9488;
+— Cyan/teal everywhere, clean and professional
+\`\`\`
+
+### Multicolor (the most complex)
+Each module gets its own color, driven by the \`data-current-view\` attribute on \`<html>\`:
+
+\`\`\`css
+/* Multicolor colors each view differently */
+:root[data-color-accent="multicolor"][data-current-view="dashboard"] {
+  --edutounes-accent-primary: #f59e0b;  /* Amber */
+}
+:root[data-color-accent="multicolor"][data-current-view="chat"] {
+  --edutounes-accent-primary: #0d9488;  /* Teal */
+}
+:root[data-color-accent="multicolor"][data-current-view="quiz"] {
+  --edutounes-accent-primary: #10b981;  /* Emerald */
+}
+\`\`\`
+
+The logo becomes an Ice Blue → Emerald → Violet gradient. Source badges (PDF, YouTube, Audio) take module colors.
+
+### Monochrome
+Zinc greys from light to dark. The entire UI goes monochrome — including creation icons. Radical, for zero visual distraction.
+
+### Custom
+Users pick a color via \`<input type="color">\`. The engine auto-calculates variants (\`darken()\`, \`lighten()\`), generates swatches, the gradient, and applies them everywhere.
+
+---
+
+## 🚂 The Editor Side Rail
+
+48px wide, 5 views:
+
+\`\`\`
+┌──────┐
+│  🏠  │  ← Back to Dashboard
+│  ─── │
+│  📄  │  ← Editor
+│  💬  │  ← AI Chat
+│  🎤  │  ← Podcast
+│  🗂️  │  ← Flashcards
+│  ✅  │  ← Quiz
+│  ─── │
+│  ●   │  ← Connection status (green/red/amber/gray)
+│  🎨  │  ← Compact palette
+│  👤  │  ← User menu
+└──────┘
+\`\`\`
+
+Each icon changes color per palette via \`text-accent-{dashboard|assistant|podcast|flashcard|quiz}\`.
+
+Tooltips appear on hover with a CSS \`translate-X\` transition:
+
+\`\`\`css
+.tooltip {
+  opacity: 0;
+  transform: translateX(-0.5rem);
+  transition: all 150ms;
+}
+.group:hover .tooltip {
+  opacity: 1;
+  transform: translateX(0);
+}
+\`\`\`
+
+The active view has a **colored dot** positioned at \`absolute -left-2 top-1/2\` with the module's color.
+
+Zero tooltip library — just raw CSS.
+
+---
+
+## 📋 The Virtual Dashboard
+
+Note list virtualized with \`@tanstack/react-virtual\`:
+
+\`\`\`typescript
+const virtualizer = useVirtualizer({
+  count: virtualRows.length,      // headers + notes
+  estimateSize: (index) => {
+    const row = virtualRows[index];
+    return row.type === "header" ? 40 : 124;
+  },
+  overscan: 8,
+});
+\`\`\`
+
+**Features:**
+- "Today" / "Earlier" groupings with separators
+- Cards with source-colored icons, badges, relative dates
+- Multi-select with **Shift+click** range selection
+- Bulk action bar via \`position: fixed\` + \`createPortal\` (Move, Duplicate, Copy, Export, Delete)
+- **Right-click** (\`onContextMenu\`) → context menu with same actions
+- ⌘K command palette with fuzzy search + quick action suggestions
+- CSS \`animate-card-stagger\` entrance animations
+
+The search field is a proper \`role="combobox"\` with \`aria-expanded\` and keyboard navigation (↑↓ to navigate, Enter to select).
+
+---
+
+## 🃏 3D CSS Flashcards
+
+One single JavaScript-driven animation: the card flip. Everything else is CSS:
+
+\`\`\`css
+/* Perspective container */
+.card-container {
+  perspective: 1000px;
+}
+
+/* Front/back faces */
+.card-inner {
+  transform-style: preserve-3d;
+  transition: transform 400ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.card-inner.flipped {
+  transform: rotateY(180deg);
+}
+
+/* Both faces */
+.card-front, .card-back {
+  backface-visibility: hidden;
+  position: absolute;
+  inset: 0;
+}
+.card-back {
+  transform: rotateY(180deg);
+}
+\`\`\`
+
+The 4 rating buttons (Again / Hard / Good / Easy) only appear after the flip. Design changes with the palette:
+
+\`\`\`css
+/* Multicolor palette: Easy button takes the Assistant module color */
+.pill--easy {
+  background: var(--color-accent-assistant);
+  @apply bg-accent-assistant/10 text-accent-assistant;
+}
+\`\`\`
+
+---
+
+## ⏱️ The Floating Pomodoro
+
+FAB in bottom-right corner with SVG circular timer. The progress circle uses \`stroke-dasharray\` and \`stroke-dashoffset\`:
+
+\`\`\`tsx
+<svg className="size-14 -rotate-90" viewBox="0 0 36 36">
+  <circle cx="18" cy="18" r="15.5"
+    strokeDasharray={\`\${2 * Math.PI * 15.5}\`}
+    strokeDashoffset={\`\${2 * Math.PI * 15.5 * progress}\`}
+    className="transition-all duration-500 ease-linear"
+  />
+</svg>
+\`\`\`
+
+Phases:
+- **Focus** → \`bg-accent-softer/40\` background, \`text-accent\` circle
+- **Break** → \`bg-success-soft/40\` background, \`text-success-ink\` circle
+- **Paused** → \`opacity-70 saturate-50\` with blinking "Paused" indicator
+
+The timer survives page reloads (localStorage persistence with timestamps).
+
+---
+
+## 🔔 Palette Change Toast
+
+Positioned \`fixed right-6 top-4 z-[9999]\`, with backdrop blur, CSS entrance animation, dynamic gradient:
+
+\`\`\`tsx
+<div className="pointer-events-none fixed right-6 top-4 z-[9999]
+  flex items-center gap-2.5 rounded-xl border border-edge/60
+  bg-card px-4 py-2.5 shadow-lg backdrop-blur-sm animate-toast-in">
+  <span className="size-3.5 rounded-full"
+    style={{ background: gradient }} />
+  <span className="text-sm font-semibold text-ink">{label}</span>
+</div>
+\`\`\`
+
+2.3 seconds display, then auto-dismiss.
+
+---
+
+## 📱 Responsive & Mobile
+
+- Sidebar auto-collapses < 768px with \`backdrop-blur-sm\` overlay
+- Assistant Panel becomes a bottom sheet on mobile (\`max-h-[80vh]\` with drag handle)
+- Mobile FAB to open the assistant
+- Adaptive navigation bar
+
+---
+
+## ♿ Accessibility Implemented
+
+- \`aria-label\` on all icon-only buttons
+- \`aria-expanded\` + \`aria-haspopup\` on dropdowns and menus
+- \`role="menu"\`, \`role="menuitem"\`, \`role="dialog"\`, \`role="tooltip"\`
+- \`aria-live="polite"\` for view changes in the editor
+- Full focus traps in \`ConfirmModal\` and \`CreateNoteModal\`
+- Keyboard: \`Escape\` closes all overlays, \`Tab\` cycles through modals
+- \`prefers-reduced-motion\` via conditional CSS animations
+
+---
+
+## 💡 What I'd Do Differently
+
+**The 7 manual dropdowns:**
+- PaletteDropdownPortal (AppShell)
+- UserDropdownPortal (AppShell)
+- CompactPaletteDropdown (NoteView)
+- RailUserDropdown (NoteView)
+- RowMenu (Dashboard)
+- ContextMenu (Dashboard)
+- FolderContextMenu
+
+Each reimplements \`getBoundingClientRect\` + \`useEffect\` scroll/resize + Escape handler + click-outside detection. A shared \`DropdownPortal\` abstraction would eliminate 200+ lines of redundant code.
+
+**Duplicated \`relTime()\`** between Dashboard and NoteView: 30 identical lines in two different components.
+
+**Monolithic Pomodoro** (380 lines): timer, stats, persistence, profiles, keyboard shortcuts — all in one file.
+
+---
+
+## ✅ What I'm Proud Of
+
+1. **The Multicolor theme** — each module gets a different color, giving the app real personality
+2. **Consistent CSS transitions everywhere** — \`animate-tooltip-in\`, \`animate-section-fade-in\`, \`animate-page-in\`, \`animate-card-stagger\`
+3. **Accessibility** — every component is designed for keyboard use
+4. **\`data-current-view\`** automatically propagates the current view's color to CSS, zero extra JS
+5. **3D flashcard animations** — zero libraries, pure CSS
+6. **The bulk action bar** uses \`var(--sidebar-width)\` to dynamically adapt to sidebar collapse
+7. **Palette-aware badge system** — source badge colors auto-follow the active palette via \`var(--badge-{kind}-ink)\`
+
+---
+
+**🎯 Next UI/UX Steps:**
+- Refactor 7 dropdowns into a reusable \`DropdownPortal\`
+- Add Flashcards keyboard shortcuts (1-4) and Quiz (A-D)
+- Remove the infinite "Click to reveal ↓" bounce on flashcards
+- Make FloatingPomodoro aware of BulkActionBar (z-index conflict)
+
+#UI #UX #DesignSystem #CSS #TailwindCSS #React #Frontend #WebDesign #Accessibility #CSSAnimations
+
+---
+
+*Working on a project without a UI library? Experiences with homegrown design systems? Drop a comment below — I'd love to hear your feedback.*`
+  },
+
+  // ─── V1.1 ───
+  {
+    id: "v11-arch-fr",
+    version: "V1.1",
+    category: "Architecture",
+    lang: "fr",
+    icon: "🧱",
+    title: "Architecture Technique",
+    content: `# 📍 LinkedIn Post 3 — Architecture V1.1 : 4 jours, 9 sources, un moteur audio, et Ollama qui ne crashe plus
+
+> *À accompagner d'une capture d'écran du Dashboard avec les 4 cartes de création et du LocalSetupModal avec les deux barres de progression (Ollama + Audio)*
+
+---
+
+**💻 EduTounes V1.1 — Ce qui a changé en 4 jours**
+
+4 jours après la V1, voici le bilan de la version 1.1 : **9 sources d'ingestion** (dont OCR image et PPTX), un **moteur audio local** (Whisper + Kokoro), un **cycle de vie Ollama robuste** (health-check, restart auto), et des tonnes de polish UI.
+
+---
+
+## 📥 9 sources d'ingestion — toutes fonctionnelles
+
+La V1 supportait blank, text, pdf, docx, audio, url, youtube. La V1.1 ajoute **deux nouveaux types** :
+
+| Source | Statut | Technique |
+|--------|--------|-----------|
+| **Image (OCR)** | ✅ Nouveau | Tesseract.js — Web Worker + WASM, 100% navigateur, zéro clé API |
+| **PPTX** | ✅ Nouveau | JSZip + regex \`<a:t>\`, extraction texte diapositives |
+
+### OCR Image — \`src/lib/ingest/image.ts\`
+
+\`\`\`typescript
+// Worker lazy singleton — téléchargé UNE seule fois par session
+let workerPromise: Promise<Tesseract.Worker> | null = null;
+
+async function getWorker() {
+  if (!workerPromise) {
+    workerPromise = (async () => {
+      const Tesseract = await import("tesseract.js");
+      return await Tesseract.createWorker("eng");
+    })();
+  }
+  return workerPromise;
+}
+\`\`\`
+
+- Formats supportés : PNG, JPG, JPEG, GIF, WebP, BMP
+- Langue : anglais (~3 MB téléchargés une fois, cachés par le navigateur)
+- Singleton lazy : la première image télécharge les données WASM, les suivantes sont instantanées
+- Extraction de la confiance (0–100) dans \`meta.confidence\`
+- Nettoyage mémoire : \`terminateOcrWorker()\` pour libérer le worker
+- **10 tests unitaires** — mock de Tesseract.js
+
+### PPTX — \`src/lib/ingest/pptx.ts\`
+
+\`\`\`typescript
+// Extraction regex des <a:t> dans chaque slide XML
+const paragraphRegex = /<a:\\p\\b[^>]*>([\\s\\S]*?)<\\/a:\\p>/gi;
+const textRunRegex = /<a:\\t\\b[^>]*>([^<]*)<\\/a:\\t>/g;
+\`\`\`
+
+- Utilise JSZip pour décompresser le format ZIP OpenXML
+- Parcourt \`ppt/slides/slide{N}.xml\` triés par numéro
+- Gère les retours à la ligne avec \`<a:br/>\`
+- Message d'erreur clair pour l'ancien format \`.ppt\`
+- Compte les diapositives dans \`meta.slides\`
+
+### Routing — \`src/lib/ingest/index.ts\`
+
+Le switch exhaustif \`ingest()\` couvre maintenant **9 sources** avec un \`never\` check TypeScript :
+
+\`\`\`typescript
+switch (input.kind) {
+  case "blank": case "text": case "url": case "youtube":
+  case "pdf": case "docx": case "pptx": case "image": case "audio":
+    // ...
+  default:
+    const exhaustive: never = input.kind;
+    throw new Error(\`Unsupported source kind: \${exhaustive}\`);
+}
+\`\`\`
+
+---
+
+## 🎵 Moteur audio local — Whisper (STT) + Kokoro (TTS)
+
+Nouveau module \`server/audio.mjs\` qui gère le cycle de vie d'un binaire standalone \`edutounes-audio-server\` :
+
+### Architecture
+
+\`\`\`
+[App Electron] ──→ server/audio.mjs
+                     ├── findBinary() ← PATH → resources/
+                     ├── downloadBinary() ← GitHub Releases
+                     ├── ensureServing() ← spawn + health-check
+                     ├── checkHealth() ← GET /health
+                     └── shutdown() ← kill on quit
+\`\`\`
+
+### Endpoints exposés par le binaire
+
+| Endpoint | Usage | Compatible |
+|----------|-------|------------|
+| \`GET /health\` | Liveness check | — |
+| \`POST /v1/audio/transcriptions\` | Whisper STT | OpenAI |
+| \`POST /v1/audio/speech\` | Kokoro TTS | OpenAI |
+
+### Provisioning
+
+- Détection multi-plateforme (Windows, macOS, Linux, arm64)
+- Téléchargement ~200 MB depuis GitHub Releases (archive .zip ou .tar.gz)
+- **Non-bloquant** : si le téléchargement échoue, Ollama fonctionne quand même
+- Marqueur \`.audio-provisioned\` pour restart au lancement suivant
+
+### Intégration dans \`LocalEngine\`
+
+\`\`\`typescript
+// src/lib/engine/local.ts
+async transcribe(audio: Blob, signal?: AbortSignal): Promise<TranscriptResult> {
+  const form = new FormData();
+  form.append("file", audio, "audio");
+  // POST vers http://127.0.0.1:5000/v1/audio/transcriptions
+}
+
+async tts(text: string, opts: TtsOptions): Promise<Blob> {
+  // POST vers http://127.0.0.1:5000/v1/audio/speech
+}
+
+capabilities(): EngineCapabilities {
+  return {
+    chat: this._ollamaServing,
+    transcription: audioReady,  // ← dynamique !
+    tts: audioReady,
+    embeddings: this._ollamaServing,
+  };
+}
+\`\`\`
+
+---
+
+## 🔄 Ollama Lifecycle — Le point faible de la V1
+
+La V1 lançait Ollama en \`void\` (fire-and-forget) et ne surveillait pas les crashes.
+
+### PHASE A — Auto-démarrage fiable (\`electron/main.mjs\`)
+
+\`\`\`javascript
+// Au lieu de :
+void ensureServingIfProvisioned(binDir(), info.url);
+
+// Maintenant :
+scheduleOllamaStart(binDir(), info.url);
+
+function scheduleOllamaStart(binDir, appOrigin, attempt = 0) {
+  if (attempt >= 5) return;
+  ensureServingIfProvisioned(binDir, appOrigin).then((started) => {
+    if (!started) {
+      setTimeout(() => scheduleOllamaStart(..., attempt + 1), 3000);
+    }
+  });
+}
+\`\`\`
+
+Le port 11434 est parfois encore occupé après un redémarrage rapide. 5 tentatives à 3s d'intervalle résolvent le problème.
+
+### PHASE B — Health-check toutes les 30s (\`src/lib/engine/local.ts\`)
+
+\`\`\`typescript
+class LocalEngine {
+  private _ollamaServing = true; // optimiste
+  private _healthCheckTimer: ReturnType<typeof setInterval> | null = null;
+
+  startHealthCheck(): void {
+    this._pollHealth();
+    this._healthCheckTimer = setInterval(() => this._pollHealth(), 30_000);
+  }
+
+  private async _pollHealth(): Promise<void> {
+    // GET /api/tags avec timeout 3s
+    // Si Ollama ne répond pas → _ollamaServing = false → _attemptRestart()
+  }
+
+  private async _attemptRestart(): Promise<void> {
+    // POST /api/local/start
+  }
+}
+\`\`\`
+
+### PHASE C — Resilient retry (\`src/lib/engine/resilient.ts\`)
+
+\`\`\`typescript
+// AVANT : retryable = rate_limit | network
+// APRÈS : retryable = rate_limit | network | model_missing
+
+function retryable(e: unknown): boolean {
+  return e instanceof EngineError && (
+    e.kind === "rate_limit" ||
+    e.kind === "network" ||
+    e.kind === "model_missing"  // ← NOUVEAU
+  );
+}
+\`\`\`
+
+Avec callback \`onModelMissing\` qui tente un restart avant chaque retry :
+
+\`\`\`
+Tentative 1 → 3s → Tentative 2 → 8s → Tentative 3 → 20s → Tentative 4 → 40s
+           ↑ redémarrage        ↑ redémarrage       ↑ redémarrage       ↑ redémarrage
+\`\`\`
+
+### PHASE D — UI réactive
+
+- **ConnectionStatus** : bouton "Redémarrer Ollama" qui appelle \`POST /api/local/start\`
+- **DashboardJobOverlay** : message ⚠️ "Ollama ne répond pas" avec :
+  - 🔄 Redémarrer & réessayer
+  - → Passer en cloud (lien vers Settings)
+
+---
+
+## 🌐 Serveur HTTP — Nouveaux endpoints
+
+\`server/httpServer.mjs\` enrichi de 5 nouveaux endpoints :
+
+| Endpoint | Méthode | Usage |
+|----------|---------|-------|
+| \`/api/local/start\` | POST | Redémarrer Ollama (appelé par le health-check et les boutons UI) |
+| \`/api/local/setup-audio\` | GET (SSE) | Provisionner le moteur audio (Whisper + Kokoro) |
+| \`/api/local/audio-status\` | GET | Statut du moteur audio (installed, serving) |
+| \`/api/proxy\` | POST | Proxy générique pour le mode navigateur (relais API → contourne CORS) |
+
+Le endpoint \`/api/local/status\` inclut maintenant le sous-statut audio :
+
+\`\`\`json
+{
+  "installed": true,
+  "serving": true,
+  "hasChatModel": true,
+  "hasEmbedModel": true,
+  "audio": {
+    "installed": true,
+    "serving": true
+  }
+}
+\`\`\`
+
+---
+
+## 🖥️ UI — Améliorations
+
+### Dashboard
+- **4 cartes de création** : Blank, Audio, Document (PDF/DOCX/PPTX/Image/Texte), Lien
+- **Carte Audio masquée** quand \`engine.capabilities().transcription\` est \`false\`
+- **Retry All** avec compteur de tentatives (max 3), désactivé après épuisement
+- **État de création** : spinner "Creating…" pendant la création d'une note vierge
+
+### Onboarding — Nouveau !
+- **Typewriter demo** : animation en temps réel qui tape une explication de la photosynthèse
+- **Ambiguïté DeepSeek** : détection quand \`sk-\` peut être OpenAI ou DeepSeek, avec bouton "Use DeepSeek"
+- **Setup local complet** : script d'installation Ollama + Audio avec barre de progression duale
+- **Validation avant submit** : vérifie le statut local avant d'afficher le setup modal
+
+### Settings — Local Engine Status
+- **Deux composants** : barre de progression Ollama + barre de progression Audio
+- **Bouton "Réessayer Audio"** si le téléchargement a échoué
+- **Profils Pomodoro personnalisés** : création/suppression de profils utilisateur
+- **Objectifs quotidiens** : sessions cibles et temps de focus cible par jour
+- **Palette Custom** : 8 presets de couleur rapides (Red, Orange, Amber, Green, Emerald, Cyan, Blue, Pink)
+- **Provider override** : sélection explicite de fournisseur cloud (DeepSeek surtout)
+- **Waveform toggle** : activer/désactiver la visualisation des fréquences audio
+
+### AppShell
+- **Zen Mode** : bouton dans le footer pour masquer la sidebar (focus total sur l'éditeur)
+- **BroadcastChannel** synchronisation des palettes entre onglets
+- **Folder context menu** : renommer/supprimer un dossier
+- **Toast "music-favorite-playing"** avec ❤️ animation de cœurs flottants
+- **WidgetDockSidebar** + FloatingWidgetsContainer + FloatingHearts
+
+---
+
+## ✅ Audit final — 180 tests, 9 sources
+
+| Source | Upload | Ingest | Badge | Icône | Test |
+|--------|--------|--------|-------|-------|------|
+| 📝 Texte (.md/.txt) | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 📄 PDF | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 📃 DOCX | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 🖼️ PPTX | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 🖼️ Images (OCR) | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 🎵 Audio | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 🔗 Lien web | ✅ | ✅ | ✅ | ✅ | ✅ |
+| ▶️ YouTube | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 📄 Blank | ✅ | ✅ | ✅ | ✅ | ✅ |
+
+**180 tests passent — 9 sources, 9 fonctionnelles.** Repository (GitHub) avec pipeline CI.
+
+---
+
+## 📊 Bilan technique
+
+| Métrique | V1 | V1.1 |
+|----------|----|------|
+| Sources supportées | 7 | **9** |
+| Fichiers serveur | 3 (http, ollama, ytdlp) | **6** (+ audio.mjs, standalone.mjs, extract-music.mjs) |
+| Tests unitaires | ~160 | **180** |
+| Moteurs IA | 7 providers | **8** (+ audio local Whisper/Kokoro) |
+| Dépendances nouvelles | — | tesseract.js, jszip |
+| Comportement Ollama | Fire-and-forget | **Health-check 30s + restart auto** |
+
+---
+
+**🎯 Prochaines étapes :**
+1. Parallélisation MAP des chunks (Promise.all avec concurrence limitée)
+2. Keep-alive + warmup pour éliminer les 20 min d'attente au premier appel
+3. Timer visuel ETA dans le JobOverlay
+4. Mode service Windows pour Ollama
+
+#React #TypeScript #OCR #Tesseract #Whisper #Kokoro #Architecture #OpenSource #EduTounes
+
+---
+
+*4 jours de dev, ~800 lignes de code, 0 régression, 20 nouveaux tests, 2 nouvelles sources, un moteur audio complet, et un Ollama qui ne crashe plus. La suite dans quelques jours.*`
+  },
+
+  {
+    id: "v11-arch-en",
+    version: "V1.1",
+    category: "Architecture",
+    lang: "en",
+    icon: "🧱",
+    title: "Technical Architecture",
+    content: `# 📍 LinkedIn Post 3 — Architecture V1.1: 4 Days, 9 Sources, an Audio Engine, and Ollama That Never Crashes
+
+> *Pair with a screenshot of the Dashboard with 4 creation cards and the LocalSetupModal showing dual progress bars (Ollama + Audio)*
+
+---
+
+**💻 EduTounes V1.1 — What changed in 4 days**
+
+4 days after V1, here's the V1.1 changelog: **9 ingestion sources** (including image OCR and PPTX), a **local audio engine** (Whisper + Kokoro), a **bulletproof Ollama lifecycle** (health-check, auto-restart), and tons of UI polish.
+
+---
+
+## 📥 9 Ingestion Sources — All Functional
+
+V1 supported blank, text, pdf, docx, audio, url, youtube. V1.1 adds **two new types**:
+
+| Source | Status | Technique |
+|--------|--------|-----------|
+| **Image (OCR)** | ✅ New | Tesseract.js — Web Worker + WASM, 100% browser, zero API key |
+| **PPTX** | ✅ New | JSZip + regex \`<a:t>\`, slide text extraction |
+
+### Image OCR — \`src/lib/ingest/image.ts\`
+
+\`\`\`typescript
+// Lazy worker singleton — downloaded ONCE per session
+let workerPromise: Promise<Tesseract.Worker> | null = null;
+
+async function getWorker() {
+  if (!workerPromise) {
+    workerPromise = (async () => {
+      const Tesseract = await import("tesseract.js");
+      return await Tesseract.createWorker("eng");
+    })();
+  }
+  return workerPromise;
+}
+\`\`\`
+
+- Supported formats: PNG, JPG, JPEG, GIF, WebP, BMP
+- Language: English (~3 MB downloaded once, browser-cached)
+- Lazy singleton: first image downloads WASM data, subsequent ones are instant
+- Confidence score (0–100) in \`meta.confidence\`
+- Memory cleanup: \`terminateOcrWorker()\` to free the worker
+- **10 unit tests** — Tesseract.js mocked
+
+### PPTX — \`src/lib/ingest/pptx.ts\`
+
+\`\`\`typescript
+// Regex extraction of <a:t> from each slide XML
+const paragraphRegex = /<a:\\p\\b[^>]*>([\\s\\S]*?)<\\/a:\\p>/gi;
+const textRunRegex = /<a:\\t\\b[^>]*>([^<]*)<\\/a:\\t>/g;
+\`\`\`
+
+- Uses JSZip to decompress the OpenXML ZIP format
+- Iterates through \`ppt/slides/slide{N}.xml\` sorted by slide number
+- Handles line breaks with \`<a:br/>\`
+- Clear error message for legacy \`.ppt\` format
+- Slide count in \`meta.slides\`
+
+### Routing — \`src/lib/ingest/index.ts\`
+
+The exhaustive \`ingest()\` switch now covers **9 sources** with a TypeScript \`never\` check:
+
+\`\`\`typescript
+switch (input.kind) {
+  case "blank": case "text": case "url": case "youtube":
+  case "pdf": case "docx": case "pptx": case "image": case "audio":
+    // ...
+  default:
+    const exhaustive: never = input.kind;
+    throw new Error(\`Unsupported source kind: \${exhaustive}\`);
+}
+\`\`\`
+
+---
+
+## 🎵 Local Audio Engine — Whisper (STT) + Kokoro (TTS)
+
+New \`server/audio.mjs\` module managing the lifecycle of a standalone \`edutounes-audio-server\` binary:
+
+### Architecture
+
+\`\`\`
+[Electron App] ──→ server/audio.mjs
+                    ├── findBinary() ← PATH → resources/
+                    ├── downloadBinary() ← GitHub Releases
+                    ├── ensureServing() ← spawn + health-check
+                    ├── checkHealth() ← GET /health
+                    └── shutdown() ← kill on quit
+\`\`\`
+
+### Exposed Binary Endpoints
+
+| Endpoint | Usage | Compatible |
+|----------|-------|------------|
+| \`GET /health\` | Liveness check | — |
+| \`POST /v1/audio/transcriptions\` | Whisper STT | OpenAI |
+| \`POST /v1/audio/speech\` | Kokoro TTS | OpenAI |
+
+### Provisioning
+
+- Multi-platform detection (Windows, macOS, Linux, arm64)
+- ~200 MB download from GitHub Releases (.zip or .tar.gz archive)
+- **Non-blocking**: if download fails, Ollama still works
+- \`.audio-provisioned\` marker for restart on next launch
+
+### Integration into \`LocalEngine\`
+
+\`\`\`typescript
+// src/lib/engine/local.ts
+async transcribe(audio: Blob, signal?: AbortSignal): Promise<TranscriptResult> {
+  const form = new FormData();
+  form.append("file", audio, "audio");
+  // POST to http://127.0.0.1:5000/v1/audio/transcriptions
+}
+
+async tts(text: string, opts: TtsOptions): Promise<Blob> {
+  // POST to http://127.0.0.1:5000/v1/audio/speech
+}
+
+capabilities(): EngineCapabilities {
+  return {
+    chat: this._ollamaServing,
+    transcription: audioReady,  // ← dynamic!
+    tts: audioReady,
+    embeddings: this._ollamaServing,
+  };
+}
+\`\`\`
+
+---
+
+## 🔄 Ollama Lifecycle — V1's Biggest Weakness Fixed
+
+V1 launched Ollama as \`void\` (fire-and-forget) and didn't monitor for crashes.
+
+### PHASE A — Reliable Auto-start (\`electron/main.mjs\`)
+
+\`\`\`javascript
+// Instead of:
+void ensureServingIfProvisioned(binDir(), info.url);
+
+// Now:
+scheduleOllamaStart(binDir(), info.url);
+
+function scheduleOllamaStart(binDir, appOrigin, attempt = 0) {
+  if (attempt >= 5) return;
+  ensureServingIfProvisioned(binDir, appOrigin).then((started) => {
+    if (!started) {
+      setTimeout(() => scheduleOllamaStart(..., attempt + 1), 3000);
+    }
+  });
+}
+\`\`\`
+
+Port 11434 is sometimes still occupied after a quick restart. 5 attempts at 3s intervals solve the problem.
+
+### PHASE B — Health-check every 30s (\`src/lib/engine/local.ts\`)
+
+\`\`\`typescript
+class LocalEngine {
+  private _ollamaServing = true; // optimistic
+  private _healthCheckTimer: ReturnType<typeof setInterval> | null = null;
+
+  startHealthCheck(): void {
+    this._pollHealth();
+    this._healthCheckTimer = setInterval(() => this._pollHealth(), 30_000);
+  }
+
+  private async _pollHealth(): Promise<void> {
+    // GET /api/tags with 3s timeout
+    // If Ollama doesn't respond → _ollamaServing = false → _attemptRestart()
+  }
+
+  private async _attemptRestart(): Promise<void> {
+    // POST /api/local/start
+  }
+}
+\`\`\`
+
+### PHASE C — Resilient retry (\`src/lib/engine/resilient.ts\`)
+
+\`\`\`typescript
+// BEFORE: retryable = rate_limit | network
+// AFTER: retryable = rate_limit | network | model_missing
+
+function retryable(e: unknown): boolean {
+  return e instanceof EngineError && (
+    e.kind === "rate_limit" ||
+    e.kind === "network" ||
+    e.kind === "model_missing"  // ← NEW
+  );
+}
+\`\`\`
+
+With \`onModelMissing\` callback attempting a restart before each retry:
+
+\`\`\`
+Attempt 1 → 3s → Attempt 2 → 8s → Attempt 3 → 20s → Attempt 4 → 40s
+            ↑ restart        ↑ restart       ↑ restart       ↑ restart
+\`\`\`
+
+### PHASE D — Reactive UI
+
+- **ConnectionStatus**: "Restart Ollama" button calling \`POST /api/local/start\`
+- **DashboardJobOverlay**: ⚠️ "Ollama not responding" message with:
+  - 🔄 Restart & retry
+  - → Switch to cloud (link to Settings)
+
+---
+
+## 🌐 HTTP Server — New Endpoints
+
+\`server/httpServer.mjs\` enriched with 5 new endpoints:
+
+| Endpoint | Method | Usage |
+|----------|--------|-------|
+| \`/api/local/start\` | POST | Restart Ollama (called by health-check and UI buttons) |
+| \`/api/local/setup-audio\` | GET (SSE) | Provision the audio engine (Whisper + Kokoro) |
+| \`/api/local/audio-status\` | GET | Audio engine status (installed, serving) |
+| \`/api/proxy\` | POST | Generic proxy for browser mode (API relay → bypasses CORS) |
+
+The \`/api/local/status\` endpoint now includes audio sub-status:
+
+\`\`\`json
+{
+  "installed": true,
+  "serving": true,
+  "hasChatModel": true,
+  "hasEmbedModel": true,
+  "audio": {
+    "installed": true,
+    "serving": true
+  }
+}
+\`\`\`
+
+---
+
+## 🖥️ UI Improvements
+
+### Dashboard
+- **4 creation cards**: Blank, Audio, Document (PDF/DOCX/PPTX/Image/Text), Link
+- **Audio card hidden** when \`engine.capabilities().transcription\` is \`false\`
+- **Retry All** with attempt counter (max 3), disabled after exhaustion
+- **Creation state**: spinner "Creating…" during blank note creation
+
+### Onboarding — Brand New!
+- **Typewriter demo**: real-time animation typing a photosynthesis explanation
+- **DeepSeek ambiguity**: detection when \`sk-\` could be OpenAI or DeepSeek, with "Use DeepSeek" button
+- **Full local setup**: Ollama + Audio installation script with dual progress bar
+- **Pre-submit validation**: checks local status before showing the setup modal
+
+### Settings — Local Engine Status
+- **Two components**: Ollama progress bar + Audio progress bar
+- **"Retry Audio" button** if download failed
+- **Custom Pomodoro profiles**: create/delete user profiles
+- **Daily goals**: target sessions and daily focus time
+- **Custom palette**: 8 quick color presets (Red, Orange, Amber, Green, Emerald, Cyan, Blue, Pink)
+- **Provider override**: explicit cloud provider selection (DeepSeek especially)
+- **Waveform toggle**: enable/disable frequency visualization for music
+
+### AppShell
+- **Zen Mode**: footer button to hide sidebar (full editor focus)
+- **BroadcastChannel**: cross-tab palette synchronization
+- **Folder context menu**: rename/delete folders
+- **Toast "music-favorite-playing"** with ❤️ floating hearts animation
+- **WidgetDockSidebar** + FloatingWidgetsContainer + FloatingHearts
+
+---
+
+## ✅ Final Audit — 180 Tests, 9 Sources
+
+| Source | Upload | Ingest | Badge | Icon | Test |
+|--------|--------|--------|-------|------|------|
+| 📝 Text (.md/.txt) | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 📄 PDF | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 📃 DOCX | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 🖼️ PPTX | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 🖼️ Images (OCR) | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 🎵 Audio | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 🔗 Web link | ✅ | ✅ | ✅ | ✅ | ✅ |
+| ▶️ YouTube | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 📄 Blank | ✅ | ✅ | ✅ | ✅ | ✅ |
+
+**180 tests passing — 9 sources, all functional.** Repository (GitHub) with CI pipeline.
+
+---
+
+## 📊 Technical Summary
+
+| Metric | V1 | V1.1 |
+|--------|----|------|
+| Supported sources | 7 | **9** |
+| Server files | 3 (http, ollama, ytdlp) | **6** (+ audio.mjs, standalone.mjs, extract-music.mjs) |
+| Unit tests | ~160 | **180** |
+| AI engines | 7 providers | **8** (+ local Whisper/Kokoro) |
+| New dependencies | — | tesseract.js, jszip |
+| Ollama behavior | Fire-and-forget | **Health-check 30s + auto-restart** |
+
+---
+
+**🎯 Next steps:**
+1. MAP chunk parallelization (Promise.all with limited concurrency)
+2. Keep-alive + warmup to eliminate the 20-min wait on first call
+3. Visual ETA timer in JobOverlay
+4. Windows Service mode for Ollama
+
+#React #TypeScript #OCR #Tesseract #Whisper #Kokoro #Architecture #OpenSource #EduTounes
+
+---
+
+*4 days of dev, ~800 lines of code, 0 regressions, 20 new tests, 2 new source types, a complete audio engine, and an Ollama that no longer crashes. More coming in a few days.*`
+  },
+
+  {
+    id: "v11-uiux-fr",
+    version: "V1.1",
+    category: "UI/UX",
+    lang: "fr",
+    icon: "🎨",
+    title: "UI/UX Design",
+    content: `# 📍 LinkedIn Post 4 — UI/UX V1.1 : Onboarding, Ollama visible, Zen Mode, et des flottants partout
+
+> *À accompagner d'une capture d'écran de l'Onboarding avec la démo typewriter, ou du Dashboard avec les 4 cartes de création*
+
+---
+
+**🎨 EduTounes V1.1 — 4 jours pour passer de "ça marche" à "ça vit"**
+
+La V1 était un squelette solide : 7 sources, 7 providers IA, un éditeur à blocs, des flashcards 3D. La V1.1, c'est le moment où l'appli prend vie. Onboarding interactif, monitoring Ollama en temps réel, Zen Mode, widgets flottants, profils Pomodoro, et une tonne de micro-interactions.
+
+---
+
+## 🚀 Le nouvel Onboarding — L'appli se présente toute seule
+
+La V1 n'avait pas d'écran d'accueil. La V1.1 introduit un onboarding complet qui guide l'utilisateur en 3 étapes.
+
+### La démo Typewriter
+
+\`\`\`tsx
+<div className="overflow-hidden rounded-2xl border border-edge bg-card shadow-soft">
+  {/* Barre de titre façon IDE */}
+  <div className="...">
+    <span className="size-2.5 rounded-full bg-danger-ink/50" />
+    <span className="size-2.5 rounded-full bg-warning-ink/50" />
+    <span className="size-2.5 rounded-full bg-success-ink/50" />
+    <span>Assistant EduTounes</span>
+  </div>
+  {/* Message utilisateur */}
+  <div>Explique la photosynthèse simplement</div>
+  {/* Réponse qui se tape en direct */}
+  <div>
+    <span>{displayed}</span>
+    <span className="animate-pulse bg-accent" /> {/* curseur clignotant */}
+  </div>
+</div>
+\`\`\`
+
+- Animation JavaScript pure (setInterval à 18ms) — zéro librairie
+- Curseur clignotant CSS (\`animate-pulse\`)
+- Checkmark ✓ quand la démo est finie
+- Simulation d'une vraie conversation avec bulles utilisateur → assistant
+
+### Les cartes de choix de mode
+
+Deux cartes côte à côte avec bordure animée au clic :
+
+\`\`\`tsx
+<button className={\`relative rounded-card border-2 p-6 text-left \${
+  active ? "border-accent bg-accent-softer" : "border-edge bg-card hover:bg-card-hover"
+}\`}>
+  <Cpu className={\`size-7 \${active ? "text-accent" : "text-ink-dim"}\`} />
+  <h2 className="mt-3 font-display text-xl font-bold">Fully local</h2>
+  <p className="mt-1.5 text-sm text-ink-dim">{body}</p>
+</button>
+\`\`\`
+
+### Gestion de l'ambiguïté DeepSeek
+
+Quand l'utilisateur colle une clé commençant par \`sk-\`, c'est soit OpenAI soit DeepSeek. L'UI le détecte et propose un bouton de bascule :
+
+\`\`\`tsx
+{showAmbiguityWarning && !cloudProvider && (
+  <div className="flex items-center gap-2 text-xs text-ink-faint">
+    <span>This looks like an OpenAI key. Using DeepSeek?</span>
+    <button onClick={() => setCloudProvider("deepseek")}
+      className="rounded-md bg-card-hover px-2 py-1 font-semibold hover:text-accent">
+      Use DeepSeek
+    </button>
+  </div>
+)}
+\`\`\`
+
+---
+
+## 🔴🟢 ConnectionStatus — Le point qui dit la vérité
+
+Le petit point vert/rouge de la sidebar reflète maintenant **l'état réel** d'Ollama grâce au health-check toutes les 30s.
+
+### États
+
+| État | Couleur | Action |
+|------|---------|--------|
+| Connected | Vert (avec glow ping CSS) | Rien — tout va bien |
+| Disconnected | Rouge | Bouton "Redémarrer Ollama" + "Paramètres" |
+| Checking | Ambre | Spinner — vérification en cours |
+| Unconfigured | Gris | "Get started" → lien vers Settings |
+
+### Le bouton "Redémarrer Ollama"
+
+\`\`\`tsx
+{engine?.mode === "local" && state.errorKind === "model_missing" && (
+  <button onClick={async () => {
+    await fetch("/api/local/start", { method: "POST" });
+    setState(prev => ({ ...prev, status: "checking", label: "Starting Ollama…" }));
+    setTimeout(() => check(), 3000);
+  }}
+    className="flex items-center gap-1.5 rounded-lg bg-card-hover px-2.5 py-1.5
+      text-[11px] font-semibold text-ink-dim transition-colors
+      hover:bg-accent-soft hover:text-accent"
+  >
+    🔄 Redémarrer Ollama
+  </button>
+)}
+\`\`\`
+
+### Glow ping CSS
+
+\`\`\`css
+{state.status === "connected" && (
+  <span className="absolute inset-0 rounded-full bg-success-ink/30 animate-ping" />
+)}
+\`\`\`
+
+---
+
+## 📊 DashboardJobOverlay — La transparence pendant la génération
+
+La barre de progression V1 était basique. La V1.1 ajoute :
+
+### Per-file progress bars
+
+Pour les uploads multi-fichiers, chaque fichier a sa propre mini-barre :
+
+\`\`\`tsx
+{job.files.map((f, i) => (
+  <div key={i} className="rounded-lg bg-panel/50 p-2.5">
+    <div className="flex items-center justify-between">
+      <span className="truncate text-xs font-semibold text-ink-dim">{f.name}</span>
+      <span className="text-[11px] font-bold">{filePct}%</span>
+    </div>
+    <div className="h-1 w-full overflow-hidden rounded-full bg-edge/50">
+      <div className={\`h-full rounded-full transition-all \${
+        f.status === "done" ? "bg-success-ink"
+          : f.status === "error" ? "bg-danger-ink"
+          : "bg-accent"
+      }\`} style={{ width: \`\${filePct}%\` }} />
+    </div>
+  </div>
+))}
+\`\`\`
+
+### Retry budget — compteur de tentatives
+
+\`\`\`tsx
+const hasRetryBudget = job.files?.some(
+  (f, i) => f.status === "error" && (retryCounts[i] ?? 0) < maxRetries,
+);
+\`\`\`
+
+- 3 tentatives max par fichier
+- Affichage \`retries/maxRetries\` à côté de chaque fichier en erreur
+- Bouton "Retry All" désactivé après épuisement
+
+### Message Ollama down
+
+\`\`\`tsx
+{isOllamaError && (
+  <div className="rounded-xl border border-danger-ink/20 bg-danger-soft p-4">
+    <p className="text-xs font-bold text-danger-ink">⚠️ Ollama ne répond pas</p>
+    <p className="mt-1 text-[11px] text-danger-ink/80 leading-relaxed">
+      Le moteur IA local s'est arrêté. Tentative de redémarrage automatique...
+    </p>
+    <button onClick={async () => {
+      await fetch("/api/local/start", { method: "POST" });
+      onRetry?.();
+    }} className="rounded-lg bg-danger-ink/10 px-3 py-1.5 text-[11px] font-bold">
+      🔄 Redémarrer & réessayer
+    </button>
+    <button onClick={() => navigate("/settings")}
+      className="text-[11px] font-bold text-danger-ink underline">
+      → Passer en cloud
+    </button>
+  </div>
+)}
+\`\`\`
+
+---
+
+## ⏱️ Zen Mode — Ne rien voir d'autre que son texte
+
+Nouveau bouton dans le footer de la sidebar : **Zen Mode**. Un clic, et toute la sidebar disparaît.
+
+\`\`\`tsx
+<button onClick={handleToggleZen}
+  className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold
+    text-ink-dim hover:bg-card-hover hover:text-ink transition-colors">
+  <Focus className="size-4.5 shrink-0" />
+  <span>Zen Mode</span>
+</button>
+\`\`\`
+
+\`\`\`tsx
+// Synchronisation avec <html>
+useEffect(() => {
+  document.documentElement.classList.toggle("zen-mode", !!prefs.zenMode);
+  return () => document.documentElement.classList.remove("zen-mode");
+}, [prefs.zenMode]);
+\`\`\`
+
+---
+
+## 🎛️ Settings — Page de contrôle centralisée
+
+### Local Engine Status — Dual progress
+
+Deux barres de progression distinctes : Ollama + Audio Engine :
+
+\`\`\`tsx
+{/* Composant Ollama */}
+<div className="flex items-center gap-3">
+  <Cpu className="size-5" />
+  <span>Ollama</span>
+  <span className="text-xs">{ollama.phase}</span>
+  <div className="h-1.5 flex-1 rounded-full bg-edge">
+    <div className="h-full rounded-full bg-accent" style={{ width: \`\${ollama.percent}%\` }} />
+  </div>
+</div>
+{/* Composant Audio */}
+<div className="flex items-center gap-3">
+  <Headphones className="size-5" />
+  <span>Whisper + Kokoro</span>
+  ...
+</div>
+{/* Bouton réessayer si audio échoué */}
+<button onClick={retryAudioSetup} className="...">
+  Réessayer le téléchargement audio
+</button>
+\`\`\`
+
+### Profils Pomodoro personnalisés
+
+Les utilisateurs peuvent créer/supprimer leurs propres profils :
+
+\`\`\`tsx
+{[...BUILTIN_PROFILES, ...userProfiles].map((p) => (
+  <button key={p.id} onClick={() => savePrefs({...prefs, pomodoroFocus: p.focus, ...})}
+    className={\`rounded-full border px-3 py-1.5 text-xs font-bold \${
+      prefs.pomodoroProfileId === p.id
+        ? "border-accent bg-accent-softer text-accent"
+        : "border-edge text-ink-dim hover:border-ink-faint"
+    }\`}>
+    {p.name}
+    {!isBuiltinProfile(p.id) && (
+      <button onClick={(e) => { e.stopPropagation(); deleteProfile(p.id); }}
+        className="ml-1 rounded-full p-0.5 hover:text-danger-ink">
+        <X className="size-3" />
+      </button>
+    )}
+  </button>
+))}
+\`\`\`
+
+### Presets de couleur rapides (palette Custom)
+
+8 couleurs prêtes à l'emploi avec sélection visuelle :
+
+\`\`\`tsx
+{[{ label: "Red", hex: "#ef4444" }, { label: "Emerald", hex: "#10b981" }, ...].map(({ label, hex }) => (
+  <button key={hex} onClick={() => setAccentPalette("custom", hex)}
+    className={\`relative flex size-8 items-center justify-center rounded-full
+      transition-all hover:scale-110 hover:shadow-md active:scale-95
+      \${customAccentColor === hex ? "ring-2 ring-accent ring-offset-2 ring-offset-card" : ""}\`}
+    style={{ backgroundColor: hex }}>
+    {customAccentColor === hex && <CheckCircle2 className="size-4 text-white drop-shadow-sm" />}
+  </button>
+))}
+\`\`\`
+
+---
+
+## ❤️ Micro-interactions et détails
+
+### Toast "music-favorite-playing"
+
+Quand une musique favorite est jouée, un toast apparaît avec une animation de cœurs flottants :
+
+\`\`\`typescript
+const offMusicFav = on("music-favorite-playing", ({ title }) => {
+  setToast({ label: \`♡ \${title}\`, gradient: "linear-gradient(135deg, #f43f5e, #ec4899)" });
+  setHeartBurstId((id) => id + 1);
+});
+\`\`\`
+
+Combiné avec le composant \`FloatingHearts\` qui génère des ❤️ qui flottent et disparaissent.
+
+### BroadcastChannel multi-onglets
+
+Changement de palette instantanément synchronisé entre tous les onglets :
+
+\`\`\`typescript
+let bc = new BroadcastChannel("edutounes-palette");
+bc.onmessage = () => setCurrentPalette(getAccentPalette());
+\`\`\`
+
+### WidgetDockSidebar + FloatingWidgetsContainer
+
+Nouveau système de widgets flottants (Pomodoro, Music Player, Todo List, Waveform) avec ordre personnalisable :
+
+\`\`\`typescript
+const nextOrder = v && !order.includes('pomodoro')
+  ? [...order, 'pomodoro']
+  : order;
+savePrefs({ ...prefs, showPomodoro: v, widgetOrder: nextOrder });
+\`\`\`
+
+### Overlay mobile responsive
+
+La sidebar se transforme en overlay avec \`backdrop-blur-sm\` sur mobile :
+
+\`\`\`tsx
+{!collapsed && !prefs.zenMode && (
+  <div ref={mobileOverlayRef} onClick={() => setCollapsed(true)}
+    className="fixed inset-0 z-30 bg-surface-overlay backdrop-blur-sm md:hidden
+      transition-opacity duration-300 ease-out" />
+)}
+\`\`\`
+
+---
+
+## ✅ Résumé UI/UX V1.1
+
+| Fonctionnalité | Statut | Effort |
+|----------------|--------|--------|
+| Onboarding typewriter | Nouveau | ~120 lignes |
+| Mode Zen | Nouveau | ~20 lignes |
+| ConnectionStatus health-check | Amélioré | ~80 lignes |
+| JobOverlay per-file + retry | Amélioré | ~100 lignes |
+| Settings dual progress | Nouveau | ~150 lignes |
+| Profils Pomodoro custom | Nouveau | ~80 lignes |
+| Presets couleur palette | Nouveau | ~40 lignes |
+| Provider override DeepSeek | Nouveau | ~30 lignes |
+| FloatingHearts + WidgetDock | Nouveau | ~200 lignes |
+| Toast ♡ musique favorite | Nouveau | ~30 lignes |
+| BroadcastChannel palette | Nouveau | ~15 lignes |
+| Overlay mobile | Amélioré | ~20 lignes |
+
+**Leçons apprises :**
+- ✅ Le health-check polling est simple et efficace — pas besoin de WebSocket
+- ✅ Les composants modulaires (LocalSetupModal avec deux barres) sont bien plus maintenables qu'un monolithe
+- ✅ Le système d'events customs (\`music-favorite-playing\`, \`palette-change\`) permet une découplage propre
+- ⚠️ Les 7 dropdowns manuels sont toujours là (pas encore refactorés — priorité V1.2)
+- ⚠️ Le fichier \`Dashboard.tsx\` commence à devenir massif (600+ lignes)
+
+**🎯 Prochaine étape UI/UX :**
+- Refactorer les 7 dropdowns en composant \`DropdownPortal\` réutilisable
+- Timer ETA visuel dans le JobOverlay (temps écoulé + estimation)
+- Raccourcis clavier Flashcards (1-4) et Quiz (A-D)
+
+#UI #UX #DesignSystem #React #TypeScript #Onboarding #ZenMode #CSSAnimations #MicroInteractions
+
+---
+
+*La V1.1, c'est ~800 lignes de UI qui transforment une appli fonctionnelle en une appli agréable. Prochaine étape : refactorer ces 7 dropdowns 😅*`
+  },
+
+  {
+    id: "v11-uiux-en",
+    version: "V1.1",
+    category: "UI/UX",
+    lang: "en",
+    icon: "🎨",
+    title: "UI/UX Design",
+    content: `# 📍 LinkedIn Post 4 — UI/UX V1.1: Onboarding, Visible Ollama, Zen Mode, and Widgets Everywhere
+
+> *Pair with a screenshot of the Onboarding typewriter demo, or the Dashboard with 4 creation cards*
+
+---
+
+**🎨 EduTounes V1.1 — 4 days to go from "it works" to "it lives"**
+
+V1 was a solid skeleton: 7 sources, 7 AI providers, a block editor, 3D flashcards. V1.1 is when the app comes alive. Interactive onboarding, real-time Ollama monitoring, Zen Mode, floating widgets, Pomodoro profiles, and a ton of micro-interactions.
+
+---
+
+## 🚀 The New Onboarding — The App Introduces Itself
+
+V1 had no welcome screen. V1.1 introduces a complete onboarding flow that guides the user in 3 steps.
+
+### The Typewriter Demo
+
+\`\`\`tsx
+<div className="overflow-hidden rounded-2xl border border-edge bg-card shadow-soft">
+  {/* IDE-style title bar */}
+  <div className="...">
+    <span className="size-2.5 rounded-full bg-danger-ink/50" />
+    <span className="size-2.5 rounded-full bg-warning-ink/50" />
+    <span className="size-2.5 rounded-full bg-success-ink/50" />
+    <span>Assistant EduTounes</span>
+  </div>
+  {/* User message */}
+  <div>Explique la photosynthèse simplement</div>
+  {/* Response typing in real-time */}
+  <div>
+    <span>{displayed}</span>
+    <span className="animate-pulse bg-accent" /> {/* blinking cursor */}
+  </div>
+</div>
+\`\`\`
+
+- Pure JavaScript animation (setInterval at 18ms) — zero libraries
+- CSS blinking cursor (\`animate-pulse\`)
+- Checkmark ✓ when the demo finishes
+- Simulates a real conversation with user → assistant bubbles
+
+### Mode Selection Cards
+
+Two side-by-side cards with animated border on click:
+
+\`\`\`tsx
+<button className={\`relative rounded-card border-2 p-6 text-left \${
+  active ? "border-accent bg-accent-softer" : "border-edge bg-card hover:bg-card-hover"
+}\`}>
+  <Cpu className={\`size-7 \${active ? "text-accent" : "text-ink-dim"}\`} />
+  <h2 className="mt-3 font-display text-xl font-bold">Fully local</h2>
+  <p className="mt-1.5 text-sm text-ink-dim">{body}</p>
+</button>
+\`\`\`
+
+### DeepSeek Ambiguity Handling
+
+When the user pastes a key starting with \`sk-\`, it could be OpenAI or DeepSeek. The UI detects it and offers a toggle:
+
+\`\`\`tsx
+{showAmbiguityWarning && !cloudProvider && (
+  <div className="flex items-center gap-2 text-xs text-ink-faint">
+    <span>This looks like an OpenAI key. Using DeepSeek?</span>
+    <button onClick={() => setCloudProvider("deepseek")}
+      className="rounded-md bg-card-hover px-2 py-1 font-semibold hover:text-accent">
+      Use DeepSeek
+    </button>
+  </div>
+)}
+\`\`\`
+
+---
+
+## 🔴🟢 ConnectionStatus — The Dot That Tells the Truth
+
+The small green/red dot in the sidebar now reflects **Ollama's real state** thanks to the 30s health-check.
+
+### States
+
+| State | Color | Action |
+|-------|-------|--------|
+| Connected | Green (with CSS ping glow) | Nothing — all good |
+| Disconnected | Red | "Restart Ollama" button + "Settings" |
+| Checking | Amber | Spinner — checking in progress |
+| Unconfigured | Gray | "Get started" → link to Settings |
+
+### The "Restart Ollama" Button
+
+\`\`\`tsx
+{engine?.mode === "local" && state.errorKind === "model_missing" && (
+  <button onClick={async () => {
+    await fetch("/api/local/start", { method: "POST" });
+    setState(prev => ({ ...prev, status: "checking", label: "Starting Ollama…" }));
+    setTimeout(() => check(), 3000);
+  }}
+    className="flex items-center gap-1.5 rounded-lg bg-card-hover px-2.5 py-1.5
+      text-[11px] font-semibold text-ink-dim transition-colors
+      hover:bg-accent-soft hover:text-accent"
+  >
+    🔄 Restart Ollama
+  </button>
+)}
+\`\`\`
+
+### CSS Glow Ping
+
+\`\`\`css
+{state.status === "connected" && (
+  <span className="absolute inset-0 rounded-full bg-success-ink/30 animate-ping" />
+)}
+\`\`\`
+
+---
+
+## 📊 DashboardJobOverlay — Transparency During Generation
+
+The V1 progress bar was basic. V1.1 adds:
+
+### Per-file Progress Bars
+
+For multi-file uploads, each file gets its own mini-bar:
+
+\`\`\`tsx
+{job.files.map((f, i) => (
+  <div key={i} className="rounded-lg bg-panel/50 p-2.5">
+    <div className="flex items-center justify-between">
+      <span className="truncate text-xs font-semibold text-ink-dim">{f.name}</span>
+      <span className="text-[11px] font-bold">{filePct}%</span>
+    </div>
+    <div className="h-1 w-full overflow-hidden rounded-full bg-edge/50">
+      <div className={\`h-full rounded-full transition-all \${
+        f.status === "done" ? "bg-success-ink"
+          : f.status === "error" ? "bg-danger-ink"
+          : "bg-accent"
+      }\`} style={{ width: \`\${filePct}%\` }} />
+    </div>
+  </div>
+))}
+\`\`\`
+
+### Retry Budget — Attempt Counter
+
+\`\`\`tsx
+const hasRetryBudget = job.files?.some(
+  (f, i) => f.status === "error" && (retryCounts[i] ?? 0) < maxRetries,
+);
+\`\`\`
+
+- 3 max retries per file
+- Shows \`retries/maxRetries\` next to each errored file
+- "Retry All" button disabled after exhaustion
+
+### Ollama Down Message
+
+\`\`\`tsx
+{isOllamaError && (
+  <div className="rounded-xl border border-danger-ink/20 bg-danger-soft p-4">
+    <p className="text-xs font-bold text-danger-ink">⚠️ Ollama not responding</p>
+    <p className="mt-1 text-[11px] text-danger-ink/80 leading-relaxed">
+      The local AI engine has stopped. Auto-restart in progress...
+    </p>
+    <button onClick={async () => {
+      await fetch("/api/local/start", { method: "POST" });
+      onRetry?.();
+    }} className="rounded-lg bg-danger-ink/10 px-3 py-1.5 text-[11px] font-bold">
+      🔄 Restart & retry
+    </button>
+    <button onClick={() => navigate("/settings")}
+      className="text-[11px] font-bold text-danger-ink underline">
+      → Switch to cloud
+    </button>
+  </div>
+)}
+\`\`\`
+
+---
+
+## ⏱️ Zen Mode — See Nothing But Your Text
+
+New button in the sidebar footer: one click and the entire sidebar disappears.
+
+\`\`\`tsx
+<button onClick={handleToggleZen}
+  className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold
+    text-ink-dim hover:bg-card-hover hover:text-ink transition-colors">
+  <Focus className="size-4.5 shrink-0" />
+  <span>Zen Mode</span>
+</button>
+\`\`\`
+
+\`\`\`tsx
+// Synchronisation with <html>
+useEffect(() => {
+  document.documentElement.classList.toggle("zen-mode", !!prefs.zenMode);
+  return () => document.documentElement.classList.remove("zen-mode");
+}, [prefs.zenMode]);
+\`\`\`
+
+---
+
+## 🎛️ Settings — Centralized Control Page
+
+### Local Engine Status — Dual Progress
+
+Two separate progress bars: Ollama + Audio Engine:
+
+\`\`\`tsx
+{/* Ollama component */}
+<div className="flex items-center gap-3">
+  <Cpu className="size-5" />
+  <span>Ollama</span>
+  <span className="text-xs">{ollama.phase}</span>
+  <div className="h-1.5 flex-1 rounded-full bg-edge">
+    <div className="h-full rounded-full bg-accent" style={{ width: \`\${ollama.percent}%\` }} />
+  </div>
+</div>
+{/* Audio component */}
+<div className="flex items-center gap-3">
+  <Headphones className="size-5" />
+  <span>Whisper + Kokoro</span>
+  ...
+</div>
+{/* Retry button if audio failed */}
+<button onClick={retryAudioSetup} className="...">
+  Retry audio download
+</button>
+\`\`\`
+
+### Custom Pomodoro Profiles
+
+Users can create/delete their own profiles:
+
+\`\`\`tsx
+{[...BUILTIN_PROFILES, ...userProfiles].map((p) => (
+  <button key={p.id} onClick={() => savePrefs({...prefs, pomodoroFocus: p.focus, ...})}
+    className={\`rounded-full border px-3 py-1.5 text-xs font-bold \${
+      prefs.pomodoroProfileId === p.id
+        ? "border-accent bg-accent-softer text-accent"
+        : "border-edge text-ink-dim hover:border-ink-faint"
+    }\`}>
+    {p.name}
+    {!isBuiltinProfile(p.id) && (
+      <button onClick={(e) => { e.stopPropagation(); deleteProfile(p.id); }}
+        className="ml-1 rounded-full p-0.5 hover:text-danger-ink">
+        <X className="size-3" />
+      </button>
+    )}
+  </button>
+))}
+\`\`\`
+
+### Quick Color Presets (Custom Palette)
+
+8 ready-to-use colors with visual selection:
+
+\`\`\`tsx
+{[{ label: "Red", hex: "#ef4444" }, { label: "Emerald", hex: "#10b981" }, ...].map(({ label, hex }) => (
+  <button key={hex} onClick={() => setAccentPalette("custom", hex)}
+    className={\`relative flex size-8 items-center justify-center rounded-full
+      transition-all hover:scale-110 hover:shadow-md active:scale-95
+      \${customAccentColor === hex ? "ring-2 ring-accent ring-offset-2 ring-offset-card" : ""}\`}
+    style={{ backgroundColor: hex }}>
+    {customAccentColor === hex && <CheckCircle2 className="size-4 text-white drop-shadow-sm" />}
+  </button>
+))}
+\`\`\`
+
+---
+
+## ❤️ Micro-interactions and Details
+
+### "music-favorite-playing" Toast
+
+When a favorite song plays, a toast appears with a floating hearts animation:
+
+\`\`\`typescript
+const offMusicFav = on("music-favorite-playing", ({ title }) => {
+  setToast({ label: \`♡ \${title}\`, gradient: "linear-gradient(135deg, #f43f5e, #ec4899)" });
+  setHeartBurstId((id) => id + 1);
+});
+\`\`\`
+
+Combined with the \`FloatingHearts\` component that generates ❤️ floating upward and fading out.
+
+### Multi-tab BroadcastChannel
+
+Palette changes sync instantly across all browser tabs:
+
+\`\`\`typescript
+let bc = new BroadcastChannel("edutounes-palette");
+bc.onmessage = () => setCurrentPalette(getAccentPalette());
+\`\`\`
+
+### WidgetDockSidebar + FloatingWidgetsContainer
+
+New floating widget system (Pomodoro, Music Player, Todo List, Waveform) with customizable ordering:
+
+\`\`\`typescript
+const nextOrder = v && !order.includes('pomodoro')
+  ? [...order, 'pomodoro']
+  : order;
+savePrefs({ ...prefs, showPomodoro: v, widgetOrder: nextOrder });
+\`\`\`
+
+### Mobile Responsive Overlay
+
+The sidebar transforms into an overlay with \`backdrop-blur-sm\` on mobile:
+
+\`\`\`tsx
+{!collapsed && !prefs.zenMode && (
+  <div ref={mobileOverlayRef} onClick={() => setCollapsed(true)}
+    className="fixed inset-0 z-30 bg-surface-overlay backdrop-blur-sm md:hidden
+      transition-opacity duration-300 ease-out" />
+)}
+\`\`\`
+
+---
+
+## ✅ V1.1 UI/UX Summary
+
+| Feature | Status | Effort |
+|---------|--------|--------|
+| Onboarding typewriter | New | ~120 lines |
+| Zen Mode | New | ~20 lines |
+| ConnectionStatus health-check | Improved | ~80 lines |
+| JobOverlay per-file + retry | Improved | ~100 lines |
+| Settings dual progress | New | ~150 lines |
+| Custom Pomodoro profiles | New | ~80 lines |
+| Color palette presets | New | ~40 lines |
+| DeepSeek provider override | New | ~30 lines |
+| FloatingHearts + WidgetDock | New | ~200 lines |
+| ♡ favorite music toast | New | ~30 lines |
+| BroadcastChannel palette | New | ~15 lines |
+| Mobile overlay | Improved | ~20 lines |
+
+**Lessons learned:**
+- ✅ Health-check polling is simple and effective — no WebSocket needed
+- ✅ Modular components (LocalSetupModal with dual bars) are far more maintainable than monolothic ones
+- ✅ Custom event system (\`music-favorite-playing\`, \`palette-change\`) enables clean decoupling
+- ⚠️ The 7 manual dropdowns are still there (not refactored yet — V1.2 priority)
+- ⚠️ \`Dashboard.tsx\` is getting massive (600+ lines)
+
+**🎯 Next UI/UX steps:**
+- Refactor 7 dropdowns into reusable \`DropdownPortal\` component
+- Visual ETA timer in JobOverlay (elapsed time + estimate)
+- Flashcards keyboard shortcuts (1-4) and Quiz (A-D)
+
+#UI #UX #DesignSystem #React #TypeScript #Onboarding #ZenMode #CSSAnimations #MicroInteractions
+
+---
+
+*V1.1 is ~800 lines of UI that transform a functional app into a pleasant one. Next up: refactoring those 7 dropdowns 😅*`
+  },
+
+  // ─── V1.2 ───
+  {
+    id: "v12-arch-fr",
+    version: "V1.2",
+    category: "Architecture",
+    lang: "fr",
+    icon: "🧱",
+    title: "Architecture Technique",
+    content: `# 📍 LinkedIn Post 5 — Architecture V1.2 : le chantier des données (sync, collaboration, databases) et 888 tests verts
+
+> *À accompagner d'une capture d'écran du serveur sync (docker compose) ou du Dashboard avec la vue Board d'une database*
+
+---
+
+**💻 EduTounes V1.2 — Le plus gros chantier de la V1**
+
+La V1.1 a fait vivre l'interface. La V1.2 fait voyager les données : **synchronisation multi-appareils**, **collaboration temps réel**, **databases complètes** (4 vues, relation, rollup), **publication web**, **workspaces**, et un **éditeur qui tient les gros documents**. Résultat : 888 tests verts, 0 erreur TypeScript, et une architecture réorganisée en modules par domaine.
+
+---
+
+## 🧱 Le refactor structurel — \`src/lib\` réorganisé par domaine
+
+Avant : une vingtaine de fichiers plats (\`types.ts\`, \`markdown.ts\`, \`history.ts\`, \`prefs.ts\`…). Après : **19 modules à responsabilité unique**, chacun testé indépendamment.
+
+\`\`\`
+src/lib/
+├── ai/           # types & utilitaires partagés IA
+├── comments/     # commentaires + notifications (mentions, pins, threads)
+├── core/         # types du domaine, prefs, thème, events typés, ids, helpers
+├── data/         # assets statiques (catalogue musique)
+├── db/           # abstraction de stockage (IndexedDB + mémoire) + le Repo
+├── editor/       # moteur de l'éditeur à blocs (document, delta, commandes)
+├── engine/       # providers IA : OpenAI, Anthropic, compatible, Ollama local
+├── exercises/    # détection de séries d'exercices dans les notes (reconnaissance de schémas)
+├── generation/   # pipelines IA : notes, flashcards, quiz, podcast
+├── history/      # pile undo/redo générique
+├── ingest/       # text / url / youtube / pdf / docx / pptx / image → texte
+├── markdown/     # parseur markdown ↔ blocks (round-trip) + HTML/math
+├── music/        # lecteur de musique : état pur, catalogue
+├── prompts/      # templates de prompts + schémas JSON
+├── publish/      # export + publication web
+├── search/       # recherche plein texte + recherche d'images Unsplash
+├── speech/       # synthèse vocale / dictée
+├── study/        # FSRS-5 + suivi de maîtrise
+└── sync/         # sync multi-appareils + collaboration temps réel
+\`\`\`
+
+Chaque module ne dépend que des autres via leur API publique. Le typage strict (\`strict\` + \`noUncheckedIndexedAccess\`) couvre tout le modèle de domaine — \`Note\`, \`Block\`, \`Database\`, \`Comment\`, \`Workspace\`, \`Flashcard\`, \`Quiz\`, \`Job\`, \`Notification\`…
+
+### Le bus d'événements typé
+
+Les \`CustomEvent("edutounes:…")\` fragiles sont remplacés par une API **\`emit\`/\`on\`/\`off\` typée** : chaque nom d'événement et sa charge utile sont déclarés dans une interface unique, donc ajouter un événement est vérifié à la compilation.
+
+\`\`\`typescript
+// src/lib/core/events.ts — catalogue unique
+export interface EduTounesEvents {
+  "palette-change": { palette: string; label: string; gradient: string };
+  "folder-select": string | null;
+  "pomodoro-toast": { message: string };
+  "music-favorite-playing": { title: string };
+  "sidebar-search": string;
+  "study-generation-progress": { kind: "flashcards" | "quiz"; noteId: string; job: Job };
+  "study-generation-done": { kind: "flashcards" | "quiz"; noteId: string; count: number };
+  "study-generation-error": { kind: "flashcards" | "quiz"; noteId: string; error: string };
+}
+\`\`\`
+
+---
+
+## 🗄️ Databases — Grid, Board, Calendar, Gallery + Relation & Rollup
+
+La V1.2 complète les databases inspirées de Notion/AppFlowy : **4 types de vues** sur les mêmes données, **8 types de champs** (dont relation & rollup), filtres, tris, et relation entre bases.
+
+### Le modèle de données
+
+\`\`\`typescript
+type DatabaseViewType = "grid" | "board" | "calendar" | "gallery";
+type DatabaseFieldType = "text" | "number" | "checkbox" | "select" |
+  "multi_select" | "date" | "relation" | "rollup";
+\`\`\`
+
+- **Relation** : champ qui pointe vers une autre database (\`relationDatabaseId\`) — affichage en pills, navigation au clic, et **backlink** : la row cible voit la relation inversée.
+- **Rollup** : champ agrégé sur une relation (\`sourceRelation\` + \`targetField\` + \`rollupFunction\` : sum, count, avg, min, max), recalculé automatiquement.
+- **Conversion de type de champ** : un select peut devenir multi_select, un nombre devenir texte, avec mapping des valeurs (\`convertFieldType\`).
+- **Tri intra-colonne du Board** : drag vertical dans une colonne, persistance via \`sortOrder\` sur la row.
+
+### La logique pure dans \`query.ts\`
+
+Toute la logique (filtres, tris, groupement, conversion, calcul rollup) vit dans des **fonctions pures sans React** — testées directement en Node :
+
+\`\`\`typescript
+// 500+ lignes de logique pure, 0 dépendance React
+applyViewQuery(rows, view, fields)   // filtre + tri + projection
+groupRowsBySelect(rows, field)       // colonnes du Board
+monthWeeks(year, month)              // grille du Calendar
+moveRowToOption(row, field, optionId) // drag inter-colonnes
+\`\`\`
+
+Chaque vue est un composant dédié (\`GridView\`, \`BoardView\`, \`CalendarView\`, \`GalleryView\`) qui ne fait que rendre — la logique est 100% dans \`query.ts\`.
+
+---
+
+## 🔄 P2-A — Synchronisation multi-appareils (serveur self-hosted pur Node)
+
+Le point le plus gros du chantier : un **serveur de sync self-hosted, zéro dépendance**, qui synchronise **11 collections** (notes, folders, flashcards, quiz, attempts, podcasts, chat, databases, db_rows, workspaces, comments) entre tous les appareils.
+
+### Le serveur — \`server/sync.mjs\` + \`server/sync/\`
+
+\`\`\`
+[App Electron] ──→ /api/sync/* (monté sur le serveur local)
+                    ├── register / login    → JWT HMAC-SHA256 (node:crypto)
+                    ├── pull?since=…        → changements depuis le curseur
+                    ├── push {changes}      → diffs locaux, LWW côté serveur
+                    ├── share / shares      → registre note_shares (P2-B)
+                    └── /api/sync/ws        → WebSocket RFC6455 minimal (temps réel)
+\`\`\`
+
+| Endpoint | Méthode | Usage |
+|----------|---------|-------|
+| \`/api/sync/register\` | POST | Création de compte (scrypt + JWT) |
+| \`/api/sync/login\` | POST | Connexion |
+| \`/api/sync/pull\` | GET | Changements depuis un curseur (\`since\`) |
+| \`/api/sync/push\` | POST | Push des changements locaux |
+| \`/api/sync/share\` | POST/DELETE/PATCH | Partager / révoquer / changer le rôle |
+| \`/api/sync/shares\` | GET | Liste des partages d'une note |
+| \`/api/sync/shared-notes\` | GET | Notes partagées avec moi |
+| \`/api/sync/ws\` | WS | Notifications temps réel + présence |
+
+- **Stockage pluggable** : mémoire (tests) ou fichier JSON (self-hosted), \`flush\` au shutdown.
+- **Docker compose** : service \`sync\` sur le port 4848, volume persisté.
+- **\`npm run serve:sync\`** lance le serveur standalone.
+
+### Le moteur client — \`src/lib/sync/\`
+
+Le \`SyncEngine\` est **framework-free** (il prend la \`Store\` brute), testé en Node avec 2 appareils simulés :
+
+\`\`\`
+1. pull  → applique les changements distants (LWW : jamais écraser un write local plus récent)
+2. push  → diff du snapshot local vs ce qu'on a déjà poussé (put / delete)
+3. tombstones → les suppressions locales ne peuvent pas être ressuscitées par le pull
+4. conflits → le serveur renvoie sa copie gagnante, on l'applique → convergence
+\`\`\`
+
+\`\`\`typescript
+// Résolution de conflits : last-write-wins + fingerprint comme bris d'égalité
+export function lwwShouldApply(incoming: Versioned, current: Versioned | undefined): boolean {
+  if (!current) return true;
+  if (incoming.version !== current.version) return incoming.version > current.version;
+  return incoming.hash !== current.hash; // version égale → hash stable comme tie-break
+}
+\`\`\`
+
+Le \`fingerprint\` utilise un \`stableStringify\` (tri des clés) pour qu'un même objet ait toujours le même hash. Le **WebSocket temps réel** (backoff exponentiel 1s → 30s) déclenche un \`syncNow()\` dès qu'un autre appareil a poussé.
+
+---
+
+## 👥 P2-B — Collaboration temps réel
+
+### Modèle d'accès Owner / Editor / Viewer
+
+\`\`\`typescript
+type AccessLevel = "owner" | "editor" | "viewer";
+const canEdit = (l) => l === "owner" || l === "editor";
+const canShare = (l) => l === "owner";
+\`\`\`
+
+- Registre \`note_shares\` côté serveur : \`noteId → owner + entries\`.
+- **Rejet read-only** : les écritures d'un viewer sont rejetées par le serveur (no-op idempotent accepté), l'UI passe en mode lecture seule (éditeur, titre, emoji, cover, propriétés).
+- **Mirroring cross-user** : les modifs d'un éditeur sont répliquées au propriétaire et inversement (LWW par version). Le **chat reste privé** — pas de fuite entre collaborateurs.
+- **Bootstrap au partage** : la note + ses flashcards/quiz sont seedées dans le store du collaborateur.
+
+### Présence WebSocket — \`src/lib/sync/presence.ts\`
+
+Canal temps réel dédié avec **couleurs déterministes** par utilisateur :
+
+\`\`\`typescript
+const PRESENCE_COLORS = ["#f59e0b", "#0ea5e9", "#10b981", "#ec4899", "#8b5cf6", "#f43f5e", "#14b8a6", "#eab308"];
+export function colorFor(userId: string): string { /* hash 31 × charCode */ }
+\`\`\`
+
+Messages : \`join\` / \`roster\` / \`cursor\` / \`leave\` / \`note-updated\`, avec **refcount par appareil** (un utilisateur avec 2 onglets = 1 personne). Rejoignements automatiques après reconnexion.
+
+---
+
+## 🌐 P2-C — Publication web (\`/p/:slug\`)
+
+Une note se publie en **page autonome** :
+
+- Bouton Publish dans \`PagePropertiesPanel\` → slug généré (kebab-case), mot de passe optionnel (hashé), expiration optionnelle.
+- \`renderPublishedHTML(note)\` génère une **page HTML autonome** (CSS intégré, responsive, dark/light) — zéro dépendance externe.
+- Route SPA \`/p/:slug\` → \`PublishedPage.tsx\` : vérification mot de passe (déverrouillée en \`sessionStorage\`), page expirée → message dédié.
+- Logique partagée dans \`src/lib/publish/publish.ts\` (gate + expiration), testable purement.
+
+\`\`\`typescript
+export type PublishedGate =
+  | { status: "ok"; note: Note }
+  | { status: "password-required" }
+  | { status: "password-wrong" }
+  | { status: "expired" }
+  | { status: "not-found" };
+\`\`\`
+
+---
+
+## 🗂️ P2-D — Workspaces multiples
+
+- Type \`Workspace\` (\`name\`, \`icon\`, \`color\`, dates) + \`workspaceId\` sur \`Note\`/\`Folder\`/\`Database\`.
+- **Stockage isolé** : une IndexedDB par workspace (\`edutounes-ws-{id}\`), le Repo route vers le bon store.
+- **Migration** : les données existantes basculent dans le workspace par défaut.
+- \`WorkspaceSwitcher\` dans le Dashboard + création via \`CreateWorkspaceModal\`.
+- **Export/Import complet d'un workspace** en JSON : remapping des IDs (notes, dossiers, databases, rows, flashcards, quiz, attempts, podcasts, chat) en deux passes sur les \`parentId\`.
+
+---
+
+## ✍️ P2-E — AI Writer avancé (15 presets)
+
+Le FloatingToolbar de l'éditeur devient un vrai atelier d'écriture IA :
+
+- **4 catégories** (Réécrire / Développer / Analyser / Traduire) → **15 presets** : Reformuler, Plus professionnel, Plus concis, Corriger les fautes, Continuer, Étendre, Convertir en liste, Simplifier, Résumer, Expliquer, Extraire les points clés, Détailler, Traduire, Traduire (formel), Traduire (famillier).
+- **Streaming** du résultat en temps réel, bouton Annuler / Copier.
+- **\`Ctrl+Shift+A\`** relance le dernier preset utilisé (persisté en localStorage) sur la sélection courante.
+- Undo possible (l'historique transactionnel existant le gère).
+
+---
+
+## 💬 P3-A — Commentaires + centre de notifications
+
+### Modèle \`Comment\`
+
+\`\`\`typescript
+interface Comment {
+  id: ID;
+  noteId: ID;
+  blockId?: ID;          // null = commentaire au niveau de la note
+  userId: ID;            // auteur
+  text: string;
+  createdAt: number;
+  updatedAt: number;
+  resolvedAt?: number;   // marqué résolu
+  replyToId?: ID;        // fil de réponse
+}
+\`\`\`
+
+- \`comments\` ajouté aux collections synchronisables → **un commentaire voyage via la sync** (P2-A), la notification n'est qu'un déclencheur UI.
+- **Mentions \`@collaborateur\`** : parseur pur (\`mentionTokenAt\`, \`mentionMatches\`, \`applyMention\`) qui suggère les collaborateurs de la note → notification de type \`mention\`.
+- **Épingles ancrées** sur les blocs (même technique de mesure que les cursors distants), threads repliables, résolution ✓, suppression par l'auteur/owner.
+
+### Notifications dérivées
+
+\`\`\`typescript
+export function deriveNotifications(comments, cursor): AppNotification[]
+// type: "comment" | "mention" | "note-updated"  — triées, avec curseur persisté
+\`\`\`
+
+Les notifications \`comment\`/\`mention\` sont **dérivées localement** du pull — le serveur n'a rien à faire de plus que la sync. Le \`note-updated\` (existant) couvre les éditions via WebSocket.
+
+---
+
+## 🎤 P3-B — Dictée vocale dans l'éditeur
+
+- \`detectSpeechRecognition()\` : \`window.SpeechRecognition || webkitSpeechRecognition\`, résolu **une seule fois** (memoized) pour la stabilité en test.
+- Résultats **intermédiaires en gris** qui durcissent en texte final au commit ; arrêt → \`onCommit(transcript)\` ; Escape → annulation.
+- **Langue dérivée** de la langue de génération de la note (\`speechLangCode\` → BCP-47) + override dans le popover (13 langues).
+- Protection anti-boucle : 5 redémarrages silencieux max si le moteur coupe la session immédiatement.
+- Fallback propre : si l'API est absente (WebView), message + renvoi vers l'enregistrement vocal (P1-E) qui reste disponible.
+
+---
+
+## 🧹 P3-C — Refactor / dette technique : les leçons de la V1 réglées
+
+Les « leçons apprises » des posts V1 ont toutes été **résolues** :
+
+- **Les 7 dropdowns manuels** → un seul hook partagé \`usePositionedDropdown\` (portail + \`getBoundingClientRect\` + clamp viewport + Escape + click-outside). \`clampToViewport\` extrait et réutilisé par \`DashboardContextMenu\` — **0 dropdown manuel restant**.
+- **\`FloatingPomodoro.tsx\` (1 447 lignes)** → éclaté : \`pomodoro-core.ts\` (logique pure) + \`PomodoroTimerDisplay\`, \`PomodoroStats\`, \`PomodoroSettings\` — la coquille passe à **414 lignes**, zéro changement de comportement.
+- **\`NoteView.tsx\` (1 155 lignes)** → extraits \`NoteCoverHeader\`, \`EditorToolbar\`, \`BacklinksPanel\`, \`PagePropertiesPanel\`, \`CommentsPanel\`, et les hooks groupés par feature : \`useNoteSave\` (persist debounce 400ms + statut saving/saved + applyNow) et \`usePanelResize\` (drag-resize partagé des 3 panneaux).
+- **\`relTime()\` dupliqué** → une seule implémentation (\`helpers.relTime\`) + variante française \`relTimeFr\`.
+- **\`structuredClone\`** → éliminé du push d'historique (voir P3-D).
+- **Accessibilité** : audit \`aria-label\`, \`prefers-reduced-motion\` global, fix d'une vraie violation (\`CommentPins\` ne masque plus les boutons focusables).
+
+---
+
+## 📄 P1-C — Export PDF (complété)
+
+Le menu **Export** de l'\`EditorToolbar\` inclut l'\`impression PDF\` via \`printPdf(note)\` (dialogue d'impression du navigateur) ainsi que les exports Markdown / Word (HTML) / HTML — dans \`src/lib/publish/export.ts\`, testé unitairement.
+
+---
+
+## ⚡ P3-D — Performance : une note de 200 blocs reste fluide
+
+### Historique diff-based — \`structuredClone\` éliminé du push
+
+Avant, chaque \`push()\` clonait la note entière. Maintenant : **stockage par référence** (push O(1)), clone uniquement à la lecture d'un undo/redo.
+
+| Opération (note 200 blocs) | Avant | Après | Gain |
+|---|---|---|---|
+| \`push\` ×50 | 19,45 ms | **1,56 ms** | **12,4×** |
+| undo ×49 + redo ×49 | — | 26,18 ms | clone à la lecture seulement |
+
+### Rendu incrémental de l'éditeur
+
+- Fenêtre initiale de **60 blocs**, croissance par **40** quand un sentinel (\`IntersectionObserver\`, rootMargin 800px) approche du viewport.
+- Rendu complet forcé uniquement pendant les états transitoires : **find & replace**, drag de bloc.
+- Le bloc en \`pendingFocus\` est toujours inclus (Enter → le nouveau bloc monte immédiatement).
+- \`BlockRow\` (memo) : callbacks stables paramétrés par id → une frappe ne re-rend plus les 200 lignes.
+- Find lazy : le scan du document n'a lieu que barre ouverte.
+
+---
+
+## 🚀 Upload — les 20 minutes d'attente éliminées
+
+Le plan « 20 min d'attente au 1er appel Ollama » est implémenté dans le code :
+
+- **\`keep_alive: "5m"\`** dans \`buildOptions()\` → le modèle reste en RAM entre les appels.
+- **\`warmUp()\`** : pré-charge le modèle (\`keep_alive: "24h"\`, prompt vide) au démarrage de l'app, non-bloquant.
+- **Parallélisation MAP** : \`MAP_CONCURRENCY = 2\` workers (\`Promise.allSettled\`) au lieu d'une boucle séquentielle, avec résilience (un chunk échoué ≠ tout échoué).
+- **\`ProgressEvent\`** (\`onProgress\`) : phases \`loading_model\` → \`generating\` → \`done\`, avec **timer ETA** (\`computeETA\`) dans le \`DashboardJobOverlay\` (temps écoulé + estimation + warning après 60s).
+
+---
+
+## ✅ Bilan technique V1.2
+
+| Métrique | V1.1 | V1.2 |
+|----------|------|------|
+| Tests unitaires | 180 | **888** (57 fichiers) |
+| Collections synchronisées | 0 | **11** |
+| Endpoints serveur sync | 0 | **8** (+ WebSocket temps réel) |
+| Vues database | 0 | **4** (grid, board, calendar, gallery) |
+| Types de champs database | 0 | **8** (dont relation & rollup) |
+| Presets AI Writer | 0 | **15** (4 catégories) |
+| Push historique 200 blocs | 19,45 ms | **1,56 ms (12,4×)** |
+| Rendus d'éditeur | complet | **incrémental (60 → +40)** |
+| Erreurs TypeScript | 0 | **0** |
+
+**Pipeline CI** (\`.github/workflows/ci.yml\`) : \`typecheck\` + \`lint\` + \`format-check\` + tests sur chaque push main / PR.
+
+---
+
+**🎯 Prochaines étapes :**
+1. Mode service Windows pour Ollama (Phase E du plan lifecycle)
+2. Webhook/pwa pour pousser la sync en arrière-plan mobile
+3. Granularité des permissions par bloc (vs note entière)
+
+#React #TypeScript #Architecture #Sync #CRDT #LWW #WebSocket #IndexedDB #OpenSource #EduTounes
+
+---
+
+*Le plus gros chantier du projet : ~4000 lignes de logique nouvelle, 888 tests, 0 régression. Et un serveur de sync qui tient sur un Raspberry Pi.*`
+  },
+
+  {
+    id: "v12-arch-en",
+    version: "V1.2",
+    category: "Architecture",
+    lang: "en",
+    icon: "🧱",
+    title: "Technical Architecture",
+    content: `# 📍 LinkedIn Post 5 — Architecture V1.2: The Data Revolution (Sync, Collaboration, Databases) and 888 Green Tests
+
+> *Pair with a screenshot of the sync server (docker compose) or the Dashboard showing a Board view of a database*
+
+---
+
+**💻 EduTounes V1.2 — The biggest overhaul of the project**
+
+V1.1 brought the interface to life. V1.2 makes the **data travel**: **multi-device sync**, **real-time collaboration**, **full databases** (4 views, relation, rollup), **web publishing**, **workspaces**, and an **editor that handles huge documents**. Result: 888 green tests, 0 TypeScript errors, and an architecture reorganized into domain modules.
+
+---
+
+## 🧱 The Structural Refactor — \`src/lib\` Reorganized by Domain
+
+Before: ~20 flat files (\`types.ts\`, \`markdown.ts\`, \`history.ts\`, \`prefs.ts\`…). After: **19 single-responsibility modules**, each independently tested.
+
+\`\`\`
+src/lib/
+├── ai/           # shared AI types & utilities
+├── comments/     # comments + notifications (mentions, pins, threads)
+├── core/         # domain types, prefs, theme, typed events, ids, helpers
+├── data/         # static assets (music catalog)
+├── db/           # storage abstraction (IndexedDB + memory) + the Repo
+├── editor/       # block-editor engine (document, delta, commands)
+├── engine/       # AI providers: OpenAI, Anthropic, compatible, local Ollama
+├── exercises/    # exercise-series detection in notes (pattern recognition)
+├── generation/   # AI pipelines: notes, flashcards, quiz, podcast
+├── history/      # generic undo/redo stack
+├── ingest/       # text / url / youtube / pdf / docx / pptx / image → text
+├── markdown/     # markdown ↔ blocks round-trip parser + HTML/math
+├── music/        # music player: pure state, catalog
+├── prompts/      # prompt templates + JSON schemas
+├── publish/      # export + web publishing
+├── search/       # full-text search + Unsplash image search
+├── speech/       # speech synthesis / dictation
+├── study/        # FSRS-5 + mastery tracking
+└── sync/         # multi-device sync + real-time collaboration
+\`\`\`
+
+Each module only touches the others through their public API. Strict typing (\`strict\` + \`noUncheckedIndexedAccess\`) covers the entire domain model — \`Note\`, \`Block\`, \`Database\`, \`Comment\`, \`Workspace\`, \`Flashcard\`, \`Quiz\`, \`Job\`, \`Notification\`…
+
+### The Typed Event Bus
+
+The fragile \`CustomEvent("edutounes:…")\` pattern is replaced by a typed **\`emit\`/\`on\`/\`off\` API**: every event name and its payload live in one interface, so adding an event is checked at compile time.
+
+\`\`\`typescript
+// src/lib/core/events.ts — single catalogue
+export interface EduTounesEvents {
+  "palette-change": { palette: string; label: string; gradient: string };
+  "folder-select": string | null;
+  "pomodoro-toast": { message: string };
+  "music-favorite-playing": { title: string };
+  "sidebar-search": string;
+  "study-generation-progress": { kind: "flashcards" | "quiz"; noteId: string; job: Job };
+  "study-generation-done": { kind: "flashcards" | "quiz"; noteId: string; count: number };
+  "study-generation-error": { kind: "flashcards" | "quiz"; noteId: string; error: string };
+}
+\`\`\`
+
+---
+
+## 🗄️ Databases — Grid, Board, Calendar, Gallery + Relation & Rollup
+
+V1.2 completes the Notion/AppFlowy-style databases: **4 view types** over the same data, **8 field types** (incl. relation & rollup), filters, sorts, and cross-database relations.
+
+### The Data Model
+
+\`\`\`typescript
+type DatabaseViewType = "grid" | "board" | "calendar" | "gallery";
+type DatabaseFieldType = "text" | "number" | "checkbox" | "select" |
+  "multi_select" | "date" | "relation" | "rollup";
+\`\`\`
+
+- **Relation**: a field pointing to another database (\`relationDatabaseId\`) — rendered as pills, click-to-navigate, and **backlinks**: the target row sees the inverse relation.
+- **Rollup**: an aggregated field over a relation (\`sourceRelation\` + \`targetField\` + \`rollupFunction\`: sum, count, avg, min, max), auto-recalculated.
+- **Field type conversion**: select → multi_select, number → text, with value mapping (\`convertFieldType\`).
+- **In-column Board sorting**: vertical drag within a column, persisted via \`sortOrder\` on the row.
+
+### Pure Logic in \`query.ts\`
+
+All logic (filters, sorts, grouping, conversion, rollup math) lives in **pure functions with zero React** — tested directly in Node:
+
+\`\`\`typescript
+// 500+ lines of pure logic, 0 React dependencies
+applyViewQuery(rows, view, fields)    // filter + sort + projection
+groupRowsBySelect(rows, field)        // Board columns
+monthWeeks(year, month)               // Calendar grid
+moveRowToOption(row, field, optionId) // cross-column drag
+\`\`\`
+
+Each view is a dedicated component (\`GridView\`, \`BoardView\`, \`CalendarView\`, \`GalleryView\`) that only renders — the logic is 100% in \`query.ts\`.
+
+---
+
+## 🔄 P2-A — Multi-Device Sync (Self-Hosted, Pure Node Server)
+
+The biggest piece: a **zero-dependency self-hosted sync server** synchronizing **11 collections** (notes, folders, flashcards, quiz, attempts, podcasts, chat, databases, db_rows, workspaces, comments) across all devices.
+
+### The Server — \`server/sync.mjs\` + \`server/sync/\`
+
+\`\`\`
+[Electron App] ──→ /api/sync/* (mounted on the local server)
+                    ├── register / login    → JWT HMAC-SHA256 (node:crypto)
+                    ├── pull?since=…        → changes since the cursor
+                    ├── push {changes}      → local diffs, LWW server-side
+                    ├── share / shares      → note_shares registry (P2-B)
+                    └── /api/sync/ws        → minimal WebSocket RFC6455 (realtime)
+\`\`\`
+
+| Endpoint | Method | Usage |
+|----------|--------|-------|
+| \`/api/sync/register\` | POST | Account creation (scrypt + JWT) |
+| \`/api/sync/login\` | POST | Login |
+| \`/api/sync/pull\` | GET | Changes since a cursor (\`since\`) |
+| \`/api/sync/push\` | POST | Push local changes |
+| \`/api/sync/share\` | POST/DELETE/PATCH | Share / revoke / change role |
+| \`/api/sync/shares\` | GET | Shares of a note |
+| \`/api/sync/shared-notes\` | GET | Notes shared with me |
+| \`/api/sync/ws\` | WS | Realtime notifications + presence |
+
+- **Pluggable storage**: memory (tests) or JSON file (self-hosted), \`flush\` on shutdown.
+- **Docker compose**: \`sync\` service on port 4848 with a persisted volume.
+- **\`npm run serve:sync\`** runs the standalone server.
+
+### The Client Engine — \`src/lib/sync/\`
+
+The \`SyncEngine\` is **framework-free** (it takes the raw \`Store\`), tested in Node with 2 simulated devices:
+
+\`\`\`
+1. pull  → apply remote changes (LWW: never overwrite a newer local write)
+2. push  → diff current local snapshot vs what we pushed (put / delete)
+3. tombstones → local deletions can't be resurrected by a pull
+4. conflicts → server returns its winning copy, we apply it → convergence
+\`\`\`
+
+\`\`\`typescript
+// Conflict resolution: last-write-wins + fingerprint as tie-breaker
+export function lwwShouldApply(incoming: Versioned, current: Versioned | undefined): boolean {
+  if (!current) return true;
+  if (incoming.version !== current.version) return incoming.version > current.version;
+  return incoming.hash !== current.hash; // equal version → stable hash breaks the tie
+}
+\`\`\`
+
+The \`fingerprint\` uses a \`stableStringify\` (sorted keys) so the same object always hashes the same. The **realtime WebSocket** (exponential backoff 1s → 30s) triggers \`syncNow()\` as soon as another device pushes.
+
+---
+
+## 👥 P2-B — Real-Time Collaboration
+
+### Owner / Editor / Viewer Access Model
+
+\`\`\`typescript
+type AccessLevel = "owner" | "editor" | "viewer";
+const canEdit = (l) => l === "owner" || l === "editor";
+const canShare = (l) => l === "owner";
+\`\`\`
+
+- \`note_shares\` server registry: \`noteId → owner + entries\`.
+- **Read-only rejection**: viewer writes are rejected server-side (idempotent no-op accepted), the UI switches to read-only mode (editor, title, emoji, cover, properties).
+- **Cross-user mirroring**: an editor's changes replicate to the owner and vice versa (version-based LWW). The **chat stays private** — no leakage between collaborators.
+- **Share bootstrap**: the note + its flashcards/quiz are seeded into the collaborator's store.
+
+### WebSocket Presence — \`src/lib/sync/presence.ts\`
+
+Dedicated realtime channel with **deterministic per-user colors**:
+
+\`\`\`typescript
+const PRESENCE_COLORS = ["#f59e0b", "#0ea5e9", "#10b981", "#ec4899", "#8b5cf6", "#f43f5e", "#14b8a6", "#eab308"];
+export function colorFor(userId: string): string { /* hash 31 × charCode */ }
+\`\`\`
+
+Messages: \`join\` / \`roster\` / \`cursor\` / \`leave\` / \`note-updated\`, with **per-device refcount** (a user with 2 tabs = 1 person). Auto-rejoin after reconnection.
+
+---
+
+## 🌐 P2-C — Web Publishing (\`/p/:slug\`)
+
+A note publishes as a **standalone page**:
+
+- Publish button in \`PagePropertiesPanel\` → generated slug (kebab-case), optional password (hashed), optional expiry.
+- \`renderPublishedHTML(note)\` generates a **self-contained HTML page** (embedded CSS, responsive, dark/light) — zero external dependencies.
+- SPA route \`/p/:slug\` → \`PublishedPage.tsx\`: password check (unlocked via \`sessionStorage\`), expired page → dedicated message.
+- Shared logic in \`src/lib/publish/publish.ts\` (gate + expiry), purely testable.
+
+\`\`\`typescript
+export type PublishedGate =
+  | { status: "ok"; note: Note }
+  | { status: "password-required" }
+  | { status: "password-wrong" }
+  | { status: "expired" }
+  | { status: "not-found" };
+\`\`\`
+
+---
+
+## 🗂️ P2-D — Multiple Workspaces
+
+- \`Workspace\` type (\`name\`, \`icon\`, \`color\`, dates) + \`workspaceId\` on \`Note\`/\`Folder\`/\`Database\`.
+- **Isolated storage**: one IndexedDB per workspace (\`edutounes-ws-{id}\`), the Repo routes to the right store.
+- **Migration**: existing data moves to the default workspace.
+- \`WorkspaceSwitcher\` in the Dashboard + \`CreateWorkspaceModal\`.
+- **Full workspace Export/Import** as JSON: ID remapping (notes, folders, databases, rows, flashcards, quiz, attempts, podcasts, chat) in two passes over \`parentId\`s.
+
+---
+
+## ✍️ P2-E — Advanced AI Writer (15 presets)
+
+The editor's FloatingToolbar becomes a real AI writing studio:
+
+- **4 categories** (Rewrite / Expand / Analyze / Translate) → **15 presets**: Reformulate, More professional, More concise, Fix mistakes, Continue, Expand, Convert to list, Simplify, Summarize, Explain, Extract key points, Detail, Translate, Translate (formal), Translate (casual).
+- **Streaming** output in real time, Cancel / Copy buttons.
+- **\`Ctrl+Shift+A\`** re-runs the last used preset (persisted in localStorage) on the current selection.
+- Undo supported (the existing transactional history handles it).
+
+---
+
+## 💬 P3-A — Comments + Notification Center
+
+### The \`Comment\` Model
+
+\`\`\`typescript
+interface Comment {
+  id: ID;
+  noteId: ID;
+  blockId?: ID;          // null = note-level comment
+  userId: ID;            // author
+  text: string;
+  createdAt: number;
+  updatedAt: number;
+  resolvedAt?: number;   // marked resolved
+  replyToId?: ID;        // reply thread
+}
+\`\`\`
+
+- \`comments\` added to the syncable collections → **a comment travels through the sync** (P2-A); the notification is just a UI trigger.
+- **\`@collaborator\` mentions**: pure parser (\`mentionTokenAt\`, \`mentionMatches\`, \`applyMention\`) suggesting note collaborators → \`mention\` notification.
+- **Anchored pins** on blocks (same measurement technique as remote cursors), collapsible threads, resolve ✓, delete by author/owner.
+
+### Derived Notifications
+
+\`\`\`typescript
+export function deriveNotifications(comments, cursor): AppNotification[]
+// type: "comment" | "mention" | "note-updated" — sorted, with persisted cursor
+\`\`\`
+
+\`comment\`/\`mention\` notifications are **derived locally from the pull** — the server does nothing beyond sync. \`note-updated\` (existing) covers edits via WebSocket.
+
+---
+
+## 🎤 P3-B — Voice Dictation in the Editor
+
+- \`detectSpeechRecognition()\`: \`window.SpeechRecognition || webkitSpeechRecognition\`, resolved **once** (memoized) for test stability.
+- **Gray intermediate results** that solidify into final text on commit; stop → \`onCommit(transcript)\`; Escape → cancel.
+- **Language derived** from the note's generation language (\`speechLangCode\` → BCP-47) + override in popover (13 languages).
+- Anti-loop protection: 5 silent restarts max if the engine kills the session immediately.
+- Clean fallback: if the API is absent (WebView), message + redirect to voice recording (P1-E) which remains available.
+
+---
+
+## 🧹 P3-C — Tech Debt Cleanup: V1's Lessons Resolved
+
+The "lessons learned" from V1 posts have all been **resolved**:
+
+- **7 manual dropdowns** → single shared \`usePositionedDropdown\` hook (portal + \`getBoundingClientRect\` + viewport clamp + Escape + click-outside). \`clampToViewport\` extracted and reused by \`DashboardContextMenu\` — **0 manual dropdowns remaining**.
+- **\`FloatingPomodoro.tsx\` (1,447 lines)** → split: \`pomodoro-core.ts\` (pure logic) + \`PomodoroTimerDisplay\`, \`PomodoroStats\`, \`PomodoroSettings\` — shell drops to **414 lines**, zero behavior change.
+- **\`NoteView.tsx\` (1,155 lines)** → extracted \`NoteCoverHeader\`, \`EditorToolbar\`, \`BacklinksPanel\`, \`PagePropertiesPanel\`, \`CommentsPanel\`, and hooks grouped by feature: \`useNoteSave\` (persist debounce 400ms + saving/saved status + applyNow) and \`usePanelResize\` (shared drag-resize for 3 panels).
+- **Duplicated \`relTime()\`** → single implementation (\`helpers.relTime\`) + French variant \`relTimeFr\`.
+- **\`structuredClone\`** → eliminated from history push (see P3-D).
+- **Accessibility**: \`aria-label\` audit, global \`prefers-reduced-motion\`, fixed a real violation (\`CommentPins\` no longer hides focusable buttons).
+
+---
+
+## 📄 P1-C — PDF Export (Completed)
+
+The **Export** menu in the \`EditorToolbar\` now includes **PDF printing** via \`printPdf(note)\` (browser print dialog) alongside Markdown / Word (HTML) / HTML exports — in \`src/lib/publish/export.ts\`, unit tested.
+
+---
+
+## ⚡ P3-D — Performance: 200-Block Notes Stay Fluid
+
+### Diff-based History — \`structuredClone\` Eliminated from Push
+
+Before, every \`push()\` cloned the entire note. Now: **reference storage** (push O(1)), clone only on undo/redo read.
+
+| Operation (200-block note) | Before | After | Gain |
+|---|---|---|---|
+| \`push\` ×50 | 19.45 ms | **1.56 ms** | **12.4×** |
+| undo ×49 + redo ×49 | — | 26.18 ms | clone on read only |
+
+### Incremental Editor Rendering
+
+- Initial window of **60 blocks**, growing by **40** when a sentinel (\`IntersectionObserver\`, rootMargin 800px) approaches the viewport.
+- Full render forced only during transient states: **find & replace**, block drag.
+- The \`pendingFocus\` block is always included (Enter → new block mounts immediately).
+- \`BlockRow\` (memo): stable callbacks parameterized by id → one keystroke no longer re-renders all 200 rows.
+- Lazy find: document scan only happens when the bar is open.
+
+---
+
+## 🚀 Upload — 20-Minute Wait Eliminated
+
+The "20 min wait on first Ollama call" plan is implemented:
+
+- **\`keep_alive: "5m"\`** in \`buildOptions()\` → model stays in RAM between calls.
+- **\`warmUp()\`**: pre-loads the model (\`keep_alive: "24h"\`, empty prompt) at app startup, non-blocking.
+- **MAP parallelization**: \`MAP_CONCURRENCY = 2\` workers (\`Promise.allSettled\`) instead of sequential loop, with resilience (one chunk failing ≠ everything failing).
+- **\`ProgressEvent\`** (\`onProgress\`): phases \`loading_model\` → \`generating\` → \`done\`, with **ETA timer** (\`computeETA\`) in the \`DashboardJobOverlay\` (elapsed time + estimate + warning after 60s).
+
+---
+
+## ✅ V1.2 Technical Summary
+
+| Metric | V1.1 | V1.2 |
+|--------|------|------|
+| Unit tests | 180 | **888** (57 files) |
+| Synced collections | 0 | **11** |
+| Sync server endpoints | 0 | **8** (+ realtime WebSocket) |
+| Database views | 0 | **4** (grid, board, calendar, gallery) |
+| Database field types | 0 | **8** (incl. relation & rollup) |
+| AI Writer presets | 0 | **15** (4 categories) |
+| History push 200 blocks | 19.45 ms | **1.56 ms (12.4×)** |
+| Editor renders | full | **incremental (60 → +40)** |
+| TypeScript errors | 0 | **0** |
+
+**CI Pipeline** (\`.github/workflows/ci.yml\`): \`typecheck\` + \`lint\` + \`format-check\` + tests on every main push / PR.
+
+---
+
+**🎯 Next steps:**
+1. Windows Service mode for Ollama (Phase E of lifecycle plan)
+2. Webhook/PWA for background sync on mobile
+3. Granular per-block permissions (vs. whole note)
+
+#React #TypeScript #Architecture #Sync #CRDT #LWW #WebSocket #IndexedDB #OpenSource #EduTounes
+
+---
+
+*The biggest overhaul: ~4000 lines of new logic, 888 tests, 0 regressions. And a sync server that runs on a Raspberry Pi.*`
+  },
+
+  {
+    id: "v12-uiux-fr",
+    version: "V1.2",
+    category: "UI/UX",
+    lang: "fr",
+    icon: "🎨",
+    title: "UI/UX Design",
+    content: `# 📍 LinkedIn Post 6 — UI/UX V1.2 : Databases 4 vues, cursors collaboratifs, onglets, et un Dashboard qui se réinvente
+
+> *À accompagner d'une capture d'écran du Board d'une database avec les pastilles colorées, ou de la NoteView avec les épingles de commentaires et les cursors des collaborateurs*
+
+---
+
+**🎨 EduTounes V1.2 — L'interface devient un espace de travail**
+
+La V1.1 a rendu l'appli vivante. La V1.2 la rend **productive** : les databases passent de 1 à 4 vues, la collaboration devient visible (cursors, épingles de commentaires, présence), le Dashboard gagne des vues alternatives, et l'éditeur respire enfin sur les gros documents.
+
+---
+
+## 🗂️ Les Databases — 4 vues, un seul jeu de données
+
+### Le switcher de vues
+
+Le bloc database a maintenant un **switcher de vues** (Grid / Board / Calendar / Gallery) qui ne change que la *vue* — filtres et tris sont dédiés par vue :
+
+\`\`\`tsx
+{["grid", "board", "calendar", "gallery"].map((t) => (
+  <button
+    key={t}
+    onClick={() => setView(t)}
+    className={\`flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-bold transition-all \${
+      view === t ? "bg-accent text-accent-contrast" : "text-ink-dim hover:bg-card-hover"
+    }\`}
+  >
+    {viewIcon(t)} {viewName(t)}
+  </button>
+))}
+\`\`\`
+
+### Board / Kanban — drag inter-colonnes
+
+Le Board groupe les rows par valeur de champ \`select\`/\`multi_select\`, avec **drag & drop entre colonnes** via \`@dnd-kit\` :
+
+- Colonnes auto-générées à partir des options + colonne "No option"
+- **Cartes enrichies** : pastille de sélecteur colorée, checkbox, nombre formaté (séparateurs), date (mois + jour), et jusqu'à **4 aperçus de champs**
+- **Tri intra-colonne** par drag vertical (persistance \`sortOrder\`)
+
+\`\`\`tsx
+{/* Pastille de couleur du select — la couleur est dans le champ, pas du CSS en dur */}
+<span
+  className="size-2.5 rounded-full"
+  style={{ backgroundColor: option.color }}
+/>
+\`\`\`
+
+### Calendar — grille mensuelle
+
+Grille mois par mois avec bouton **« + » par jour** pour créer une row datée, navigation mois précédent/suivant, et pastilles colorées selon le statut.
+
+### Gallery — tuiles en grille
+
+Tuiles responsive (2–6 colonnes selon la largeur) avec header en dégradé, pills colorées par select, et bouton **+ New row** en bas de grille.
+
+### Édition de cellule inline
+
+Clic sur une cellule → **popover \`CellEditor\`** (via \`createPortal\`) : input texte, input nombre, toggle checkbox, dropdown select, date picker. Sauvegarde au blur/Enter, \`Escape\` annule. Le \`RowHistory\` (\`src/components/database/RowHistory.ts\`) suit l'historique des modifications d'une row.
+
+---
+
+## 👥 La collaboration devient visible
+
+### ShareModal — partager en 2 clics
+
+Modale de partage avec \`focus trap\` : champ email + sélecteur de rôle (Editor / Viewer), liste des collaborateurs avec changement de rôle et révocation.
+
+\`\`\`tsx
+{/* Rôle actif avec highlight, clic pour changer */}
+<button className={\`rounded-full px-3 py-1 text-[11px] font-bold \${
+  entry.accessLevel === "editor"
+    ? "bg-accent text-accent-contrast"
+    : "text-ink-dim hover:bg-card-hover"
+}\`}>
+  {entry.accessLevel === "editor" ? "Éditeur" : "Lecteur"}
+</button>
+\`\`\`
+
+### RemoteCursors — des carets colorés qui bougent en direct
+
+Chaque collaborateur voit les **carets des autres** dans l'éditeur, avec sa couleur déterministe (hash de l'userId) et son nom en tooltip. Le reporting se fait via \`selectionchange\` + rAF-throttle, sans toucher au flux d'édition.
+
+Dans l'\`EditorToolbar\`, un indicateur en direct montre **« X people viewing this note »**, et un **badge « View only »** s'affiche pour les lecteurs (viewer) — l'éditeur, le titre, l'emoji et la cover passent en lecture seule.
+
+### Épingles de commentaires — \`CommentPins\`
+
+Badge \`💬 n\` posé sur le bord droit de chaque bloc commenté :
+
+- Mesuré comme les cursors : \`data-block-id\` + \`getBoundingClientRect\` re-mesuré au scroll/resize (rAF-throttle)
+- **Couleur accent** si le fil a des commentaires non résolus, gris sinon
+- Clic → le panneau Comments s'ouvre sur le fil concerné
+- Accessibilité : les épingles sont des **boutons focusables** (pas de \`aria-hidden\` sur le conteneur)
+
+\`\`\`tsx
+<button
+  className="pointer-events-auto absolute right-0 flex items-center gap-1 rounded-full
+    border px-1.5 py-0.5 text-[10px] font-bold shadow-sm transition-all hover:scale-110"
+  style={{
+    backgroundColor: pin.unresolved ? "var(--color-accent)" : "var(--color-card)",
+    color: pin.unresolved ? "var(--color-accent-contrast)" : "var(--color-ink-dim)",
+  }}>
+  <MessageCircle className="size-3" /> {pin.count}
+</button>
+\`\`\`
+
+### CommentsPanel — le fil de discussion
+
+Panneau latéral redimensionnable (260–560px) : threads triés par bloc puis date, réponses repliables, **mention \`@nom\`** avec picker clavier (↑↓ / Enter), résolution ✓, suppression par l'auteur/owner. Sur mobile, il devient un **sheet plein écran**. Le composer est masqué pour les lecteurs (viewer).
+
+### NotificationBell — la cloche qui compte
+
+Icône cloche dans la sidebar avec **badge rouge non-lus** (9+ au-delà de 9) :
+
+- Dropdown \`role="menu"\` : notifications triées, « Tout marquer comme lu », « Vider »
+- Clic sur une notification → navigation vers la note + marquée lue
+- Types avec icônes et temps relatif français (\`relTimeFr\`)
+
+---
+
+## 📋 Le Dashboard se réinvente
+
+### 3 vues alternatives de la liste des notes
+
+En plus de la liste, le Dashboard peut afficher ses notes en :
+
+- **Board (kanban)** : colonnes par dossier, drag entre colonnes pour déplacer (ou épingler !), cartes compactes avec badge de source
+- **Calendar** : les notes datées posées sur une grille mensuelle
+- **Gallery** : grandes tuiles avec cover en dégradé
+
+### Filtres rapides couleur & tags — \`DashboardFilterBar\`
+
+Une rangée de chips : filtrer par **couleur de note** (pastille + nom) ou par **tag** (\`#tag\`). Clic sur le chip actif pour retirer le filtre.
+
+### NoteCard réinventée
+
+La carte de note affiche : emoji/icône de source colorée, badge de source, titre, extrait, tags, **pastille de couleur de la note** (\`NoteColorPicker\`), dates relatives, et le badge du **compteur de commentaires non résolus**.
+
+### TemplatesModal — créer depuis un modèle
+
+Liste des notes marquées comme modèle (\`template\`), création en un clic avec état \`creating\` (spinner) sur le modèle choisi.
+
+### PagePropertiesPanel — les métadonnées enfin visibles
+
+Panneau latéral droit (resizable) avec : icône + **EmojiPicker**, **cover** (10 dégradés), **tags** (ajout/suppression), statut (épinglé / modèle), dates (création / modification / dernière ouverture), source, et la section **Publish** (slug, mot de passe, expiration, lien copiable, unpublish).
+
+Le menu **Export** de l'EditorToolbar complète l'histoire : **Markdown**, **Word** (HTML), **HTML** et **impression PDF** (\`printPdf\` — dialogue du navigateur).
+
+---
+
+## 🎹 Command Palette — recherche globale plein texte
+
+La palette \`⌘K\` ne se limite plus aux actions : elle **cherche dans tout le workspace** via \`SearchIndex\` (Fuse.js) :
+
+- Résultats : notes + **lignes de databases**
+- **Snippets contextuels** avec le contexte autour du match
+- **Highlighting** des termes matchés (fonction pure \`highlightMatches\`)
+- Badges de type de match : \`Title\` / \`Tag\` / \`Content\` / \`Database\`
+- L'index est **persisté** (\`useSearchIndex\`) et mis à jour au fil des éditions
+
+\`\`\`typescript
+// highlightMatches — marque les matches sans risque XSS (pas de dangerouslySetInnerHTML brut)
+export function highlightMatches(text: string, query: string): string {
+  /* découpe le texte en segments match / non-match et les balise <mark> */
+}
+\`\`\`
+
+## ⌨️ Raccourcis clavier + aide
+
+\`Ctrl+/\` ouvre \`KeyboardShortcutsModal\` : **10 catégories, 40+ raccourcis**, avec détection macOS (⌘) vs Linux/Windows (Ctrl). La palette inclut les actions globales : nouvelle note, toggle thème, création depuis modèle, ouvrir les paramètres…
+
+---
+
+## 🎵 Le lecteur de musique flottant
+
+Le widget musique a 3 modes (**docked / compact / full**) pilotés par \`WidgetModeContext\` :
+
+- **Docked** : onglet dans le dock latéral (icône + play/pause + skip)
+- **Compact** : carte flottante draggable avec titre, contrôles complets, **waveform** (\`MusicWaveform\`, activable dans Settings)
+- **Full** : panneau overlay avec playlist, **filtre par catégorie** (open-lofi), **favoris ♡** (toast avec cœurs flottants), **shuffle** et **répétition** (none / one / all)
+
+La logique de lecture (état, navigation, shuffle) est **pure** (\`src/lib/music/player.ts\`) et testée ; le hook \`useMusicPlayer\` gère le cycle de vie \`HTMLAudioElement\`.
+
+## ✅ Le widget Todo List
+
+Todo list flottante en 3 modes aussi :
+
+- **Sous-tâches**, **échéances** avec **niveaux d'urgence** (none / safe / warning / danger / overdue → couleurs dédiées)
+- **Drag & drop** de réordonnancement (\`@dnd-kit\`), filtres All / Active / Done
+- **Lien note** sur une tâche (navigation vers la note)
+- Rappels (système de reminder dans AppShell)
+
+\`\`\`tsx
+// Urgence calculée à partir de la date d'échéance — logique pure testée
+export function getUrgency(dueDate?: number): UrgencyLevel { /* … */ }
+\`\`\`
+
+## 🗂️ Onglets multiples — \`NoteTabsBar\`
+
+Barre d'onglets en haut de l'éditeur permettant d'ouvrir plusieurs notes en parallèle :
+
+- **Ctrl+Click** sur un lien de note dans le Dashboard → ouvre dans un nouvel onglet
+- **Fermeture** par clic sur la croix ou \`Ctrl+W\`
+- **Réordonnancement** par drag & drop
+- **Restauration** au rechargement de la page
+
+---
+
+## ✅ Résumé UI/UX V1.2
+
+| Fonctionnalité | Statut | Effort |
+|----------------|--------|--------|
+| Databases 4 vues | Nouveau | ~2500 lignes (query.ts + 4 composants) |
+| ShareModal + RemoteCursors | Nouveau | ~300 lignes |
+| CommentPins + CommentsPanel | Nouveau | ~400 lignes |
+| NotificationBell | Nouveau | ~120 lignes |
+| Dashboard Board/Calendar/Gallery | Nouveau | ~500 lignes |
+| DashboardFilterBar | Nouveau | ~80 lignes |
+| NoteCard réinventée | Amélioré | ~150 lignes |
+| TemplatesModal | Nouveau | ~100 lignes |
+| PagePropertiesPanel | Nouveau | ~200 lignes |
+| Command Palette (search) | Amélioré | ~100 lignes |
+| KeyboardShortcutsModal | Nouveau | ~80 lignes |
+| WidgetMusique 3 modes | Nouveau | ~400 lignes |
+| WidgetTodoList 3 modes | Nouveau | ~300 lignes |
+| NoteTabsBar | Nouveau | ~120 lignes |
+
+**Leçons apprises :**
+- ✅ La logique pure dans \`query.ts\` (500+ lignes) est testée directement en Node — zéro React dans les tests
+- ✅ Les 7 dropdowns refactorés en \`usePositionedDropdown\` — 200 lignes de code redondant éliminées
+- ✅ Le \`FloatingPomodoro\` éclaté de 1447 → 414 lignes sans changement de comportement
+- ✅ L'accessibilité est un audit continu, pas une passoire
+
+**🎯 Prochaine étape UI/UX :**
+- Tabs avec restauration persistente
+- Raccourcis clavier dans les databases (↑↓ pour naviguer, Enter pour éditer)
+- Export des données de database en CSV/JSON
+
+#UI #UX #DesignSystem #CSS #TailwindCSS #React #Frontend #Databases #Collaboration #Realtime
+
+---
+
+*La V1.2 est le moment où l'interface passe d'une app à un workspace. Prochaine étape : faire en sorte que le workspace soit partageable.*`
+  },
+
+  {
+    id: "v12-uiux-en",
+    version: "V1.2",
+    category: "UI/UX",
+    lang: "en",
+    icon: "🎨",
+    title: "UI/UX Design",
+    content: `# 📍 LinkedIn Post 6 — UI/UX V1.2: 4-View Databases, Collaborative Cursors, Tabs, and a Reinvented Dashboard
+
+> *Pair with a screenshot of a Board view with its colored pills, or the NoteView with comment pins and collaborator cursors*
+
+---
+
+**🎨 EduTounes V1.2 — The interface becomes a workspace**
+
+V1.1 made the app feel alive. V1.2 makes it **productive**: databases go from 1 to 4 views, collaboration becomes visible (cursors, comment pins, presence), the Dashboard gains alternative views, and the editor finally breathes on large documents.
+
+---
+
+## 🗂️ Databases — 4 Views, One Dataset
+
+### The View Switcher
+
+The database block now has a **view switcher** (Grid / Board / Calendar / Gallery) that only changes the *view* — filters and sorts stay per-view:
+
+\`\`\`tsx
+{["grid", "board", "calendar", "gallery"].map((t) => (
+  <button
+    key={t}
+    onClick={() => setView(t)}
+    className={\`flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-bold transition-all \${
+      view === t ? "bg-accent text-accent-contrast" : "text-ink-dim hover:bg-card-hover"
+    }\`}
+  >
+    {viewIcon(t)} {viewName(t)}
+  </button>
+))}
+\`\`\`
+
+### Board / Kanban — Cross-Column Drag
+
+The Board groups rows by \`select\`/\`multi_select\` field value, with **drag & drop between columns** via \`@dnd-kit\`:
+
+- Auto-generated columns from options + a "No option" column
+- **Enriched cards**: colored select pill, checkbox, formatted number (thousands separators), date (month + day), and up to **4 field previews**
+- **In-column sorting** via vertical drag (persisted \`sortOrder\`)
+
+\`\`\`tsx
+{/* Select color pill — the color lives in the field, not hard-coded CSS */}
+<span
+  className="size-2.5 rounded-full"
+  style={{ backgroundColor: option.color }}
+/>
+\`\`\`
+
+### Calendar — Monthly Grid
+
+Month-by-month grid with a **"+" per-day button** to create a dated row, previous/next month navigation, and status-colored pills.
+
+### Gallery — Responsive Tiles
+
+Responsive tiles (2–6 columns based on width) with gradient headers, select-colored pills, and a **+ New row** button at the bottom.
+
+### Inline Cell Editing
+
+Click a cell → **\`CellEditor\` popover** (via \`createPortal\`): text input, number input, checkbox toggle, select dropdown, date picker. Saves on blur/Enter, \`Escape\` cancels. \`RowHistory\` (\`src/components/database/RowHistory.ts\`) tracks a row's edit history.
+
+---
+
+## 👥 Collaboration Becomes Visible
+
+### ShareModal — Share in 2 Clicks
+
+Share modal with **focus trap**: email field + role selector (Editor / Viewer), collaborator list with role changes and revocation.
+
+\`\`\`tsx
+{/* Active role with highlight, click to change */}
+<button className={\`rounded-full px-3 py-1 text-[11px] font-bold \${
+  entry.accessLevel === "editor"
+    ? "bg-accent text-accent-contrast"
+    : "text-ink-dim hover:bg-card-hover"
+}\`}>
+  {entry.accessLevel === "editor" ? "Editor" : "Viewer"}
+</button>
+\`\`\`
+
+### RemoteCursors — Colored Carets Moving Live
+
+Every collaborator sees the **others' carets** in the editor, with their deterministic color (userId hash) and name in a tooltip. Reporting happens via \`selectionchange\` + rAF-throttle, without touching the edit stream.
+
+In the \`EditorToolbar\`, a live indicator shows **"X people viewing this note"**, and a **"View only" badge** appears for viewers — editor, title, emoji and cover all switch to read-only.
+
+### Comment Pins — \`CommentPins\`
+
+\`💬 n\` badge pinned to the right edge of every commented block:
+
+- Measured like cursors: \`data-block-id\` + \`getBoundingClientRect\` re-measured on scroll/resize (rAF-throttled)
+- **Accent color** if the thread has unresolved comments, gray otherwise
+- Click → the Comments panel opens on that thread
+- Accessibility: pins are **focusable buttons** (no \`aria-hidden\` on the container)
+
+\`\`\`tsx
+<button
+  className="pointer-events-auto absolute right-0 flex items-center gap-1 rounded-full
+    border px-1.5 py-0.5 text-[10px] font-bold shadow-sm transition-all hover:scale-110"
+  style={{
+    backgroundColor: pin.unresolved ? "var(--color-accent)" : "var(--color-card)",
+    color: pin.unresolved ? "var(--color-accent-contrast)" : "var(--color-ink-dim)",
+  }}>
+  <MessageCircle className="size-3" /> {pin.count}
+</button>
+\`\`\`
+
+### CommentsPanel — The Discussion Thread
+
+Resizable side panel (260–560px): threads sorted by block then date, collapsible replies, **\`@name\` mentions** with keyboard picker (↑↓ / Enter), resolve ✓, deletion by author/owner. On mobile it becomes a **fullscreen sheet**. The composer is hidden for viewers.
+
+### NotificationBell — The Bell That Counts
+
+Bell icon in the sidebar with a **red unread badge** (9+ beyond 9):
+
+- \`role="menu"\` dropdown: sorted notifications, "Mark all as read", "Clear"
+- Click a notification → navigates to the note + marks it read
+- Types with icons and French relative time (\`relTimeFr\`)
+
+---
+
+## 📋 The Dashboard Reinvents Itself
+
+### 3 Alternative Views of the Note List
+
+On top of the list, the Dashboard can display notes as:
+
+- **Board (kanban)**: folder columns, drag between columns to move (or pin!), compact cards with source badge
+- **Calendar**: dated notes laid out on a monthly grid
+- **Gallery**: large tiles with gradient covers
+
+### Quick Color & Tag Filters — \`DashboardFilterBar\`
+
+A chip row: filter by **note color** (pill + name) or by **tag** (\`#tag\`). Click the active chip to remove the filter.
+
+### Redesigned NoteCard
+
+The note card shows: emoji/colored source icon, source badge, title, excerpt, tags, **note color pill** (\`NoteColorPicker\`), relative dates, and the **unresolved-comment counter badge**.
+
+### TemplatesModal — Create From a Template
+
+Lists notes flagged as templates (\`template\`), one-click creation with a \`creating\` state (spinner) on the chosen template.
+
+### PagePropertiesPanel — Metadata Finally Visible
+
+Resizable right panel with: icon + **EmojiPicker**, **cover** (10 gradients), **tags** (add/remove), status (pinned / template), dates (created / modified / last opened), source, and the **Publish** section (slug, password, expiry, copy link, unpublish).
+
+The **Export** menu in the EditorToolbar completes the story: **Markdown**, **Word** (HTML), **HTML** and **PDF printing** (\`printPdf\` — browser dialog).
+
+---
+
+## 🎹 Command Palette — Global Full-Text Search
+
+The \`⌘K\` palette is no longer action-only: it **searches the entire workspace** via \`SearchIndex\` (Fuse.js):
+
+- Results: notes + **database rows**
+- **Context snippets** around each match
+- **Highlighting** of matched terms (pure \`highlightMatches\` function)
+- Match-type badges: \`Title\` / \`Tag\` / \`Content\` / \`Database\`
+- The index is **persisted** (\`useSearchIndex\`) and updated as you edit
+
+\`\`\`typescript
+// highlightMatches — marks matches with zero XSS risk (no raw dangerouslySetInnerHTML)
+export function highlightMatches(text: string, query: string): string {
+  /* splits text into match / non-match segments wrapped in <mark> */
+}
+\`\`\`
+
+## ⌨️ Keyboard Shortcuts + Help
+
+\`Ctrl+/\` opens \`KeyboardShortcutsModal\`: **10 categories, 40+ shortcuts**, with macOS (⌘) vs Linux/Windows (Ctrl) detection. The palette includes global actions: new note, theme toggle, create from template, open settings…
+
+---
+
+## 🎵 The Floating Music Player
+
+The music widget has 3 modes (**docked / compact / full**) driven by \`WidgetModeContext\`:
+
+- **Docked**: edge tab in the side dock (icon + play/pause + skip)
+- **Compact**: draggable floating card with title, full controls, **waveform** (\`MusicWaveform\`, toggleable in Settings)
+- **Full**: overlay panel with playlist, **category filter** (open-lofi), **favorites ♡** (toast with floating hearts), **shuffle** and **repeat** (none / one / all)
+
+Playback logic (state, navigation, shuffle) is **pure** (\`src/lib/music/player.ts\`) and tested; the \`useMusicPlayer\` hook manages the \`HTMLAudioElement\` lifecycle.
+
+## ✅ The Todo List Widget
+
+Floating todo list in 3 modes too:
+
+- **Subtasks**, **due dates** with **urgency levels** (none / safe / warning / danger / overdue → dedicated colors)
+- **Drag & drop** reordering (\`@dnd-kit\`), All / Active / Done filters
+- **Note link** on a task (navigates to the note)
+- Reminders (AppShell reminder system)
+
+\`\`\`tsx
+// Urgency computed from the due date — pure tested logic
+export function getUrgency(dueDate?: number): UrgencyLevel { /* … */ }
+\`\`\`
+
+## 🗂️ Multiple Tabs — \`NoteTabsBar\`
+
+Tab bar at the top of the editor allowing multiple notes open in parallel:
+
+- **Ctrl+Click** on a note link in Dashboard → opens in a new tab
+- **Close** via × button or \`Ctrl+W\`
+- **Reorder** via drag & drop
+- **Restore** on page reload
+
+---
+
+## ✅ V1.2 UI/UX Summary
+
+| Feature | Status | Effort |
+|---------|--------|--------|
+| Databases 4 views | New | ~2500 lines (query.ts + 4 components) |
+| ShareModal + RemoteCursors | New | ~300 lines |
+| CommentPins + CommentsPanel | New | ~400 lines |
+| NotificationBell | New | ~120 lines |
+| Dashboard Board/Calendar/Gallery | New | ~500 lines |
+| DashboardFilterBar | New | ~80 lines |
+| Redesigned NoteCard | Improved | ~150 lines |
+| TemplatesModal | New | ~100 lines |
+| PagePropertiesPanel | New | ~200 lines |
+| Command Palette (search) | Improved | ~100 lines |
+| KeyboardShortcutsModal | New | ~80 lines |
+| Music Widget 3 modes | New | ~400 lines |
+| TodoList Widget 3 modes | New | ~300 lines |
+| NoteTabsBar | New | ~120 lines |
+
+**Lessons learned:**
+- ✅ Pure logic in \`query.ts\` (500+ lines) tested directly in Node — zero React in tests
+- ✅ 7 dropdowns refactored into \`usePositionedDropdown\` — 200 lines of redundant code eliminated
+- ✅ \`FloatingPomodoro\` split from 1447 → 414 lines with zero behavior change
+- ✅ Accessibility is a continuous audit, not a sieve
+
+**🎯 Next UI/UX steps:**
+- Tabs with persistent restoration
+- Keyboard shortcuts in databases (↑↓ to navigate, Enter to edit)
+- Database data export to CSV/JSON
+
+#UI #UX #DesignSystem #CSS #TailwindCSS #React #Frontend #Databases #Collaboration #Realtime
+
+---
+
+*V1.2 is when the interface goes from an app to a workspace. Next up: making the workspace shareable.*`
+  }
+];
+
+// ═══════════════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════════════
+let currentLang = "fr";
+let currentArticleId = null;
+
+// ═══════════════════════════════════════════════════════════════════════
+// THEME
+// ═══════════════════════════════════════════════════════════════════════
+function setTheme(theme) {
+  document.documentElement.setAttribute("data-theme", theme);
+  document.querySelectorAll("#themeToggle .toggle-btn").forEach(b => {
+    b.classList.toggle("active", b.dataset.theme === theme);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// LANGUAGE
+// ═══════════════════════════════════════════════════════════════════════
+function setLang(lang) {
+  currentLang = lang;
+  document.querySelectorAll("#langToggle .toggle-btn").forEach(b => {
+    b.classList.toggle("active", b.dataset.lang === lang);
+  });
+  buildNav();
+  // Select first article of current language
+  const first = articles.find(a => a.lang === lang);
+  if (first) selectArticle(first.id);
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════════════════════════
+function buildNav() {
+  const nav = document.getElementById("sidebarNav");
+  const filtered = articles.filter(a => a.lang === currentLang);
+  const versions = ["V1", "V1.1", "V1.2"];
+
+  let html = "";
+  for (const v of versions) {
+    const items = filtered.filter(a => a.version === v);
+    if (items.length === 0) continue;
+    html += `<div class="nav-group"><div class="nav-group-title">${v}</div>`;
+    for (const item of items) {
+      html += `
+        <div class="nav-item ${currentArticleId === item.id ? 'active' : ''}"
+             data-id="${item.id}" onclick="selectArticle('${item.id}')">
+          <span class="nav-item-icon">${item.icon}</span>
+          <span>${item.title}</span>
+          <span class="nav-item-tag">${item.category}</span>
+        </div>`;
+    }
+    html += `</div>`;
+  }
+  nav.innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// ARTICLE SELECTION
+// ═══════════════════════════════════════════════════════════════════════
+function selectArticle(id) {
+  currentArticleId = id;
+  const article = articles.find(a => a.id === id);
+  if (!article) return;
+
+  // Update nav active state
+  document.querySelectorAll(".nav-item").forEach(el => {
+    el.classList.toggle("active", el.dataset.id === id);
+  });
+
+  // Render content
+  const area = document.getElementById("contentArea");
+  const renderedMd = renderMarkdown(article.content);
+
+  area.innerHTML = `
+    <div class="content-header">
+      <h1>${article.icon} ${article.title}</h1>
+      <div class="content-meta">
+        <span>📦 Version ${article.version}</span>
+        <span>🏷️ ${article.category}</span>
+        <span>${currentLang === 'fr' ? '🇫🇷 Français' : '🇬🇧 English'}</span>
+      </div>
+    </div>
+    <div class="md-content">${renderedMd}</div>
+    <a href="index.html" class="back-link">← Retour au portfolio</a>
+  `;
+
+  // Scroll to top
+  document.querySelector('.main').scrollTop = 0;
+  window.scrollTo(0, 0);
+
+  // Close mobile sidebar
+  document.querySelector('.sidebar').classList.remove('open');
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// SIMPLE MARKDOWN RENDERER
+// ═══════════════════════════════════════════════════════════════════════
+function renderMarkdown(md) {
+  let html = md;
+
+  // Code blocks (must be first to prevent inner processing)
+  html = html.replace(/```(\w*)\n([\s\S]*?)```/g, (_, lang, code) => {
+    const escaped = code.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return `<pre><code class="lang-${lang}">${escaped}</code></pre>`;
+  });
+
+  // Inline code
+  html = html.replace(/`([^`\n]+)`/g, '<code>$1</code>');
+
+  // Headers
+  html = html.replace(/^#### (.+)$/gm, '<h4>$1</h4>');
+  html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+  html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
+  html = html.replace(/^# (.+)$/gm, '<h1>$1</h1>');
+
+  // Horizontal rules
+  html = html.replace(/^---$/gm, '<hr>');
+
+  // Blockquotes
+  html = html.replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>');
+
+  // Bold and italic
+  html = html.replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>');
+  html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+
+  // Links
+  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
+
+  // Tables
+  html = html.replace(/^\|(.+)\|$/gm, (match, content) => {
+    const cells = content.split('|').map(c => c.trim());
+    if (cells.every(c => /^[\s-:]+$/.test(c))) return '<!--table-sep-->';
+    const isHeader = false; // We detect header by the separator
+    return `<tr>${cells.map(c => `<td>${c}</td>`).join('')}</tr>`;
+  });
+  html = html.replace(/<tr>(.+?)<\/tr>\n<!--table-sep-->\n<tr>([\s\S]*?)<\/tr>/g, (_, header, body) => {
+    const headerCells = header.replace(/<td>/g, '<th>').replace(/<\/td>/g, '</th>');
+    return `<table><thead><tr>${headerCells}</tr></thead><tbody>${body.replace(/<\/?tr>/g, '')}</tbody></table>`;
+  });
+  // Simple table fallback
+  html = html.replace(/<!--table-sep-->/g, '');
+
+  // Lists
+  html = html.replace(/^- (.+)$/gm, '<li>$1</li>');
+  html = html.replace(/(<li>.*<\/li>\n?)+/g, (match) => `<ul>${match}</ul>`);
+
+  // Numbered lists
+  html = html.replace(/^\d+\. (.+)$/gm, '<li>$1</li>');
+
+  // Paragraphs (lines not starting with <)
+  html = html.replace(/^(?!<[a-z/])((?!^\s*$).+)$/gm, '<p>$1</p>');
+
+  // Clean up empty paragraphs
+  html = html.replace(/<p>\s*<\/p>/g, '');
+
+  // Line breaks
+  html = html.replace(/\n\n+/g, '\n');
+
+  return html;
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════════════
+buildNav();
+// Select first article by default
+const first = articles.find(a => a.lang === currentLang);
+if (first) selectArticle(first.id);
+</script>
+
+</body>
+</html>
