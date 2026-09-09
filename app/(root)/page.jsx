@@ -235,6 +235,9 @@ const MyPage = () => {
       <section id="home" className="scroll-mt-24">
         <HeroAnimation>
           <div className="relative w-full min-h-[100svh] flex flex-col justify-center overflow-x-clip px-6 md:px-16 pt-28 md:pt-24 pb-16">
+            {/* Aurora bordeaux — wash conique animé, très lent */}
+            <div aria-hidden="true" className="hero-aurora" />
+
             {/* Soft background blob bordeaux */}
             <div
               aria-hidden="true"
@@ -260,26 +263,44 @@ const MyPage = () => {
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
                 {/* Texte */}
                 <div className="lg:col-span-7">
+                  {/* Eyebrow pill — statut disponibilité */}
+                  <div
+                    className="hero-eyebrow mb-5 inline-flex items-center gap-2.5 rounded-full
+                      border border-[var(--color-border)] dark:border-[var(--color-border-dark)]
+                      bg-[var(--color-surface)] dark:bg-[var(--color-surface-dark)]
+                      px-4 py-1.5 backdrop-blur-sm"
+                  >
+                    <span className="relative flex h-2 w-2" aria-hidden="true">
+                      <span className="absolute inline-flex h-full w-full rounded-full bg-[var(--color-accent)] opacity-60 animate-ping" />
+                      <span className="relative inline-flex h-2 w-2 rounded-full bg-[var(--color-accent)] dark:bg-[var(--color-accent-dark)]" />
+                    </span>
+                    <span
+                      className="text-xs font-medium uppercase tracking-[3px]
+                        text-[var(--color-ink-2)] dark:text-[var(--color-ink-2-dark)] font-body-ui"
+                    >
+                      AI &amp; Web Engineering Student
+                    </span>
+                  </div>
+
+                  {/* Nom — typographie oversized, tracking serré */}
                   <TextReveal
-                    className="text-[var(--color-ink)] dark:text-[var(--color-ink-dark)]
-                      text-[clamp(2.5rem,8vw,6rem)] leading-[1.02] font-semibold tracking-[-0.03em]
+                    className="hero-name-glow text-[var(--color-ink)] dark:text-[var(--color-ink-dark)]
+                      text-[clamp(3.25rem,11vw,8.5rem)] leading-[0.95] font-bold tracking-[-0.04em]
                       overflow-wrap-anywhere min-w-0 mb-6 md:mb-8"
                   >
                     Taim
                     <br />
-                    Baklouti
+                    <span className="ember-word">Baklouti</span>
                   </TextReveal>
 
-                  <div className="hero-bio max-w-2xl mb-8 md:mb-10">
+                  <div className="hero-bio max-w-xl mb-8 md:mb-10">
                     <p
                       className="text-[var(--color-ink-2)] dark:text-[var(--color-ink-2-dark)]
                       text-lg md:text-xl leading-relaxed"
                     >
-                      Ranked <strong className="ember-word font-semibold">#1</strong> in my class
-                      with 15.14/20. I built{" "}
-                      <strong className="ember-word font-semibold">EduTounes</strong>, an AI
-                      learning platform used by real students — born from my own struggles, built
-                      for impact.
+                      I build <strong className="ember-word font-semibold">EduTounes</strong>, an AI
+                      learning platform used by real students — turning my own struggles into tools
+                      for others.
                     </p>
                   </div>
 
@@ -290,6 +311,54 @@ const MyPage = () => {
                     <Button variation="secondary" href="#contact">
                       Contact
                     </Button>
+                  </div>
+
+                  {/* Proof bar — stats compactes intégrées au hero */}
+                  <div
+                    className="hero-proof mb-8 inline-flex flex-wrap items-center gap-x-6 gap-y-3
+                      rounded-[var(--radius-pill)] border border-[var(--color-border)] dark:border-[var(--color-border-dark)]
+                      bg-[var(--color-surface)] dark:bg-[var(--color-surface-dark)]
+                      px-5 py-3 backdrop-blur-sm shadow-[var(--shadow-sm)]"
+                  >
+                    <AnimatedNumber
+                      value={1}
+                      prefix="#"
+                      className="font-display-alt text-xl md:text-2xl font-bold text-[var(--color-accent)] dark:text-[var(--color-accent-dark)]"
+                      duration={2000}
+                      delay={600}
+                    />
+                    <span className="text-xs md:text-sm text-[var(--color-ink-2)] dark:text-[var(--color-ink-2-dark)] font-body-ui -ml-4">
+                      Ranked in Class
+                    </span>
+                    <span
+                      className="hidden sm:block w-px h-6 bg-[var(--color-border-strong)] dark:bg-[var(--color-border-strong-dark)]"
+                      aria-hidden="true"
+                    />
+                    <AnimatedNumber
+                      value={15.14}
+                      suffix="/20"
+                      decimals={2}
+                      className="font-display-alt text-xl md:text-2xl font-bold text-[var(--color-accent)] dark:text-[var(--color-accent-dark)]"
+                      duration={2000}
+                      delay={700}
+                    />
+                    <span className="text-xs md:text-sm text-[var(--color-ink-2)] dark:text-[var(--color-ink-2-dark)] font-body-ui -ml-4">
+                      Average
+                    </span>
+                    <span
+                      className="hidden sm:block w-px h-6 bg-[var(--color-border-strong)] dark:bg-[var(--color-border-strong-dark)]"
+                      aria-hidden="true"
+                    />
+                    <AnimatedNumber
+                      value={2}
+                      suffix="nd"
+                      className="font-display-alt text-xl md:text-2xl font-bold text-[var(--color-accent)] dark:text-[var(--color-accent-dark)]"
+                      duration={2000}
+                      delay={800}
+                    />
+                    <span className="text-xs md:text-sm text-[var(--color-ink-2)] dark:text-[var(--color-ink-2-dark)] font-body-ui -ml-4">
+                      National Hackathon
+                    </span>
                   </div>
 
                   <div className="hero-social">
@@ -321,8 +390,8 @@ const MyPage = () => {
           <div className="w-full max-w-5xl mx-auto">
             <AnimatedSection stagger={0.12}>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 min-h-[50vh] md:min-h-[60vh]">
-                {/* Large image tile */}
-                <motion.div className="md:col-span-2 md:row-span-2 relative rounded-[var(--radius-xl)] overflow-hidden group min-h-[320px]">
+                {/* Large image tile — pleine largeur */}
+                <motion.div className="md:col-span-3 relative rounded-[var(--radius-xl)] overflow-hidden group min-h-[320px] md:min-h-[420px]">
                   <div data-parallax="0.12" className="absolute inset-0 scale-125">
                     <Image
                       src={MeAbout}
@@ -352,46 +421,6 @@ const MyPage = () => {
                       </Button>
                     </div>
                   </div>
-                </motion.div>
-
-                {/* Stats tiles — soft surfaces, no thick borders */}
-                <motion.div className="relative rounded-[var(--radius-xl)] p-6 flex flex-col justify-center ember-tile shadow-[var(--shadow-sm)]">
-                  <AnimatedNumber
-                    value={1}
-                    prefix="#"
-                    className="font-display-alt text-3xl md:text-4xl font-bold text-[var(--color-accent)] block mb-1"
-                    duration={2000}
-                  />
-                  <span className="text-sm text-[var(--color-ink-2)] dark:text-[var(--color-ink-2-dark)] font-body-ui">
-                    Ranked in Class
-                  </span>
-                </motion.div>
-
-                <motion.div className="relative rounded-[var(--radius-xl)] p-6 flex flex-col justify-center ember-tile shadow-[var(--shadow-sm)]">
-                  <AnimatedNumber
-                    value={15.14}
-                    suffix="/20"
-                    decimals={2}
-                    className="font-display-alt text-3xl md:text-4xl font-bold text-[var(--color-accent)] block mb-1"
-                    duration={2000}
-                    delay={100}
-                  />
-                  <span className="text-sm text-[var(--color-ink-2)] dark:text-[var(--color-ink-2-dark)] font-body-ui">
-                    Average
-                  </span>
-                </motion.div>
-
-                <motion.div className="relative rounded-[var(--radius-xl)] p-6 flex flex-col justify-center ember-tile shadow-[var(--shadow-sm)]">
-                  <AnimatedNumber
-                    value={2}
-                    suffix="nd"
-                    className="font-display-alt text-3xl md:text-4xl font-bold text-[var(--color-accent)] block mb-1"
-                    duration={2000}
-                    delay={200}
-                  />
-                  <span className="text-sm text-[var(--color-ink-2)] dark:text-[var(--color-ink-2-dark)] font-body-ui">
-                    National Hackathon
-                  </span>
                 </motion.div>
               </div>
             </AnimatedSection>

@@ -70,6 +70,29 @@ export default function HeroParticles({ className = "" }) {
         ctx.globalAlpha = Math.max(0, a);
         ctx.fill();
       }
+      /* Filament auroral — courbe traversant le hero, très douce */
+      const time = performance.now() / 1000;
+      const filament = (offset) => {
+        ctx.beginPath();
+        for (let x = -20; x <= width + 20; x += 24) {
+          const y =
+            height * (0.3 + offset * 0.25) +
+            Math.sin(x * 0.004 + time * 0.35 + offset * 2.4) * 60 +
+            Math.sin(x * 0.0013 - time * 0.2 + offset) * 40;
+          if (x === -20) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        const grad = ctx.createLinearGradient(0, 0, width, height * 0.5);
+        grad.addColorStop(0, "transparent");
+        grad.addColorStop(0.5, accent || "#b91c1c");
+        grad.addColorStop(1, "transparent");
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = 1.5;
+        ctx.globalAlpha = 0.1;
+        ctx.stroke();
+      };
+      filament(0);
+      filament(1);
       ctx.globalAlpha = 1;
     };
 
