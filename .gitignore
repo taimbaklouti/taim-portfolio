@@ -42,7 +42,6 @@ next-env.d.ts
 .agent/
 .opencode/
 .skills/
-/skills/
 skills-lock.json
 skills.txt
 
@@ -55,6 +54,7 @@ prod-server-err.log
 # docs markdown - garder uniquement README.md à la racine
 *.md
 !/README.md
+!skills/**/*.md
 
 # secrets - ne jamais push
 token.txt

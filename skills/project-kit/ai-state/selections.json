@@ -1,0 +1,108 @@
+{
+  "$comment": "Machine-readable mirror of ai-state/SELECTIONS.md — the AI's persistent choice registry (style sheets, skills, MCP per project). Update BOTH files together: SELECTIONS.md is the human/AI-readable source of truth, selections.json is for automated tooling.",
+  "version": 1,
+  "protocol": {
+    "readBeforeAnyTask": true,
+    "reuseExistingEntry": "If an entry exists for the project/page, reuse its style/skills/MCP choices exactly. Do not re-pick.",
+    "writeBeforeCode": "If no entry exists, choose via ../README.md workflows, then append an entry BEFORE coding.",
+    "userOverride": "Log replaced choices in the entry's 'replacedDecisions' field.",
+    "noDeletion": "Entries are never deleted: status flows in-progress -> done | abandoned.",
+    "template": {
+      "id": "kebab-or-SCREAMING-name + YYYY-MM-DD",
+      "status": "in-progress | done | abandoned",
+      "workflow": "A (one-shot) | B (improve)",
+      "styleReference": "path in ../02-style-references/",
+      "activeSkills": ["exact paths in ../01-skills/"],
+      "mcps": ["motion-dev-mcp", "watermelon", "21st", "none"],
+      "motionCopied": {"copied": true, "target": "src/ in target project"},
+      "keyDecisions": ["2-3 max"],
+      "replacedDecisions": [],
+      "done": [],
+      "todo": []
+    }
+  },
+  "entries": [
+    {
+      "id": "taim-portfolio-wow-2026-09-07",
+      "name": "TAIM-PORTFOLIO-WOW — refonte visuelle Hero + Projects",
+      "date": "2026-09-07",
+      "status": "in-progress",
+      "workflow": "B",
+      "styleReference": "tokens.css Ember custom (editorial, paper L98%, Instrument Serif roman + Inter, ember-red oklch 55% 0.19 28)",
+      "activeSkills": [
+        "../01-skills/gsap/gsap-core",
+        "../01-skills/gsap/gsap-react",
+        "../01-skills/gsap/gsap-scrolltrigger",
+        "../01-skills/gsap/gsap-timeline",
+        "../01-skills/gsap/gsap-performance",
+        "../01-skills/gsap/gsap-utils",
+        "../01-skills/design-critique",
+        "../01-skills/copywriting",
+        "../01-skills/unslop",
+        "../01-skills/21st/21st-ui-review",
+        "../01-skills/21st/21st-ui-build"
+      ],
+      "mcps": ["motion-dev-mcp", "watermelon"],
+      "motionCopied": {
+        "copied": false,
+        "note": "to migrate: ../03-motion/lenis.js + global.css into components/SmoothScrollProvider.jsx + app/globals.css (autoRaf, respectReducedMotion, blockScroll)"
+      },
+      "keyDecisions": [
+        "Scroll libre Lenis: drop @taim/react-fullpage-snap",
+        "Copy implicite double-cible sans mot bourse/scholarship",
+        "Scope v1 Hero + Projects, tokens Ember verrouillés"
+      ],
+      "replacedDecisions": [
+        {
+          "date": "2026-09-07",
+          "was": "fullpage 100vh snap + triple-motion incoherente",
+          "now": "Lenis libre + GSAP leader, Framer routes only"
+        }
+      ],
+      "done": ["entry created", "codebase diagnostic"],
+      "todo": ["hallmark audit", "design.md lock", "hero wow", "projects gallery", "lenis migration", "copy unslop", "QA build"]
+    },
+    {
+      "id": "project-kit-2026-09-06",
+      "name": "PROJECT-KIT — bibliothèque de skills/styles",
+      "date": "2026-09-06",
+      "status": "done",
+      "workflow": "A",
+      "styleReference": null,
+      "activeSkills": [
+        "../01-skills/gsap/",
+        "../01-skills/21st/",
+        "../01-skills/animejs/",
+        "../01-skills/copywriting/",
+        "../01-skills/design-critique/",
+        "../01-skills/unslop/"
+      ],
+      "mcps": ["motion-dev-mcp", "watermelon"],
+      "motionCopied": {
+        "copied": false,
+        "note": "canonical code lives in ../03-motion/ (lenis.js + global.css); lenis ^1.3.26 in ../_archive/npm-tooling/"
+      },
+      "keyDecisions": [
+        "Kit structure: 01-skills / 02-style-references / 03-motion / 04-examples / 05-docs / ai-state / _archive (read-only)",
+        "Mintlify promoted from example to canonical sheet (../02-style-references/mintlify/)",
+        "Original sources kept in _archive with verified mapping (INDEX.md + index.json, 18 identical files)"
+      ],
+      "replacedDecisions": [
+        {
+          "date": "2026-09-06",
+          "was": "root layout: .agents/skills/, .style-references/, loose folders",
+          "now": "everything organized under project-kit/"
+        }
+      ],
+      "done": [
+        "full reorganization + READMEs (master + 6 folders)",
+        "_archive INDEX.md + index.json",
+        "ai-state created",
+        "motion-dev-mcp cloned/built/DB initialized/configured in .mcp.json (absolute path)",
+        "21st agents/*.yaml carried over",
+        "Mintlify promoted"
+      ],
+      "todo": []
+    }
+  ]
+}

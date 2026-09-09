@@ -1,0 +1,24 @@
+Rôle : Tu es un développeur Front-End expert et un administrateur système DevOps.
+
+Mission : Écris le guide et le code complets pour installer deux outils majeurs dans mon projet :
+1. La bibliothèque de smooth-scroll Lenis (lenis.dev).
+2. Le serveur MCP Motion.dev (motion-dev-mcp) pour intégrer la documentation d'animation à mon agent IA.
+
+Contraintes techniques de mon projet :
+- Framework / Environnement : [Ex: React, Next.js App Router, Vue 3, Nuxt, Vanilla JS]
+- Langage : [Ex: JavaScript ou TypeScript]
+- Bibliothèques d'animation liées : [Ex: GSAP ScrollTrigger, Framer Motion, ou Aucune]
+- Client IA utilisé : [Ex: Claude Desktop, Cursor, VS Code Package, Claude Code]
+
+Fournis-moi un guide structuré contenant :
+
+PARTIE 1 : Setup de Smooth Scroll (Lenis)
+1. La commande d'installation npm exacte pour Lenis.
+2. Le code d'initialisation propre (avec la boucle d'animation RAF ou l'option autoRaf activée).
+3. Le fichier CSS de configuration globale indispensable pour éviter les conflits de défilement avec le navigateur.
+4. Une fonction rapide pour bloquer/débloquer le scroll (pratique pour l'ouverture des menus modals).
+
+PARTIE 2 : Installation du Serveur MCP (motion-dev-mcp)
+1. Les commandes pour cloner le dépôt (https://github.com/Abhishekrajpurohit/motion-dev-mcp), installer les dépendances et builder le projet en local (Node.js 18+).
+2. Le bloc de configuration JSON exact à ajouter dans les paramètres de mon client IA pour lier ce serveur MCP.
+3. Un exemple rapide de commande pour interroger la documentation ou générer un composant animé via ce serveur MCP.

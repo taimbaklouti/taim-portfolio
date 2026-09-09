@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "watermelon": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@watermelon-ui/mcp-server"
+      ]
+    },
+    "motion-dev-mcp": {
+      "command": "node",
+      "args": [
+        "/media/taim/9852AE4352AE25CA/projects/skills/project-kit/03-motion/motion-dev-mcp/dist/index.js"
+      ]
+    }
+  }
+}
