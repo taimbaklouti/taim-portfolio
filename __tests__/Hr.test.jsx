@@ -5,20 +5,20 @@ import Hr from "../components/Hr";
 describe("Hr", () => {
   it("renders short variant by default", () => {
     const { container } = render(<Hr />);
-    const elements = container.querySelectorAll("div");
-    // Short variant renders a flex container with 2 inner divs
-    expect(elements.length).toBeGreaterThanOrEqual(2);
+    const svgElements = container.querySelectorAll("svg.hr-line-svg");
+    // Short variant renders 2 svg lines
+    expect(svgElements.length).toBe(2);
   });
 
   it("renders long variant when specified", () => {
     const { container } = render(<Hr variant="long" />);
-    const elements = container.querySelectorAll("div");
-    expect(elements.length).toBeGreaterThanOrEqual(2);
+    const svgElements = container.querySelectorAll("svg.hr-line-svg");
+    expect(svgElements.length).toBe(2);
   });
 
   it("renders with accessible aria-hidden attribute", () => {
     const { container } = render(<Hr />);
-    const dividers = container.querySelectorAll('[aria-hidden="true"]');
-    expect(dividers.length).toBeGreaterThanOrEqual(2);
+    const hidden = container.querySelectorAll('[aria-hidden="true"]');
+    expect(hidden.length).toBeGreaterThanOrEqual(1);
   });
 });

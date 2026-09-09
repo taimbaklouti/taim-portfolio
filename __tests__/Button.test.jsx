@@ -20,6 +20,6 @@ describe("Button", () => {
 
   it("passes additional props to the button", () => {
     render(<Button disabled>Disabled</Button>);
-    expect(screen.getByText("Disabled")).toBeDisabled();
+    expect(screen.getByText("Disabled").closest("button")).toBeDisabled();
   });
 });

@@ -35,6 +35,7 @@ export default function Hr({ variant = "short", align = "center" }) {
     return (
       <div
         ref={containerRef}
+        aria-hidden="true"
         className={`flex flex-col ${isLeft ? "items-start" : "items-center"}`}
       >
         <svg className="hr-line-svg mb-3" width="112" height="4" viewBox="0 0 112 4">
@@ -66,6 +67,7 @@ export default function Hr({ variant = "short", align = "center" }) {
   return (
     <div
       ref={containerRef}
+      aria-hidden="true"
       className={`flex flex-col my-5 ${isLeft ? "items-start self-start" : "justify-center items-center"}`}
     >
       <svg className="hr-line-svg mb-2" width="80" height="4" viewBox="0 0 80 4">
