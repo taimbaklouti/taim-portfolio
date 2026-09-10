@@ -45,11 +45,58 @@ export default function Navbar() {
   const menuRef = useRef(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
+  const [activeSection, setActiveSection] = useState("");
   const { scrollTo, blockScroll, unblockScroll } = useSmoothScroll();
 
   useFocusTrap(isMenuOpen, menuRef);
 
   const toggleMenu = useCallback(() => setIsMenuOpen((p) => !p), []);
+
+  /* Scroll-spy : met à jour le lien actif de la navbar au fil du scroll (home uniquement) */
+  useEffect(() => {
+    if (pathname !== "/") {
+      setActiveSection("");
+      return;
+    }
+
+    const sectionIds = ["home", "about-preview", "projects-preview", "contact"];
+    const linkForSection = {
+      home: "/",
+      "about-preview": "/about",
+      "projects-preview": "/projects",
+      contact: "/#contact",
+    };
+
+    let raf = 0;
+    const compute = () => {
+      raf = 0;
+      const probe = window.innerHeight * 0.4; // la section active = celle qui traverse 40% du viewport
+      let current = "home";
+      for (const id of sectionIds) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+        const rect = el.getBoundingClientRect();
+        if (rect.top <= probe && rect.bottom > probe) {
+          current = id;
+          break;
+        }
+      }
+      setActiveSection(linkForSection[current] ?? "");
+    };
+
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(compute);
+    };
+
+    compute();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      if (raf) cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, [pathname]);
 
   useEffect(() => {
     if (isMenuOpen) blockScroll();
@@ -144,20 +191,28 @@ export default function Navbar() {
         </Link>
 
         <div className="flex items-center">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              onClick={link.label === "Contact" ? handleContact : undefined}
-              className="px-4 py-1.5 rounded-full text-sm font-medium
-                text-[var(--color-ink-2)] dark:text-[var(--color-ink-2-dark)]
-                hover:text-[var(--color-accent)] dark:hover:text-[var(--color-accent-dark)]
-                hover:bg-[var(--color-accent-ghost)] dark:hover:bg-[var(--color-accent-ghost-dark)]
-                transition-all duration-200"
-            >
-              {link.label}
-            </Link>
-          ))}
+          {navLinks.map((link) => {
+            const isActive =
+              pathname === link.href ||
+              (pathname === "/" && activeSection === link.href && link.href !== "/");
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={link.label === "Contact" ? handleContact : undefined}
+                aria-current={isActive ? "page" : undefined}
+                className={`px-4 py-1.5 rounded-full text-sm font-medium
+                  transition-all duration-200
+                  ${
+                    isActive
+                      ? "text-[var(--color-accent)] dark:text-[var(--color-accent-dark)] bg-[var(--color-accent-ghost)] dark:bg-[var(--color-accent-ghost-dark)]"
+                      : "text-[var(--color-ink-2)] dark:text-[var(--color-ink-2-dark)] hover:text-[var(--color-accent)] dark:hover:text-[var(--color-accent-dark)] hover:bg-[var(--color-accent-ghost)] dark:hover:bg-[var(--color-accent-ghost-dark)]"
+                  }`}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
         </div>
 
         <div className="pl-2 border-l border-[var(--color-border)] dark:border-[var(--color-border-dark)]">
@@ -220,20 +275,30 @@ export default function Navbar() {
               backdrop-blur-2xl"
           >
             <div className="flex flex-col items-center gap-8">
-              {navLinks.map((link, i) => (
-                <animated.div key={link.href} style={itemSprings[i]}>
-                  <Link
-                    href={link.href}
-                    onClick={link.label === "Contact" ? handleContact : () => setIsMenuOpen(false)}
-                    className="text-3xl font-display-alt font-semibold
-                      text-[var(--color-ink)] dark:text-[var(--color-ink-dark)]
-                      hover:text-[var(--color-accent)] dark:hover:text-[var(--color-accent-dark)]
-                      transition-colors duration-200"
-                  >
-                    {link.label}
-                  </Link>
-                </animated.div>
-              ))}
+              {navLinks.map((link, i) => {
+                const isActiveMobile =
+                  pathname === link.href ||
+                  (pathname === "/" && activeSection === link.href && link.href !== "/");
+                return (
+                  <animated.div key={link.href} style={itemSprings[i]}>
+                    <Link
+                      href={link.href}
+                      onClick={
+                        link.label === "Contact" ? handleContact : () => setIsMenuOpen(false)
+                      }
+                      aria-current={isActiveMobile ? "page" : undefined}
+                      className={`text-3xl font-display-alt font-semibold transition-colors duration-200
+                        ${
+                          isActiveMobile
+                            ? "text-[var(--color-accent)] dark:text-[var(--color-accent-dark)]"
+                            : "text-[var(--color-ink)] dark:text-[var(--color-ink-dark)] hover:text-[var(--color-accent)] dark:hover:text-[var(--color-accent-dark)]"
+                        }`}
+                    >
+                      {link.label}
+                    </Link>
+                  </animated.div>
+                );
+              })}
             </div>
           </animated.div>
         ) : null
