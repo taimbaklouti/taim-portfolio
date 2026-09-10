@@ -46,7 +46,7 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
   const [activeSection, setActiveSection] = useState("");
-  const { scrollTo, blockScroll, unblockScroll } = useSmoothScroll();
+  const { scrollTo, blockScroll, unblockScroll, lenis } = useSmoothScroll();
 
   useFocusTrap(isMenuOpen, menuRef);
 
@@ -89,14 +89,22 @@ export default function Navbar() {
     };
 
     compute();
+    // Lenis anime le scroll : on écoute son event dédié + le scroll natif en fallback
+    if (lenis) lenis.on("scroll", onScroll);
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
+    // recompute après montage des sections (gate de loading)
+    const t1 = setTimeout(compute, 400);
+    const t2 = setTimeout(compute, 1200);
     return () => {
       if (raf) cancelAnimationFrame(raf);
+      if (lenis) lenis.off("scroll", onScroll);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
+      clearTimeout(t1);
+      clearTimeout(t2);
     };
-  }, [pathname]);
+  }, [pathname, lenis]);
 
   useEffect(() => {
     if (isMenuOpen) blockScroll();
