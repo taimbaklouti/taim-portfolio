@@ -5,6 +5,9 @@
  *   (photo : rayon ~124px mobile / ~164px desktop bordure incluse ; dots 20px → rayon 10px,
  *   anneau à 140/180px = dots de 130-150/170-190px → gap 6px, plus de chevauchement image)
  * - 24 particules 20px uniformes (w-5 h-5), bg accent, opacity variée, anneau complet sans trou
+ * - chaque dot est recentré sur son ancre (translate -50%,-50% final) : sans ça, le
+ *   transform-origin par défaut (centre du dot) décale le cercle des dots de (10,10)px,
+ *   d'où un côté qui coupe l'image et un grand espace de l'autre
  * - rotation continue autour de l'image via .orbit-spin (CSS, coupée par prefers-reduced-motion)
  * - z-[5] : sous la photo (z-10), au-dessus du quart de cercle (z-0)
  */
@@ -38,7 +41,7 @@ export default function OrbitRings() {
                 bg-[var(--color-accent)] dark:bg-[var(--color-accent-dark)]
                 w-5 h-5"
               style={{
-                transform: `rotate(${angle}deg) translateX(var(--ring-r)) rotate(-${angle}deg)`,
+                transform: `rotate(${angle}deg) translateX(var(--ring-r)) rotate(-${angle}deg) translate(-50%, -50%)`,
                 opacity,
               }}
             />
