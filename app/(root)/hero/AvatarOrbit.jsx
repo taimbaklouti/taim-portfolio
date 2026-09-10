@@ -4,9 +4,10 @@ import Image from "next/image";
 import Me from "@/public/image/taim-front.webp";
 import OrbitRings from "./OrbitRings";
 
-/* AvatarOrbit — photo figée (PLAN_HERO_DARK_RED)
+/* AvatarOrbit — photo figée et centrée dans l'orbite (PLAN_HERO_DARK_RED)
  * - transform: none, pas de parallax / float / tilt / scale
- * - photo z-10, anneaux orbitaux z-[5] (OrbitRings), quart de cercle z-0 (page.jsx)
+ * - photo z-10 centrée (flex justify-center) sur le même point que OrbitRings (z-[5]),
+ *   quart de cercle z-0 (page.jsx)
  */
 export default function AvatarOrbit({ className = "" }) {
   const size = "w-[240px] h-[240px] md:w-[320px] md:h-[320px]";
@@ -16,7 +17,7 @@ export default function AvatarOrbit({ className = "" }) {
       <div className="relative [perspective:900px]">
         <OrbitRings />
 
-        <div className="relative z-10">
+        <div className="relative z-10 flex justify-center">
           <div
             className={`${size} overflow-hidden rounded-full
               border-4 border-[var(--color-surface-solid)] dark:border-[var(--color-surface-solid-dark)]

@@ -1,9 +1,9 @@
 "use client";
 
 /* OrbitRings — un seul anneau avec gros points qui tournent (PLAN_HERO_DARK_RED)
- * - 1 anneau complet léger : border 1px, rayon 130px mobile / 172px desktop (var --ring-r)
- *   (photo : rayon ~124px mobile / ~164px desktop bordure incluse → anneau collé au bord,
- *   100/140px demandé aurait caché l'anneau SOUS la photo car z-[5] < z-10)
+ * - 1 anneau complet léger : border 1px, rayon 140px mobile / 180px desktop (var --ring-r)
+ *   (photo : rayon ~124px mobile / ~164px desktop bordure incluse ; dots 20px → rayon 10px,
+ *   anneau à 140/180px = dots de 130-150/170-190px → gap 6px, plus de chevauchement image)
  * - 24 particules 20px uniformes (w-5 h-5), bg accent, opacity variée, anneau complet sans trou
  * - rotation continue autour de l'image via .orbit-spin (CSS, coupée par prefers-reduced-motion)
  * - z-[5] : sous la photo (z-10), au-dessus du quart de cercle (z-0)
@@ -17,7 +17,7 @@ export default function OrbitRings() {
     <div
       aria-hidden="true"
       className="pointer-events-none absolute left-1/2 top-1/2 z-[5] -translate-x-1/2 -translate-y-1/2
-        [--ring-r:130px] md:[--ring-r:172px] will-change-transform"
+        [--ring-r:140px] md:[--ring-r:180px] will-change-transform"
       style={{ width: "calc(var(--ring-r) * 2)", height: "calc(var(--ring-r) * 2)" }}
     >
       <div className="orbit-spin relative h-full w-full">
