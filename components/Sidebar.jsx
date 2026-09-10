@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome, faUser, faFolderOpen, faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { useSpring, useSprings, animated } from "@react-spring/web";
@@ -12,9 +12,6 @@ const navItems = [
   { icon: faFolderOpen, label: "Projects", id: "projects-preview" },
   { icon: faEnvelope, label: "Contact", id: "contact" },
 ];
-
-const ITEM_SIZE = 32;
-const ITEM_GAP = 12;
 
 export default function Sidebar() {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -57,7 +54,39 @@ export default function Sidebar() {
     }))
   );
 
-  const indicatorTop = activeIndex * (ITEM_SIZE + ITEM_GAP);
+  // ─── Desktop indicator: real DOM geometry ─────────────────────────
+  // The desktop rail's items are sized in rem (h-8 / gap-3) while the root
+  // font-size is viewport-dependent (clamp in globals.css), so the item
+  // stride varies with screen width. Hardcoding pixel constants drifts
+  // (cumulative misalignment per item). Measuring the active <li>'s real
+  // offsetTop instead is correct at any rem scale — same math as the
+  // mobile indicator's percentage-based positioning, just DOM-measured.
+  // Transforms from the entry springs never affect offsetTop, so the
+  // measurement stays reliable.
+  const itemRefs = useRef([]);
+  const [indicatorTop, setIndicatorTop] = useState(0);
+
+  const measureIndicator = useCallback(() => {
+    const li = itemRefs.current[activeIndex];
+    if (li) setIndicatorTop(li.offsetTop);
+  }, [activeIndex]);
+
+  // Re-measure when the active item changes and after mount (sections
+  // settle late behind the loading gate — same self-heal pattern as
+  // useActiveSection), plus on resize since the root font-size is a
+  // function of viewport width.
+  useEffect(() => {
+    measureIndicator();
+    window.addEventListener("resize", measureIndicator);
+    const t1 = setTimeout(measureIndicator, 400);
+    const t2 = setTimeout(measureIndicator, 1200);
+    return () => {
+      window.removeEventListener("resize", measureIndicator);
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
+  }, [measureIndicator]);
+
   const indicatorSpring = useSpring({
     top: indicatorTop,
     config: { mass: 0.5, tension: 280, friction: 26 },
@@ -92,6 +121,9 @@ export default function Sidebar() {
           {navItems.map((item, index) => (
             <animated.li
               key={item.id}
+              ref={(el) => {
+                itemRefs.current[index] = el;
+              }}
               data-menuanchor={item.id}
               style={itemSprings[index]}
               className="relative group"
