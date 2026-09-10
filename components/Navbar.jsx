@@ -202,8 +202,7 @@ export default function Navbar() {
         <div className="relative flex items-center">
           {navLinks.map((link) => {
             const isActive =
-              pathname === link.href ||
-              (pathname === "/" && activeSection === link.href && link.href !== "/");
+              pathname === link.href || (pathname === "/" && activeSection === link.href);
             return (
               <Link
                 key={link.href}
@@ -302,8 +301,7 @@ export default function Navbar() {
             <div className="flex flex-col items-center gap-8">
               {navLinks.map((link, i) => {
                 const isActiveMobile =
-                  pathname === link.href ||
-                  (pathname === "/" && activeSection === link.href && link.href !== "/");
+                  pathname === link.href || (pathname === "/" && activeSection === link.href);
                 return (
                   <animated.div key={link.href} style={itemSprings[i]}>
                     <Link
