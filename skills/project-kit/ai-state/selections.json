@@ -23,6 +23,44 @@
   },
   "entries": [
     {
+      "id": "plan-hero-dark-red-2026-09-09",
+      "name": "PLAN_HERO_DARK_RED — hero durci : dark red + anneaux orbitaux + quart de cercle",
+      "date": "2026-09-09",
+      "status": "in-progress",
+      "workflow": "B",
+      "styleReference": "tokens.css Ember custom (accent durci dark red #8B0F0A light / #dc2626 dark)",
+      "activeSkills": [
+        "../01-skills/gsap/gsap-core",
+        "../01-skills/design-critique"
+      ],
+      "mcps": [],
+      "motionCopied": {
+        "copied": false,
+        "note": "photo figée ; pulsation CSS .orbit-rings coupée par prefers-reduced-motion"
+      },
+      "keyDecisions": [
+        "Accent light bordeaux #8B0F0A (alternatives #9F1210/#B91C1C à valider) ; dark #dc2626 pour contraste sur #1c1917",
+        "Suppression aurora/blob/orbes/HeroParticles ; QuarterCircle clip 55% top-right avec cercle centré sur le coin (translate 50%/-50%)",
+        "OrbitRings : 3 anneaux 180/218/256px desktop (gap 38), slot vide déterministe ~26°/anneau"
+      ],
+      "replacedDecisions": [
+        {
+          "date": "2026-09-09",
+          "was": "avatar animé (gsap float/parallax + tilt animejs)",
+          "now": "photo figée, anneaux orbitaux avec pulsation CSS douce"
+        }
+      ],
+      "done": [
+        "tokens.css dark red",
+        "globals.css retrait aurora/pulse + orbit-pulse",
+        "AvatarOrbit figé + OrbitRings + QuarterCircle",
+        "page.jsx allégé",
+        "ProjectCard durci",
+        "HeroParticles.jsx supprimé"
+      ],
+      "todo": ["validation preview (teinte, épaisseur border 60-90px, rayons anneaux)", "pnpm lint + test"]
+    },
+    {
       "id": "taim-portfolio-wow-2026-09-07",
       "name": "TAIM-PORTFOLIO-WOW — refonte visuelle Hero + Projects",
       "date": "2026-09-07",

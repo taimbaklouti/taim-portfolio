@@ -31,7 +31,7 @@ import dynamic from "next/dynamic";
 import HeroAnimation from "./hero/HeroAnimation";
 import TextReveal from "./hero/TextReveal";
 import AvatarOrbit from "./hero/AvatarOrbit";
-import HeroParticles from "@/components/HeroParticles";
+import QuarterCircle from "./hero/QuarterCircle";
 import BackToTop from "@/components/BackToTop";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -183,13 +183,6 @@ const MyPage = () => {
         );
       });
 
-      // Blob hero : dérive douce
-      gsap.to(".hero-blob", {
-        yPercent: 24,
-        ease: "none",
-        scrollTrigger: { trigger: "#home", start: "top top", end: "bottom top", scrub: true },
-      });
-
       // Titres de section révélés au scroll (une seule fois)
       gsap.utils.toArray("[data-reveal-title]").forEach((el) => {
         gsap.fromTo(
@@ -235,30 +228,6 @@ const MyPage = () => {
       <section id="home" className="scroll-mt-24">
         <HeroAnimation>
           <div className="relative w-full min-h-[100svh] flex flex-col justify-center overflow-x-clip px-6 md:px-16 pt-28 md:pt-24 pb-16">
-            {/* Aurora bordeaux — wash conique animé, très lent */}
-            <div aria-hidden="true" className="hero-aurora" />
-
-            {/* Soft background blob bordeaux */}
-            <div
-              aria-hidden="true"
-              className="hero-blob absolute -top-1/4 -right-1/4 w-[500px] h-[500px] md:w-[700px] md:h-[700px]
-                rounded-full bg-gradient-to-br from-[var(--color-accent-ghost)] to-transparent
-                dark:from-[var(--color-accent-ghost-dark)] pointer-events-none opacity-70 blur-3xl"
-            />
-
-            {/* Orbes ember flottantes — couleur affirmée */}
-            <div
-              aria-hidden="true"
-              className="ember-orb ember-orb-a ember-float w-[340px] h-[340px] -bottom-28 -left-28 opacity-80"
-            />
-            <div
-              aria-hidden="true"
-              className="ember-orb ember-orb-b ember-float-b w-[420px] h-[420px] top-1/3 left-1/2 opacity-70"
-            />
-
-            {/* Particules bordeaux flottantes */}
-            <HeroParticles className="opacity-80" />
-
             <div className="relative z-10 w-full max-w-6xl mx-auto">
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
                 {/* Texte */}
@@ -284,7 +253,7 @@ const MyPage = () => {
 
                   {/* Nom — typographie oversized, tracking serré */}
                   <TextReveal
-                    className="hero-name-glow text-[var(--color-ink)] dark:text-[var(--color-ink-dark)]
+                    className="text-[var(--color-ink)] dark:text-[var(--color-ink-dark)]
                       text-[clamp(3.25rem,11vw,8.5rem)] leading-[0.95] font-bold tracking-[-0.04em]
                       overflow-wrap-anywhere min-w-0 mb-6 md:mb-8"
                   >
@@ -366,8 +335,9 @@ const MyPage = () => {
                   </div>
                 </div>
 
-                {/* Avatar */}
-                <div className="lg:col-span-5 hero-avatar-col flex justify-center lg:justify-end">
+                {/* Avatar + quart de cercle (coin supérieur droit, derrière la photo) */}
+                <div className="lg:col-span-5 hero-avatar-col relative flex justify-center lg:justify-end">
+                  <QuarterCircle />
                   <AvatarOrbit />
                 </div>
               </div>
