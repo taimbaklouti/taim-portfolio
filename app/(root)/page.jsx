@@ -228,6 +228,8 @@ const MyPage = () => {
       <section id="home" className="scroll-mt-24">
         <HeroAnimation>
           <div className="relative w-full min-h-[100svh] flex flex-col justify-center overflow-x-clip px-6 md:px-16 pt-28 md:pt-24 pb-16">
+            {/* Quart de cercle — coin supérieur droit du hero, derrière tout le contenu */}
+            <QuarterCircle />
             <div className="relative z-10 w-full max-w-6xl mx-auto">
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
                 {/* Texte */}
@@ -335,9 +337,8 @@ const MyPage = () => {
                   </div>
                 </div>
 
-                {/* Avatar + quart de cercle (coin supérieur droit, derrière la photo) */}
-                <div className="lg:col-span-5 hero-avatar-col relative flex justify-center lg:justify-end">
-                  <QuarterCircle />
+                {/* Avatar */}
+                <div className="lg:col-span-5 hero-avatar-col flex justify-center lg:justify-end">
                   <AvatarOrbit />
                 </div>
               </div>
