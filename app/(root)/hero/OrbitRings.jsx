@@ -1,8 +1,10 @@
 "use client";
 
-/* OrbitRings — un seul anneau avec points plus grands qui tournent (PLAN_HERO_DARK_RED)
- * - 1 anneau complet léger : border 1px, rayon 138px mobile / 188px desktop (var --ring-r) — proche de l'image
- * - 24 particules 8-10px, bg accent, opacity variée, un slot vide pour la respiration
+/* OrbitRings — un seul anneau avec gros points qui tournent (PLAN_HERO_DARK_RED)
+ * - 1 anneau complet léger : border 1px, rayon 130px mobile / 172px desktop (var --ring-r)
+ *   (photo : rayon ~124px mobile / ~164px desktop bordure incluse → anneau collé au bord,
+ *   100/140px demandé aurait caché l'anneau SOUS la photo car z-[5] < z-10)
+ * - 23 particules 20px uniformes (w-5 h-5), bg accent, opacity variée, un slot vide pour la respiration
  * - rotation continue autour de l'image via .orbit-spin (CSS, coupée par prefers-reduced-motion)
  * - z-[5] : sous la photo (z-10), au-dessus du quart de cercle (z-0)
  */
@@ -15,7 +17,7 @@ export default function OrbitRings() {
     <div
       aria-hidden="true"
       className="pointer-events-none absolute left-1/2 top-1/2 z-[5] -translate-x-1/2 -translate-y-1/2
-        [--ring-r:138px] md:[--ring-r:188px] will-change-transform"
+        [--ring-r:130px] md:[--ring-r:172px] will-change-transform"
       style={{ width: "calc(var(--ring-r) * 2)", height: "calc(var(--ring-r) * 2)" }}
     >
       <div className="orbit-spin relative h-full w-full">
@@ -30,14 +32,13 @@ export default function OrbitRings() {
           /* slot vide déterministe (~15°) — respiration */
           if (i === 9) return null;
           const angle = i * DOT_STEP;
-          const isBig = i % 4 === 0;
           const opacity = 0.7 + ((i * 7) % 25) / 100;
           return (
             <span
               key={i}
-              className={`absolute left-1/2 top-1/2 rounded-full
+              className="absolute left-1/2 top-1/2 rounded-full
                 bg-[var(--color-accent)] dark:bg-[var(--color-accent-dark)]
-                ${isBig ? "w-2.5 h-2.5" : "w-2 h-2"}`}
+                w-5 h-5"
               style={{
                 transform: `rotate(${angle}deg) translateX(var(--ring-r)) rotate(-${angle}deg)`,
                 opacity,

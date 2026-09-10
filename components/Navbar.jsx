@@ -1,6 +1,6 @@
 "use client";
 import { useRef, useState, useCallback, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { useSpring, useTransition, useSprings, animated } from "@react-spring/web";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -51,6 +51,7 @@ export default function Navbar() {
   useFocusTrap(isMenuOpen, menuRef);
 
   const toggleMenu = useCallback(() => setIsMenuOpen((p) => !p), []);
+  const reduceMotion = useReducedMotion();
 
   /* Scroll-spy : met à jour le lien actif de la navbar au fil du scroll (home uniquement) */
   useEffect(() => {
@@ -198,7 +199,7 @@ export default function Navbar() {
           <span className="font-display-alt text-lg tracking-tight font-semibold">TB</span>
         </Link>
 
-        <div className="flex items-center">
+        <div className="relative flex items-center">
           {navLinks.map((link) => {
             const isActive =
               pathname === link.href ||
@@ -209,15 +210,31 @@ export default function Navbar() {
                 href={link.href}
                 onClick={link.label === "Contact" ? handleContact : undefined}
                 aria-current={isActive ? "page" : undefined}
-                className={`px-4 py-1.5 rounded-full text-sm font-medium
-                  transition-all duration-200
+                className={`relative px-4 py-1.5 rounded-full text-sm font-medium
+                  transition-colors duration-200
                   ${
                     isActive
-                      ? "text-[var(--color-accent)] dark:text-[var(--color-accent-dark)] bg-[var(--color-accent-ghost)] dark:bg-[var(--color-accent-ghost-dark)]"
+                      ? "text-[var(--color-accent)] dark:text-[var(--color-accent-dark)]"
                       : "text-[var(--color-ink-2)] dark:text-[var(--color-ink-2-dark)] hover:text-[var(--color-accent)] dark:hover:text-[var(--color-accent-dark)] hover:bg-[var(--color-accent-ghost)] dark:hover:bg-[var(--color-accent-ghost-dark)]"
                   }`}
               >
-                {link.label}
+                {/* Indicateur actif animé (FLIP via layoutId) — suit le scroll-spy
+                    (activeSection) ET la navigation (pathname) en temps réel.
+                    Restylable librement (flèche, ligne, pill) sans toucher la logique. */}
+                {isActive && (
+                  <motion.span
+                    layoutId="nav-indicator"
+                    aria-hidden="true"
+                    className="absolute inset-0 rounded-full
+                      bg-[var(--color-accent-ghost)] dark:bg-[var(--color-accent-ghost-dark)]"
+                    transition={
+                      reduceMotion
+                        ? { duration: 0 }
+                        : { type: "spring", stiffness: 400, damping: 30, mass: 0.8 }
+                    }
+                  />
+                )}
+                <span className="relative">{link.label}</span>
               </Link>
             );
           })}
