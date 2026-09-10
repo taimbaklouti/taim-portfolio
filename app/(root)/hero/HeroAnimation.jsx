@@ -12,7 +12,7 @@ export default function HeroAnimation({ children }) {
   useGSAP(
     () => {
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        gsap.set([".hero-blob", ".hero-bio", ".hero-cta", ".hero-social a", ".hero-eyebrow"], {
+        gsap.set([".hero-bio", ".hero-cta", ".hero-social a", ".hero-eyebrow"], {
           clearProps: "all",
           opacity: 1,
         });
@@ -21,13 +21,7 @@ export default function HeroAnimation({ children }) {
 
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
-      tl.fromTo(".hero-blob", { scale: 0.8, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.2 })
-        .fromTo(
-          ".hero-eyebrow",
-          { y: 15, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.5 },
-          "-=0.5"
-        )
+      tl.fromTo(".hero-eyebrow", { y: 15, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5 })
         .fromTo(".hero-bio", { y: 25, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6 }, "-=0.6")
         .fromTo(".hero-cta", { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5 }, "-=0.2")
         .fromTo(
@@ -36,8 +30,6 @@ export default function HeroAnimation({ children }) {
           { y: 0, opacity: 1, stagger: 0.08, duration: 0.4 },
           "-=0.2"
         );
-
-      gsap.to(".hero-blob", { rotation: 360, duration: 20, repeat: -1, ease: "none" });
     },
     { scope: containerRef }
   );

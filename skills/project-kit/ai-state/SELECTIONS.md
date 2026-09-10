@@ -59,6 +59,22 @@ Ce qui n'est PAS enregistré ici : le code lui-même (il vit dans le projet), le
 - **Fait (2026-09-08 session 3) :** palette orange/crème (tokens.css déverrouillé sur demande user). Amplification couleur : bandes ember-band, tuiles ember-tile, manifeste ember-solid (bande 100% orange), orbes flottantes. Titres révélés au scroll (data-reveal-title, GSAP once). Zoom images 1.3→1.18 scrub. Section Stack pills en cascade. 3 cartes projets réelles (EduTounes, Calendar, ImageVault — ImageVault choisi car Intervyou refusé par user, slugs vérifiés dans json/data.json). Micro-interactions animejs v4 : tilt 3D avatar avec ressort, pop élastique icônes sociales. Back-to-top flottant (components/BackToTop.jsx). Point pulsant badge hero. Build vert. Backup tar 102Mo dans ~/backups/ + /tmp (git stash -u a timeouté à cause de .pnpm-store).
 - **À reprendre :** valider le rendu scroll sur navigateur (orange/crème + reveals), étendre le même traitement aux pages About/Projects si validé.
 
+### PLAN_HERO_DARK_RED — hero durci : dark red + anneaux orbitaux + quart de cercle — 2026-09-09
+- **Statut :** 🔄 en cours (implémenté, validation preview en cours)
+- **Workflow :** B (amélioration — hero du portfolio existant)
+- **Style reference :** `../02-style-references/apple.md` (variante) — tokens.css Ember custom conservés, accent durci dark red
+- **Skills actifs :** `../01-skills/gsap/gsap-core`, `../01-skills/design-critique`
+- **MCP utilisés :** aucun (CSS + JSX pur)
+- **Motion :** photo figée (suppression parallax/float/tilt animejs), anneaux orbitaux statiques avec pulsation CSS douce (coupée par prefers-reduced-motion), quarter circle statique
+- **Décisions clés :**
+  - Accent light → bordeaux #8B0F0A (hover #6F0C08, ghost rgba(139,15,10,0.08)) ; alternatives #9F1210 / #B91C1C à tester en preview. Accent dark → #dc2626 (le #6F0C08 du plan cassait le contraste sur fond brun #1c1917).
+  - Supprimé : conic aurora, blob hero, orbes ember du hero, HeroParticles (canvas), breathing glow du nom. Gardé : ember-orb du contact + keyframes skeleton.
+  - QuarterCircle : clip absolute top-0 right-0 w-[55%] h-[55%] overflow-hidden, cercle centré sur le coin (translate 50%/-50% au lieu du translate(28%,-28%) du plan qui rendait le quart invisible — le 50% garantit un quart net dans le coin).
+  - OrbitRings : rayons 128/156/184px mobile, 180/218/256px desktop (gap 38), 13-14 particules/anneau, slot vide déterministe ~26° par anneau.
+- **Décisions remplacées :** motion avatar animé (gsap float/parallax + tilt animejs) → figé le 2026-09-09.
+- **Fait :** tokens.css, globals.css (retrait aurora/pulse, ajout orbit-pulse), AvatarOrbit figé, OrbitRings.jsx, QuarterCircle.jsx, page.jsx allégé + quarter circle branché, ProjectCard durci (border-strong, shadow-md, chips sans blur), HeroParticles.jsx supprimé, HeroAnimation nettoyé du blob.
+- **À reprendre :** valider rendu preview (teinte accent, épaisseur border quarter circle 60-90px, rayons anneaux vs photo 320px), `pnpm run lint` + `pnpm run test` (3 tests).
+
 ### PROJECT-KIT — bibliothèque de skills/styles — 2026-09-06
 - **Statut :** ✅ terminé (kit organisé ; entrées futures = nouveaux projets sites)
 - **Workflow :** A (one-shot — construction de la librairie elle-même)

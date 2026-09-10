@@ -70,11 +70,11 @@ export default function ProjectCard({ project }) {
           willChange: "transform",
         }}
         className="relative flex flex-col justify-end w-full aspect-[16/10] overflow-hidden rounded-2xl
-          border border-[var(--color-border)] dark:border-[var(--color-border-dark)]
+          border border-[var(--color-border-strong)] dark:border-[var(--color-border-strong-dark)]
           bg-[var(--color-paper-2)] dark:bg-[var(--color-paper-2-dark)]
-          shadow-lg hover:shadow-xl hover:shadow-[var(--color-accent)]/10
-          dark:hover:shadow-[var(--color-accent-dark)]/10
-          hover:border-[var(--color-accent)]/30 dark:hover:border-[var(--color-accent-dark)]/30
+          shadow-[var(--shadow-md)] hover:shadow-[var(--shadow-lg)] hover:shadow-[var(--color-accent)]/15
+          dark:hover:shadow-[var(--color-accent-dark)]/15
+          hover:border-[var(--color-accent)]/40 dark:hover:border-[var(--color-accent-dark)]/40
           transition-[border-color,box-shadow] duration-500 cursor-pointer"
       >
         {/* Image gallery — visible, zoom doux */}
@@ -115,7 +115,7 @@ export default function ProjectCard({ project }) {
 
         {/* Contenu — toujours lisible, remonte au hover desktop */}
         <div className="relative z-10 w-full p-5 md:p-6 translate-y-0 md:translate-y-2 group-hover/card:translate-y-0 transition-transform duration-500 ease-out">
-          <h3 className="text-white text-xl md:text-2xl font-bold mb-1.5 leading-tight">
+          <h3 className="text-white text-xl md:text-2xl font-semibold tracking-[-0.02em] mb-1.5 leading-tight">
             {project.title}
           </h3>
           <p className="text-white/75 text-sm leading-relaxed line-clamp-2 max-w-lg">{excerpt}</p>
@@ -123,7 +123,7 @@ export default function ProjectCard({ project }) {
             {project.tech.slice(0, 4).map((t) => (
               <span
                 key={t}
-                className="px-2.5 py-0.5 bg-white/15 backdrop-blur-sm text-white text-xs rounded-md border border-white/20 font-medium"
+                className="px-2.5 py-0.5 bg-black/35 text-white text-xs rounded-md border border-white/25 font-medium"
               >
                 {t}
               </span>
