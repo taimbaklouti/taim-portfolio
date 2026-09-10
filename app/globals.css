@@ -292,7 +292,7 @@ th {
 
 /* ─── Hero orbit ring — continuous rotation (GPU: transform only) ── */
 .orbit-spin {
-  animation: orbit-rotate 28s linear infinite;
+  animation: orbit-rotate 18s linear infinite;
   will-change: transform;
 }
 
