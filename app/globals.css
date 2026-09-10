@@ -290,19 +290,15 @@ th {
   }
 }
 
-/* ─── Hero orbit rings — gentle breathing (GPU: transform only) ── */
-.orbit-rings {
-  animation: orbit-pulse 6s ease-in-out infinite;
+/* ─── Hero orbit ring — continuous rotation (GPU: transform only) ── */
+.orbit-spin {
+  animation: orbit-rotate 28s linear infinite;
   will-change: transform;
 }
 
-@keyframes orbit-pulse {
-  0%,
-  100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.04);
+@keyframes orbit-rotate {
+  to {
+    transform: rotate(360deg);
   }
 }
 
@@ -320,7 +316,7 @@ th {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .orbit-rings {
+  .orbit-spin {
     animation: none;
   }
 }

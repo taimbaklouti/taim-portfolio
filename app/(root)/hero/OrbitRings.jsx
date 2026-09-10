@@ -1,59 +1,51 @@
 "use client";
 
-/* OrbitRings — 3 anneaux concentriques + particules (PLAN_HERO_DARK_RED)
- * - anneaux complets légers : border 1px, rayons 128/156/184px mobile, 180/218/256px desktop (gap 38px)
- * - particules 4-6px, bg accent, opacity 0.7-0.9, un slot vide (~26°) par anneau pour la respiration
- * - pulsation douce via .orbit-rings (CSS, coupée par prefers-reduced-motion), pas de rotation lourde
+/* OrbitRings — un seul anneau avec points plus grands qui tournent (PLAN_HERO_DARK_RED)
+ * - 1 anneau complet léger : border 1px, rayon 150px mobile / 215px desktop (var --ring-r)
+ * - 24 particules 8-10px, bg accent, opacity variée, un slot vide pour la respiration
+ * - rotation continue via .orbit-spin (CSS, coupée par prefers-reduced-motion)
  * - z-[5] : sous la photo (z-10), au-dessus du quart de cercle (z-0)
  */
 
-const RINGS = [
-  { radius: "var(--ring-1)", count: 14, gapStart: 18 },
-  { radius: "var(--ring-2)", count: 14, gapStart: 84 },
-  { radius: "var(--ring-3)", count: 14, gapStart: 150 },
-];
+const DOTS_COUNT = 24;
+const DOT_STEP = 360 / DOTS_COUNT;
 
 export default function OrbitRings() {
   return (
     <div
       aria-hidden="true"
-      className="orbit-rings pointer-events-none absolute inset-0 z-[5]
-        [--ring-1:128px] [--ring-2:156px] [--ring-3:184px]
-        md:[--ring-1:180px] md:[--ring-2:218px] md:[--ring-3:256px]"
+      className="pointer-events-none absolute left-1/2 top-1/2 z-[5] -translate-x-1/2 -translate-y-1/2
+        [--ring-r:150px] md:[--ring-r:215px] will-change-transform"
+      style={{ width: "calc(var(--ring-r) * 2)", height: "calc(var(--ring-r) * 2)" }}
     >
-      {RINGS.map((ring, ringIndex) => {
-        const step = 360 / ring.count;
-        return (
-          <div
-            key={ringIndex}
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full
-              border border-[rgba(29,29,31,0.12)] dark:border-[rgba(255,255,255,0.08)]"
-            style={{
-              width: `calc(${ring.radius} * 2)`,
-              height: `calc(${ring.radius} * 2)`,
-            }}
-          >
-            {Array.from({ length: ring.count }).map((_, i) => {
-              /* slot vide déterministe (~26°) — respiration sans rotation */
-              if (i === (ringIndex * 5 + 2) % ring.count) return null;
-              const angle = i * step + ring.gapStart;
-              const sizeCls = (i + ringIndex) % 3 === 0 ? "w-1.5 h-1.5" : "w-1 h-1";
-              const opacity = 0.7 + ((i * 7 + ringIndex * 13) % 20) / 100;
-              return (
-                <span
-                  key={i}
-                  className={`absolute left-1/2 top-1/2 rounded-full
-                    bg-[var(--color-accent)] dark:bg-[var(--color-accent-dark)] ${sizeCls}`}
-                  style={{
-                    transform: `rotate(${angle}deg) translateX(${ring.radius}) rotate(-${angle}deg)`,
-                    opacity,
-                  }}
-                />
-              );
-            })}
-          </div>
-        );
-      })}
+      <div className="orbit-spin relative h-full w-full">
+        {/* Anneau */}
+        <div
+          className="absolute inset-0 rounded-full
+            border border-[rgba(29,29,31,0.12)] dark:border-[rgba(255,255,255,0.08)]"
+        />
+
+        {/* Points orbitaux — tournent avec l'anneau */}
+        {Array.from({ length: DOTS_COUNT }).map((_, i) => {
+          /* slot vide déterministe (~15°) — respiration */
+          if (i === 9) return null;
+          const angle = i * DOT_STEP;
+          const isBig = i % 4 === 0;
+          const opacity = 0.7 + ((i * 7) % 25) / 100;
+          return (
+            <span
+              key={i}
+              className={`absolute left-1/2 top-1/2 rounded-full
+                bg-[var(--color-accent)] dark:bg-[var(--color-accent-dark)]
+                ${isBig ? "w-2.5 h-2.5" : "w-2 h-2"}`}
+              style={{
+                transform: `rotate(${angle}deg) translateX(var(--ring-r)) rotate(-${angle}deg)`,
+                opacity,
+              }}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 }
