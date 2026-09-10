@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import ThemeToggle from "./ThemeToggle";
 import { useSmoothScroll } from "./SmoothScrollProvider";
+import useActiveSection, { HOME_SECTION_IDS } from "@/hooks/useActiveSection";
 
 function useFocusTrap(isActive, containerRef) {
   useEffect(() => {
@@ -41,71 +42,28 @@ const navLinks = [
   { href: "/#contact", label: "Contact" },
 ];
 
+/* Mapping section -> lien navbar (même ordre que useActiveSection). */
+const linkForSection = {
+  home: "/",
+  "about-preview": "/about",
+  "projects-preview": "/projects",
+  contact: "/#contact",
+};
+
 export default function Navbar() {
   const menuRef = useRef(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
-  const [activeSection, setActiveSection] = useState("");
-  const { scrollTo, blockScroll, unblockScroll, lenis } = useSmoothScroll();
+  const { scrollTo, blockScroll, unblockScroll } = useSmoothScroll();
+  // Même source de scroll-spy que la Sidebar (home uniquement).
+  const spyEnabled = pathname === "/";
+  const activeId = useActiveSection(HOME_SECTION_IDS, { enabled: spyEnabled });
+  const activeSection = spyEnabled ? (linkForSection[activeId] ?? "") : "";
 
   useFocusTrap(isMenuOpen, menuRef);
 
   const toggleMenu = useCallback(() => setIsMenuOpen((p) => !p), []);
   const reduceMotion = useReducedMotion();
-
-  /* Scroll-spy : met à jour le lien actif de la navbar au fil du scroll (home uniquement) */
-  useEffect(() => {
-    if (pathname !== "/") {
-      setActiveSection("");
-      return;
-    }
-
-    const sectionIds = ["home", "about-preview", "projects-preview", "contact"];
-    const linkForSection = {
-      home: "/",
-      "about-preview": "/about",
-      "projects-preview": "/projects",
-      contact: "/#contact",
-    };
-
-    let raf = 0;
-    const compute = () => {
-      raf = 0;
-      const probe = window.innerHeight * 0.4; // la section active = celle qui traverse 40% du viewport
-      let current = "home";
-      for (const id of sectionIds) {
-        const el = document.getElementById(id);
-        if (!el) continue;
-        const rect = el.getBoundingClientRect();
-        if (rect.top <= probe && rect.bottom > probe) {
-          current = id;
-          break;
-        }
-      }
-      setActiveSection(linkForSection[current] ?? "");
-    };
-
-    const onScroll = () => {
-      if (!raf) raf = requestAnimationFrame(compute);
-    };
-
-    compute();
-    // Lenis anime le scroll : on écoute son event dédié + le scroll natif en fallback
-    if (lenis) lenis.on("scroll", onScroll);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    // recompute après montage des sections (gate de loading)
-    const t1 = setTimeout(compute, 400);
-    const t2 = setTimeout(compute, 1200);
-    return () => {
-      if (raf) cancelAnimationFrame(raf);
-      if (lenis) lenis.off("scroll", onScroll);
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      clearTimeout(t1);
-      clearTimeout(t2);
-    };
-  }, [pathname, lenis]);
 
   useEffect(() => {
     if (isMenuOpen) blockScroll();
@@ -201,8 +159,11 @@ export default function Navbar() {
 
         <div className="relative flex items-center">
           {navLinks.map((link) => {
+            // Sur "/" seul le scroll-spy décide (sinon Home resterait
+            // actif en permanence car pathname === "/"). Hors home,
+            // l'actif vient uniquement de la route.
             const isActive =
-              pathname === link.href || (pathname === "/" && activeSection === link.href);
+              pathname === "/" ? activeSection === link.href : pathname === link.href;
             return (
               <Link
                 key={link.href}
@@ -301,7 +262,7 @@ export default function Navbar() {
             <div className="flex flex-col items-center gap-8">
               {navLinks.map((link, i) => {
                 const isActiveMobile =
-                  pathname === link.href || (pathname === "/" && activeSection === link.href);
+                  pathname === "/" ? activeSection === link.href : pathname === link.href;
                 return (
                   <animated.div key={link.href} style={itemSprings[i]}>
                     <Link

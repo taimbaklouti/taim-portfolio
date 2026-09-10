@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome, faUser, faFolderOpen, faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { useSpring, useSprings, animated } from "@react-spring/web";
 import { useSmoothScroll } from "./SmoothScrollProvider";
+import useActiveSection, { HOME_SECTION_IDS } from "@/hooks/useActiveSection";
 
 const navItems = [
   { icon: faHome, label: "Home", id: "home" },
@@ -18,26 +19,13 @@ const ITEM_GAP = 12;
 export default function Sidebar() {
   const [activeIndex, setActiveIndex] = useState(0);
   const { scrollTo } = useSmoothScroll();
+  // Source unique de scroll-spy partagée avec la Navbar.
+  const activeId = useActiveSection(HOME_SECTION_IDS);
 
   useEffect(() => {
-    const sections = navItems.map((item) => document.getElementById(item.id)).filter(Boolean);
-    if (sections.length === 0) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            const idx = navItems.findIndex((item) => item.id === entry.target.id);
-            if (idx !== -1) setActiveIndex(idx);
-          }
-        }
-      },
-      { rootMargin: "-40% 0px -55% 0px", threshold: 0 }
-    );
-
-    sections.forEach((s) => observer.observe(s));
-    return () => observer.disconnect();
-  }, []);
+    const idx = navItems.findIndex((item) => item.id === activeId);
+    if (idx !== -1) setActiveIndex(idx);
+  }, [activeId]);
 
   const goTo = useCallback(
     (index, id) => {
