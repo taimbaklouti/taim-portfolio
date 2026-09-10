@@ -306,7 +306,7 @@ const MyPage = () => {
                       aria-hidden="true"
                     />
                     <AnimatedNumber
-                      value={15.14}
+                      value={15.33}
                       suffix="/20"
                       decimals={2}
                       className="font-display-alt text-xl md:text-2xl font-bold text-[var(--color-accent)] dark:text-[var(--color-accent-dark)]"
@@ -328,7 +328,7 @@ const MyPage = () => {
                       delay={800}
                     />
                     <span className="text-xs md:text-sm text-[var(--color-ink-2)] dark:text-[var(--color-ink-2-dark)] font-body-ui -ml-4">
-                      National Hackathon
+                      Place Hackathon
                     </span>
                   </div>
 
