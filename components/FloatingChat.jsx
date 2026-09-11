@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import TerminalText from "@/components/TerminalText";
 
@@ -13,16 +14,83 @@ import {
   faStar,
 } from "@fortawesome/free-solid-svg-icons";
 
-/* ─── Suggestion chips ───────────────────────────────────────── */
-const SUGGESTIONS = [
-  "Who is Taim Baklouti?",
-  "What is EduTounes?",
-  "Tell me about your hackathon win",
-  "What are your future goals?",
-  "What tech stack do you use?",
+/* ─── Per-page suggestion chips ───────────────────────────────── */
+/* Ordered most-specific first; the first matching prefix wins. */
+const SUGGESTIONS_BY_PAGE = [
+  {
+    match: (p) => /^\/projects\/[^/]+$/.test(p),
+    hint: "About the project you're viewing right now.",
+    suggestions: [
+      "Tell me about this project",
+      "What technologies does it use?",
+      "What challenges did you face building it?",
+      "Where can I see it live?",
+      "What did you learn from it?",
+    ],
+  },
+  {
+    match: (p) => p.startsWith("/projects/archive"),
+    hint: "About the full project archive.",
+    suggestions: [
+      "How many projects have you built?",
+      "Which technologies appear most in your work?",
+      "What is your most complex project?",
+      "Show me your AI-related projects",
+    ],
+  },
+  {
+    match: (p) => p.startsWith("/projects"),
+    hint: "About Taim's projects and tech stack.",
+    suggestions: [
+      "What projects have you built?",
+      "Which project are you most proud of?",
+      "What is EduTounes?",
+      "What tech stack do you use?",
+      "Do you work alone or in teams?",
+    ],
+  },
+  {
+    match: (p) => p.startsWith("/about/complete-story"),
+    hint: "About Taim's full journey.",
+    suggestions: [
+      "Tell me your full story",
+      "How did you overcome learning difficulties?",
+      "What motivated you to start EduTounes?",
+      "What lessons has basketball taught you?",
+      "What are your plans after high school?",
+    ],
+  },
+  {
+    match: (p) => p.startsWith("/about"),
+    hint: "About who Taim is, his skills and experience.",
+    suggestions: [
+      "What are your main skills?",
+      "Tell me about your work experience",
+      "What did you study?",
+      "Who are you outside of tech?",
+      "What are your future goals?",
+    ],
+  },
+  {
+    match: (p) => p === "/" || p === "",
+    hint: "Ask me anything about Taim, his projects, or his journey.",
+    suggestions: [
+      "Who is Taim Baklouti?",
+      "What is EduTounes?",
+      "Tell me about your hackathon win",
+      "What are your future goals?",
+      "What tech stack do you use?",
+    ],
+  },
 ];
 
-/* ─── Terminal Header ────────────────────────────────────────── */
+const DEFAULT_SUGGESTIONS = SUGGESTIONS_BY_PAGE.find((entry) => entry.match("/"));
+
+function getSuggestionsFor(pathname) {
+  return SUGGESTIONS_BY_PAGE.find((entry) => entry.match(pathname)) ?? DEFAULT_SUGGESTIONS;
+}
+
+/* ─── Terminal Header ────────────────────────────────────── */
 function TerminalHeader({ isResponding, onClose }) {
   return (
     <div
@@ -62,7 +130,7 @@ function TerminalHeader({ isResponding, onClose }) {
 }
 
 /* ─── Intro / Empty State ────────────────────────────────────── */
-function IntroState({ onSuggestionClick }) {
+function IntroState({ onSuggestionClick, hint, suggestions }) {
   return (
     <div className="flex flex-col items-center justify-center flex-1 p-6 text-center">
       <motion.div
@@ -79,7 +147,7 @@ function IntroState({ onSuggestionClick }) {
           <TerminalText text="Welcome to the AI Lab" speed={40} startDelay={300} />
         </h2>
         <p className="text-xs font-mono text-black/40 dark:text-white/40 max-w-xs leading-relaxed">
-          Ask me anything about Taim, his projects, or his journey.
+          {hint}
         </p>
       </motion.div>
 
@@ -89,7 +157,7 @@ function IntroState({ onSuggestionClick }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.8 }}
       >
-        {SUGGESTIONS.map((s) => (
+        {suggestions.map((s) => (
           <button
             key={s}
             type="button"
@@ -108,6 +176,7 @@ function IntroState({ onSuggestionClick }) {
 
 /* ─── Main Component ─────────────────────────────────────────── */
 export default function FloatingChat() {
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [prompt, setPrompt] = useState("");
   const [response, setResponse] = useState("");
@@ -118,6 +187,15 @@ export default function FloatingChat() {
 
   const inputRef = useRef(null);
   const responseEndRef = useRef(null);
+
+  // Reset the conversation on route change so each page opens with
+  // its own context, intro hint and suggestion chips.
+  useEffect(() => {
+    setHasStarted(false);
+    setResponse("");
+    setError("");
+    setPrompt("");
+  }, [pathname]);
 
   // Focus input when opened
   useEffect(() => {
@@ -198,6 +276,8 @@ export default function FloatingChat() {
     setIsOpen(false);
   }, []);
 
+  const pageSuggestions = getSuggestionsFor(pathname);
+
   return (
     <>
       {/* ─── Floating Trigger Button ──────────────────────────── */}
@@ -243,7 +323,11 @@ export default function FloatingChat() {
               {/* Messages / Intro */}
               <div className="flex-1 overflow-y-auto scroll-smooth p-4 space-y-3">
                 {!hasStarted ? (
-                  <IntroState onSuggestionClick={handleSuggestionClick} />
+                  <IntroState
+                    onSuggestionClick={handleSuggestionClick}
+                    hint={pageSuggestions.hint}
+                    suggestions={pageSuggestions.suggestions}
+                  />
                 ) : (
                   <div className="space-y-3">
                     {/* User message */}

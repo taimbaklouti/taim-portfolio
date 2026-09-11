@@ -276,8 +276,8 @@ const MyPage = () => {
                   </div>
 
                   <div className="hero-cta flex flex-wrap items-center gap-4 mb-8">
-                    <Button variation="primary" href="/projects/edutounes">
-                      View EduTounes
+                    <Button variation="primary" href="#about-preview">
+                      More About Me
                     </Button>
                     <Button variation="secondary" href="#contact">
                       Contact

@@ -14,6 +14,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import PageTransition from "@/components/PageTransition";
 import FontAwesomeLoader from "@/components/FontAwesomeLoader";
 import SmoothScrollProvider from "@/components/SmoothScrollProvider";
+import FloatingChat from "@/components/FloatingChat";
 import GSAPProvider from "@/components/GSAPProvider";
 
 export const metadata = {
@@ -144,6 +145,7 @@ export default function RootLayout({ children }) {
                   {children}
                 </div>
               </PageTransition>
+              <FloatingChat />
             </SmoothScrollProvider>
           </GSAPProvider>
         </ThemeProvider>
