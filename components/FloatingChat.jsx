@@ -4,6 +4,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import TerminalText from "@/components/TerminalText";
+import { findOfflineAnswer } from "@/lib/chatbotFaq";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -12,6 +13,8 @@ import {
   faPaperPlane,
   faMicrochip,
   faStar,
+  faBolt,
+  faRotateLeft,
 } from "@fortawesome/free-solid-svg-icons";
 
 /* ─── Per-page suggestion chips ───────────────────────────────── */
@@ -129,7 +132,27 @@ function TerminalHeader({ isResponding, onClose }) {
   );
 }
 
-/* ─── Intro / Empty State ────────────────────────────────────── */
+/* ─── Follow-up chips (shown after an answer) ───────────────── */
+function FollowUpChips({ suggestions, onSuggestionClick }) {
+  return (
+    <div className="flex flex-wrap gap-1.5">
+      {suggestions.slice(0, 4).map((s) => (
+        <button
+          key={s}
+          type="button"
+          onClick={() => onSuggestionClick(s)}
+          className="px-2.5 py-1 text-[11px] font-mono rounded-full
+            bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 border border-black/10 dark:border-white/10 hover:border-[var(--color-accent)]/50
+            text-black/50 dark:text-white/50 hover:text-black/80 dark:hover:text-white/80 transition-all duration-300 cursor-pointer"
+        >
+          {s}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+/* ─── Intro / Empty State ────────────────────────────────── */
 function IntroState({ onSuggestionClick, hint, suggestions }) {
   return (
     <div className="flex flex-col items-center justify-center flex-1 p-6 text-center">
@@ -184,6 +207,8 @@ export default function FloatingChat() {
   const [error, setError] = useState("");
   const [hasStarted, setHasStarted] = useState(false);
   const [typingKey, setTypingKey] = useState(0);
+  const [lastQuestion, setLastQuestion] = useState("");
+  const [isOfflineAnswer, setIsOfflineAnswer] = useState(false);
 
   const inputRef = useRef(null);
   const responseEndRef = useRef(null);
@@ -195,6 +220,7 @@ export default function FloatingChat() {
     setResponse("");
     setError("");
     setPrompt("");
+    setIsOfflineAnswer(false);
   }, [pathname]);
 
   // Focus input when opened
@@ -210,15 +236,32 @@ export default function FloatingChat() {
   }, [response, isLoading]);
 
   // ─── Ask AI ────────────────────────────────────────────────
+  // 1) Try the offline FAQ (instant, no API); 2) fall back to Gemini.
   const askAI = useCallback(
     async (question) => {
       const q = (question || prompt).trim();
       if (!q || isLoading) return;
 
+      setLastQuestion(q);
+
+      // Instant offline answer path — no loading, no API call
+      const offline = findOfflineAnswer(q);
+      if (offline) {
+        setHasStarted(true);
+        setIsOfflineAnswer(true);
+        setError("");
+        setResponse(offline.a);
+        setTypingKey((k) => k + 1);
+        setPrompt("");
+        setIsLoading(false);
+        return;
+      }
+
       setIsLoading(true);
       setError("");
       setResponse("");
       setHasStarted(true);
+      setIsOfflineAnswer(false);
       setTypingKey((k) => k + 1);
 
       try {
@@ -274,6 +317,14 @@ export default function FloatingChat() {
 
   const handleClose = useCallback(() => {
     setIsOpen(false);
+  }, []);
+
+  const handleReset = useCallback(() => {
+    setHasStarted(false);
+    setResponse("");
+    setError("");
+    setPrompt("");
+    setIsOfflineAnswer(false);
   }, []);
 
   const pageSuggestions = getSuggestionsFor(pathname);
@@ -344,7 +395,7 @@ export default function FloatingChat() {
                           user@lab
                         </p>
                         <p className="text-sm font-mono text-black/90 dark:text-white/90 leading-relaxed">
-                          {prompt}
+                          {lastQuestion}
                         </p>
                       </div>
                     </motion.div>
@@ -360,9 +411,16 @@ export default function FloatingChat() {
                         AI
                       </span>
                       <div className="flex-1 min-w-0">
-                        <p className="text-[10px] font-mono text-[var(--color-accent)]/50 mb-0.5">
-                          edu-ai
-                        </p>
+                        <div className="flex items-center gap-1.5 mb-0.5">
+                          <p className="text-[10px] font-mono text-[var(--color-accent)]/50">
+                            edu-ai
+                          </p>
+                          {isOfflineAnswer && response && !isLoading && (
+                            <span className="inline-flex items-center gap-1 text-[9px] font-mono px-1.5 py-0.5 rounded-full bg-[var(--color-accent-ghost)] dark:bg-[var(--color-accent-ghost-dark)] text-[var(--color-accent)]/70 dark:text-[var(--color-accent-dark)]/70">
+                              <FontAwesomeIcon icon={faBolt} className="text-[8px]" /> instant
+                            </span>
+                          )}
+                        </div>
 
                         {isLoading && !response && (
                           <div className="flex items-center gap-1 text-black/50 dark:text-white/50 font-mono text-xs">
@@ -393,6 +451,26 @@ export default function FloatingChat() {
                               speed={12}
                               onComplete={() => {}}
                             />
+                          </div>
+                        )}
+
+                        {/* Follow-up suggestions + reset */}
+                        {(response || error) && !isLoading && (
+                          <div className="mt-3 space-y-2">
+                            <FollowUpChips
+                              suggestions={pageSuggestions.suggestions.filter(
+                                (s) => s.toLowerCase() !== lastQuestion.toLowerCase()
+                              )}
+                              onSuggestionClick={handleSuggestionClick}
+                            />
+                            <button
+                              type="button"
+                              onClick={handleReset}
+                              className="inline-flex items-center gap-1 text-[10px] font-mono text-black/30 dark:text-white/30 hover:text-black/60 dark:hover:text-white/60 transition-colors cursor-pointer"
+                            >
+                              <FontAwesomeIcon icon={faRotateLeft} className="text-[9px]" />
+                              Back to suggestions
+                            </button>
                           </div>
                         )}
 
