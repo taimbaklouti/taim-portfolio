@@ -6,7 +6,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import ThemeToggle from "./ThemeToggle";
 import { useSmoothScroll } from "./SmoothScrollProvider";
-import useActiveSection, { HOME_SECTION_IDS } from "@/hooks/useActiveSection";
 
 function useFocusTrap(isActive, containerRef) {
   useEffect(() => {
@@ -42,23 +41,11 @@ const navLinks = [
   { href: "/#contact", label: "Contact" },
 ];
 
-/* Mapping section -> lien navbar (même ordre que useActiveSection). */
-const linkForSection = {
-  home: "/",
-  "about-preview": "/about",
-  "projects-preview": "/projects",
-  contact: "/#contact",
-};
-
 export default function Navbar() {
   const menuRef = useRef(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
   const { scrollTo, blockScroll, unblockScroll } = useSmoothScroll();
-  // Même source de scroll-spy que la Sidebar (home uniquement).
-  const spyEnabled = pathname === "/";
-  const activeId = useActiveSection(HOME_SECTION_IDS, { enabled: spyEnabled });
-  const activeSection = spyEnabled ? (linkForSection[activeId] ?? "") : "";
 
   useFocusTrap(isMenuOpen, menuRef);
 
@@ -159,11 +146,8 @@ export default function Navbar() {
 
         <div className="relative flex items-center">
           {navLinks.map((link) => {
-            // Sur "/" seul le scroll-spy décide (sinon Home resterait
-            // actif en permanence car pathname === "/"). Hors home,
-            // l'actif vient uniquement de la route.
-            const isActive =
-              pathname === "/" ? activeSection === link.href : pathname === link.href;
+            // Actif uniquement à la route — volontairement non réactif au scroll sur "/" (sidebar seule suit le scroll).
+            const isActive = pathname === link.href;
             return (
               <Link
                 key={link.href}
@@ -178,9 +162,7 @@ export default function Navbar() {
                       : "text-[var(--color-ink-2)] dark:text-[var(--color-ink-2-dark)] hover:text-[var(--color-accent)] dark:hover:text-[var(--color-accent-dark)] hover:bg-[var(--color-accent-ghost)] dark:hover:bg-[var(--color-accent-ghost-dark)]"
                   }`}
               >
-                {/* Indicateur actif animé (FLIP via layoutId) — suit le scroll-spy
-                    (activeSection) ET la navigation (pathname) en temps réel.
-                    Restylable librement (flèche, ligne, pill) sans toucher la logique. */}
+                {/* Indicateur actif animé (FLIP via layoutId) — suit uniquement la route. */}
                 {isActive && (
                   <motion.span
                     layoutId="nav-indicator"
@@ -261,8 +243,7 @@ export default function Navbar() {
           >
             <div className="flex flex-col items-center gap-8">
               {navLinks.map((link, i) => {
-                const isActiveMobile =
-                  pathname === "/" ? activeSection === link.href : pathname === link.href;
+                const isActiveMobile = pathname === link.href;
                 return (
                   <animated.div key={link.href} style={itemSprings[i]}>
                     <Link
