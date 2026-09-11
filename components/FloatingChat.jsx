@@ -4,7 +4,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import TerminalText from "@/components/TerminalText";
-import { findOfflineAnswer } from "@/lib/chatbotFaq";
+import { findOfflineAnswer, getProjectTitle } from "@/lib/chatbotFaq";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -89,8 +89,25 @@ const SUGGESTIONS_BY_PAGE = [
 
 const DEFAULT_SUGGESTIONS = SUGGESTIONS_BY_PAGE.find((entry) => entry.match("/"));
 
+function getProjectSlug(pathname) {
+  if (!pathname) return null;
+  const m = pathname.match(/^\/projects\/([^/]+)$/);
+  if (!m) return null;
+  if (m[1] === "archive") return null;
+  return m[1];
+}
+
 function getSuggestionsFor(pathname) {
-  return SUGGESTIONS_BY_PAGE.find((entry) => entry.match(pathname)) ?? DEFAULT_SUGGESTIONS;
+  const base = SUGGESTIONS_BY_PAGE.find((entry) => entry.match(pathname)) ?? DEFAULT_SUGGESTIONS;
+  // Make the project-detail hint project-aware (e.g. "About Calendar — ask about its stack, challenges…")
+  const slug = getProjectSlug(pathname);
+  if (slug) {
+    const title = getProjectTitle(slug);
+    if (title && title !== slug) {
+      return { ...base, hint: `About ${title} — ask about its stack, challenges, live demo…` };
+    }
+  }
+  return base;
 }
 
 /* ─── Terminal Header ────────────────────────────────────── */
@@ -245,7 +262,9 @@ export default function FloatingChat() {
       setLastQuestion(q);
 
       // Instant offline answer path — no loading, no API call
-      const offline = findOfflineAnswer(q);
+      // Pass the current project slug so detail-page chips ("Tell me about this project" etc.) resolve to the viewed project.
+      const slug = getProjectSlug(pathname);
+      const offline = findOfflineAnswer(q, slug ? { slug } : undefined);
       if (offline) {
         setHasStarted(true);
         setIsOfflineAnswer(true);
@@ -286,7 +305,7 @@ export default function FloatingChat() {
         inputRef.current?.focus();
       }
     },
-    [prompt, isLoading]
+    [prompt, isLoading, pathname]
   );
 
   const handleSubmit = useCallback(
